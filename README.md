@@ -1,2 +1,54 @@
-# Jeevan_Full_Stack
-This Project Includes Development Of A Medical Application And A Website For The Same, It Includes All Features Of Other Medical/Fitness/Pharma/Diet Applications, With Simplified UI
+# Jeevan Full Stack Project 🚀
+
+## Overview 📖
+The **Jeevan Full Stack Project** aims to develop a comprehensive medical application and website with a simplified and user-friendly interface. The project integrates features from medical, fitness, pharma, and diet applications into a single platform. Built using modern technologies, it ensures scalability and performance while maintaining simplicity.
+
+## Technologies Used 🛠️
+
+### Web Technologies 🌐
+- **HTML** - [Learn More](https://developer.mozilla.org/en-US/docs/Web/HTML)
+- **CSS** - [Learn More](https://developer.mozilla.org/en-US/docs/Web/CSS)
+- **React.js** - [Learn More](https://react.dev/)
+
+### Backend Technologies 🔗
+- **PostgreSQL** - [Learn More](https://www.postgresql.org/)
+- **Ktor** - [Learn More](https://ktor.io/)  
+  **or**  
+  **Spring Boot** - [Learn More](https://spring.io/projects/spring-boot)
+
+### Application Technologies 📱
+- **Kotlin with Compose** - [Learn More](https://developer.android.com/jetpack/compose)
+
+### API Technologies 🌐
+- **RESTful API** - [Learn More](https://restfulapi.net/)
+
+### Development Platform 🐳
+- **Docker** - [Learn More](https://www.docker.com/)
+
+## Features ✨
+- Unified platform for medical, fitness, pharma, and diet services.
+- Simplified and intuitive UI/UX.
+- Cross-platform accessibility through a web application and a mobile app.
+
+## Get Started 🚀
+1. Clone the repository (ensure you have access):
+   ```bash
+   git clone git@https://github.com/DreamerX00/Jeevan_Full_Stack.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd jeevan-full-stack
+   ```
+3. Build the Docker environment:
+   ```bash
+   docker-compose up
+   ```
+
+## Contributers
+
+
+## License 🐜
+This project is licensed under the [MIT License](LICENSE).
+
+
+
