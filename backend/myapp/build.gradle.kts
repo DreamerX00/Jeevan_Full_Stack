@@ -4,11 +4,6 @@ plugins {
 	id("org.springframework.boot") version "3.4.1"
 	id("io.spring.dependency-management") version "1.1.7"
 	kotlin("plugin.jpa") version "1.9.25"
-<<<<<<< HEAD
-
-=======
-	application
->>>>>>> 41e9f2737d90653e4ae24f4d947765efdb657fc8
 }
 
 group = "com.jeevan"
@@ -54,9 +49,3 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-<<<<<<< HEAD
-=======
-application {
-    mainClass.set("com.example.myapp.MyAppApplicationKt") // Replace with your actual main class
-}
->>>>>>> 41e9f2737d90653e4ae24f4d947765efdb657fc8
