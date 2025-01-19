@@ -1,10 +1,18 @@
 ktor:
-    application:
-        modules:
-            - com.example.ApplicationKt.module
-    deployment:
-        port: 8080
+  application:
+    modules:
+      - com.example.ApplicationKt.module  # Adjust to your main module
+
+  deployment:
+    port: 8080  # Set the application to run on port 8080
+
+  server:
+    type: netty  # Netty is the default server for Ktor
+    threads: 4    # Number of threads to be used by the server
+
 postgres:
-  url: "jdbc:postgresql://localhost/default"
-  user: username
-  password: password
+  url: "jdbc:postgresql://postgres:5432/jeevanDB"  # Database URL with service name used in Docker Compose
+  user: "jeevan"                                  # Database user
+  password: "G1@4424"                             # Database password
+
+# Additional configurations as required
