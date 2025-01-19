@@ -2,7 +2,7 @@ FROM amazoncorretto:23-alpine
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY myapp/build/libs/backend-all.jar app.jar
+COPY myapp/build/libs/myapp-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port (default for Spring Boot is 8080)
 EXPOSE 8080
