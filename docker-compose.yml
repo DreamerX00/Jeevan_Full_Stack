@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: jeevan
+      POSTGRES_PASSWORD: G1@4424
+      POSTGRES_DB: jeevanDB
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
+backend:
+  build:
+    context: ./backend
+    dockerfile: Dockerfile
+  container_name: backend_container
+  ports:
+    - "8080:8080"
+  depends_on:
+    - postgres
+  environment:
+    DB_URL: jdbc:postgresql://postgres:5432/jeevanDB
+    DB_USER: jeevan
+    DB_PASSWORD: G1@4424
+
+frontend:
+  build:
+    context: ./frontend
+    dockerfile: Dockerfile
+  container_name: frontend_container
+  ports:
+    - "3000:3000"
+  environment:
+    REACT_APP_API_URL: http://localhost:8080
+
+
