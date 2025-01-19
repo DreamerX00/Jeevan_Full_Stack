@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.ApplicationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-01-19T08:59:27" hostname="DREAMERX" time="0.913">
+  <properties/>
+  <testcase name="testRoot" classname="com.example.ApplicationTest" time="0.913"/>
+  <system-out><![CDATA[2025-01-19 14:29:28.287 [DefaultDispatcher-worker-1] TRACE i.ktor.client.plugins.HttpPlainText - Adding Accept-Charset=UTF-8 to http:///
+2025-01-19 14:29:28.330 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2025-01-19 14:29:28.357 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - Using embedded H2 database for testing; replace this flag to use postgres
+2025-01-19 14:29:28.509 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - Application started in 0.189 seconds.
+2025-01-19 14:29:28.511 [DefaultDispatcher-worker-1 @coroutine#4] INFO  io.ktor.test - Responding at http://localhost:80
+2025-01-19 14:29:28.511 [DefaultDispatcher-worker-1 @coroutine#4] INFO  io.ktor.test - Responding at https://localhost:443
+2025-01-19 14:29:28.545 [DefaultDispatcher-worker-3 @request#3] TRACE io.ktor.server.routing.Routing - Trace for []
+/, segment:0 -> SUCCESS @ /
+  /json, segment:0 -> FAILURE "Selector didn't match" @ /json
+  /cities, segment:0 -> FAILURE "Selector didn't match" @ /cities
+  /, segment:0 -> SUCCESS @ /
+    /(method:GET), segment:0 -> SUCCESS @ /(method:GET)
+Matched routes:
+  "" -> "<slash>" -> "(method:GET)"
+Routing resolve result:
+  SUCCESS @ /(method:GET)
+2025-01-19 14:29:28.587 [DefaultDispatcher-worker-6] TRACE i.k.client.plugins.HttpCallValidator - Validating response for request http://localhost/
+2025-01-19 14:29:28.588 [DefaultDispatcher-worker-6] TRACE i.k.c.p.DefaultResponseValidation - Skipping default response validation for http://localhost/
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
