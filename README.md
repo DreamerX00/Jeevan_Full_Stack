@@ -33,7 +33,7 @@ The **Jeevan Full Stack Project** aims to develop a comprehensive medical applic
 ## Get Started 🚀
 1. Clone the repository (ensure you have access):
    ```bash
-   git clone git@your-private-repo-url:yourusername/jeevan-full-stack.git
+   git clone https://github.com/DreamerX00/Jeevan_Full_Stack.git
    ```
 2. Navigate to the project directory:
    ```bash
