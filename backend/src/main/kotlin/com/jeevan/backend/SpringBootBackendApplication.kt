@@ -1,11 +1,11 @@
-package com.jeevan.myapp
+package com.jeevan.backend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class JeevanApplication
+class SpringBootBackendApplication
 
 fun main(args: Array<String>) {
-	runApplication<JeevanApplication>(*args)
+	runApplication<SpringBootBackendApplication>(*args)
 }

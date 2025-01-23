@@ -1,10 +1,10 @@
-package com.jeevan.myapp
+package com.jeevan.backend
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class JeevanApplicationTests {
+class SpringBootBackendApplicationTests {
 
 	@Test
 	fun contextLoads() {
