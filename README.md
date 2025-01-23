@@ -22,8 +22,7 @@ The **Jeevan Full Stack Project** aims to develop a comprehensive medical applic
 ### API Technologies 🌐
 - **RESTful API** - [Learn More](https://restfulapi.net/)
 
-### Development Platform 🐳
-- **Docker** - [Learn More](https://www.docker.com/)
+
 
 ## Features ✨
 - Unified platform for medical, fitness, pharma, and diet services.
@@ -38,10 +37,6 @@ The **Jeevan Full Stack Project** aims to develop a comprehensive medical applic
 2. Navigate to the project directory:
    ```bash
    cd jeevan-full-stack
-   ```
-3. Build the Docker environment:
-   ```bash
-   docker-compose up
    ```
 
 ## Contributing 🤝
