@@ -10,11 +10,9 @@ The **Jeevan Full Stack Project** aims to develop a comprehensive medical applic
 - **CSS** - [Learn More](https://developer.mozilla.org/en-US/docs/Web/CSS)
 - **React.js** - [Learn More](https://react.dev/)
 
-### Backend Technologies 🔗
+### Backend & Frameworks Technologies 🔗
 - **PostgreSQL** - [Learn More](https://www.postgresql.org/)
-- **Ktor** - [Learn More](https://ktor.io/)  
-  **or**  
-  **Spring Boot** - [Learn More](https://spring.io/projects/spring-boot)
+- **Spring Boot** - [Learn More](https://spring.io/projects/spring-boot)
 
 ### Application Technologies 📱
 - **Kotlin with Compose** - [Learn More](https://developer.android.com/jetpack/compose)
