@@ -1,4 +1,5 @@
 package com.jeevan.backend.models
 
-class Role {
+enum class Role {
+    USER, ADMIN
 }
