@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.compose.material3:material3-android:1.2.1@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.10.2/transforms/3dfce16273cf15cc984310ad04f80f5f/transformed/material3-release/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.10.2/transforms/3dfce16273cf15cc984310ad04f80f5f/transformed/material3-release/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.10.2/transforms/3dfce16273cf15cc984310ad04f80f5f/transformed/material3-release/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.compose.material3/material3-android/1.2.1/a269bcec123bcf8567c612a65f19cc47d9ab2b49/material3-android-1.2.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
