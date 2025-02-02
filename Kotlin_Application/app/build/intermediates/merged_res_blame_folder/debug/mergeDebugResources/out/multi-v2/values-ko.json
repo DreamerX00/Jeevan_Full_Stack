@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-51:/values-ko/values-ko.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-52:/values-ko/values-ko.xml",
             "map": [
                 {
                     "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\aaa82f8dc555dffabe7b2328125eb211\\transformed\\ui-release\\res\\values-ko\\values-ko.xml",

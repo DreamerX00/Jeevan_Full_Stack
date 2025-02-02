@@ -3,7 +3,6 @@ package com.example.jeevanandroid.ui.auth
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInVertically
@@ -13,9 +12,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,8 +40,16 @@ import com.example.jeevanandroid.ui.theme.JeevanAndroidTheme
 fun RegisterScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var reEnterPassword by remember { mutableStateOf("") }
     val context = LocalContext.current
     var visible by remember { mutableStateOf(true) }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var reEnterPasswordVisible by remember { mutableStateOf(false) }
+
+    // Validation states
+    var emailError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
+    var reEnterPasswordError by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -46,7 +57,7 @@ fun RegisterScreen(navController: NavController) {
     ) {
         // Background Image
         Image(
-            painter = painterResource(id = R.drawable.registration_back), // Use your image from drawable
+            painter = painterResource(id = R.drawable.registration_back),
             contentDescription = "Background",
             modifier = Modifier.fillMaxSize(),
             alignment = Alignment.Center,
@@ -57,7 +68,7 @@ fun RegisterScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -68,8 +79,8 @@ fun RegisterScreen(navController: NavController) {
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     // Logo Image
-                    val logo = painterResource(id = R.drawable.heart_logo) // Assuming your logo is placed in res/drawable/heart_logo.png
-                    Image(painter = logo, contentDescription = "App Logo", modifier = Modifier.size(150.dp))
+                    val logo = painterResource(id = R.drawable.heart_logo)
+                    Image(painter = logo, contentDescription = "App Logo", modifier = Modifier.size(200.dp))
 
                     Spacer(modifier = Modifier.height(5.dp))
 
@@ -80,9 +91,9 @@ fun RegisterScreen(navController: NavController) {
                         fontSize = 16.sp
                     )
 
-                    Spacer(Modifier.height(30.dp))
+                    Spacer(Modifier.height(12.dp))
 
-                    // Email Field with Underline
+                    // Email Field with Underline and Validation
                     Box(
                         modifier = Modifier
                             .height(40.dp)
@@ -90,56 +101,132 @@ fun RegisterScreen(navController: NavController) {
                     ) {
                         BasicTextField(
                             value = email,
-                            onValueChange = { email = it },
+                            onValueChange = {
+                                email = it
+                                emailError = !it.contains("@")
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Transparent)
                                 .padding(bottom = 4.dp),
-                            singleLine = true
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Email
+                            )
                         ) {
-                            if(email.isEmpty()) {
-                                Text(text = "EMAIL", color = Color(0xFF484C4C), fontSize = 16.sp)
+                            if (email.isEmpty()) {
+                                Text(text = "EMAIL", color = Color(0xFF484C4C), fontSize = 12.sp)
                             }
-                            Text(text = email, color = Color.Black)
+                            Text(text = email, color = if (emailError) Color.Red else Color.Black)
                         }
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
-                                .background(Color.Gray)
+                                .background(if (emailError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
                         )
                     }
+                    if (emailError) {
+                        Text(text = "Invalid email address", color = Color.Red, fontSize = 12.sp)
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Password Field with Underline
+                    // Password Field with Eye Icon and Validation
                     Box(
                         modifier = Modifier
                             .height(40.dp)
                             .width(220.dp)
                     ) {
-                        BasicTextField(
-                            value = password,
-                            onValueChange = { password = it },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.Transparent)
-                                .padding(bottom = 4.dp),
-                            singleLine = true
-                        ) {
-                            if (password.isEmpty()) {
-                                Text(text = "PASSWORD", color = Color(0xFF484C4C), fontSize = 16.sp)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            BasicTextField(
+                                value = password,
+                                onValueChange = {
+                                    password = it
+                                    passwordError = it.length < 8 || !it.any { char -> char.isDigit() } || !it.any { char -> !char.isLetterOrDigit() }
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .background(Color.Transparent)
+                                    .padding(bottom = 4.dp),
+                                singleLine = true,
+                                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Password
+                                )
+                            ) { innerTextField ->
+                                if (password.isEmpty()) {
+                                    Text(text = "PASSWORD", color = Color(0xFF484C4C), fontSize = 12.sp)
+                                }
+                                innerTextField()
                             }
-                            Text(text = password, color = Color.Black)
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = "Toggle Password Visibility"
+                                )
+                            }
                         }
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
-                                .background(Color.Gray)
+                                .background(if (passwordError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
                         )
+                    }
+                    if (passwordError) {
+                        Text(text = "Contain Character And Symbols (maximum 8 character)", color = Color.Red, fontSize = 10.sp)
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Re-enter Password Field with Eye Icon and Validation
+                    Box(
+                        modifier = Modifier
+                            .height(40.dp)
+                            .width(220.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            BasicTextField(
+                                value = reEnterPassword,
+                                onValueChange = {
+                                    reEnterPassword = it
+                                    reEnterPasswordError = it != password
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .background(Color.Transparent)
+                                    .padding(bottom = 4.dp),
+                                singleLine = true,
+                                visualTransformation = if (reEnterPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Password
+                                )
+                            ) { innerTextField ->
+                                if (reEnterPassword.isEmpty()) {
+                                    Text(text = "RE-ENTER PASSWORD", color = Color(0xFF484C4C), fontSize = 12.sp)
+                                }
+                                innerTextField()
+                            }
+                            IconButton(onClick = { reEnterPasswordVisible = !reEnterPasswordVisible }) {
+                                Icon(
+                                    imageVector = if (reEnterPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = "Toggle Re-enter Password Visibility"
+                                )
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .background(if (reEnterPasswordError) Color.Red else Color.Gray)
+                                .height(1.dp)
+                                .fillMaxWidth()
+                        )
+                    }
+                    if (reEnterPasswordError) {
+                        Text(text = "Passwords do not match", color = Color.Red, fontSize = 12.sp)
                     }
 
                     Spacer(modifier = Modifier.height(25.dp))
@@ -148,7 +235,11 @@ fun RegisterScreen(navController: NavController) {
                     Button(
                         onClick = {
                             // Handle registration logic here
-                            Toast.makeText(context, "Registered", Toast.LENGTH_SHORT).show()
+                            if (!emailError && !passwordError && !reEnterPasswordError) {
+                                Toast.makeText(context, "Registered", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Please fix the errors", Toast.LENGTH_SHORT).show()
+                            }
                         },
                         modifier = Modifier
                             .width(180.dp)

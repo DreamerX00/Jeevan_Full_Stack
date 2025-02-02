@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-51:/values-ka/values-ka.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-52:/values-ka/values-ka.xml",
             "map": [
                 {
                     "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\3dfce16273cf15cc984310ad04f80f5f\\transformed\\material3-release\\res\\values-ka\\values-ka.xml",

@@ -13,8 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.jeevanandroid.ui.auth.LoginScreen
-import com.example.jeevanandroid.ui.auth.RegisterScreen
+import com.example.jeevanandroid.ui.auth.*
 import com.example.jeevanandroid.ui.theme.JeevanAndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +34,10 @@ class MainActivity : ComponentActivity() {
                         // Define the registration screen route
                         composable("register") {
                             RegisterScreen(navController = navController)  // Passing navController
+                        }
+                        // Define the forgot password screen route
+                        composable("forgot_password") {
+                            ForgotPasswordScreen(navController = navController)  // Passing navController
                         }
                     }
                 }

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-51:/values-or/values-or.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-52:/values-or/values-or.xml",
             "map": [
                 {
                     "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\0409dfa9fa4a3229bab57b5326e84b75\\transformed\\core-1.15.0\\res\\values-or\\values-or.xml",

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-51:/values-iw/values-iw.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-52:/values-iw/values-iw.xml",
             "map": [
                 {
                     "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\aaa82f8dc555dffabe7b2328125eb211\\transformed\\ui-release\\res\\values-iw\\values-iw.xml",

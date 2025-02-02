@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-51:/values-sk/values-sk.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-52:/values-sk/values-sk.xml",
             "map": [
                 {
                     "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\1eb8aaf35963898dba6adf96da38679d\\transformed\\foundation-release\\res\\values-sk\\values-sk.xml",

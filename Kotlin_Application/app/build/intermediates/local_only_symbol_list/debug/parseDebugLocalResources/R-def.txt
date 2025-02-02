@@ -7,6 +7,7 @@ color purple_700
 color teal_200
 color teal_700
 color white
+drawable forgot_password_bg
 drawable heart_logo
 drawable ic_launcher_background
 drawable ic_launcher_foreground
