@@ -1,36 +1,28 @@
 package com.jeevan.backend.services
 
-import com.jeevan.backend.models.Role
-import com.jeevan.backend.models.User
 import com.jeevan.backend.repositories.UserRepository
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
-class AuthService(
-    private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
-) {
+class AuthService(private val userRepository: UserRepository, private val emailService: EmailService) {
 
-    fun registerUser(email: String, password: String, role: Role): String {
-        if (userRepository.existsByEmail(email)) {
-            return "User already exists!"
-        }
-        val hashedPassword = passwordEncoder.encode(password)
-        val user = User(email = email, password = hashedPassword, role = role)
-        userRepository.save(user)
-        return "User registered successfully with role: $role"
-    }
+    fun forgotPassword(email: String): ResponseEntity<String> {
+        val user = userRepository.findByEmail(email)
 
-
-    fun loginUser(email: String, password: String): String {
-        val user: Optional<User> = userRepository.findByEmail(email)
-
-        if (user.isEmpty || !passwordEncoder.matches(password, user.get().password)) {
-            return "Invalid email or password!"
+        if (user.isEmpty) {
+            return ResponseEntity.badRequest().body("User not found")
         }
 
-        return "Login successful! Welcome, ${user.get().email}. Role: ${user.get().role}"
+        val resetToken = UUID.randomUUID().toString()
+
+        // Here, you should save the token in the database (implement token storage logic)
+        println("Generated Reset Token: $resetToken for user: ${user.get().email}")
+
+        // Send Reset Email
+        emailService.sendResetEmail(email, resetToken)
+
+        return ResponseEntity.ok("Password reset email sent")
     }
 }

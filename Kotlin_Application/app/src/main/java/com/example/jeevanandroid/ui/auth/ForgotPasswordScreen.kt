@@ -120,6 +120,7 @@ fun ForgotPasswordScreen(navController: NavController) {
                 Text("Reset Password", fontSize = 20.sp)
             }
 
+
             Spacer(modifier = Modifier.height(50.dp))
 
             // Navigate to the Login screen
