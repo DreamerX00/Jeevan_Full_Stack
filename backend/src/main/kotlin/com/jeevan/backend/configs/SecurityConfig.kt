@@ -1,5 +1,7 @@
 package com.jeevan.backend.configs
 
+import com.jeevan.backend.security.JwtFilter
+import com.jeevan.backend.security.JwtUtil
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -7,10 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(private val jwtUtil: JwtUtil) {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -22,6 +25,7 @@ class SecurityConfig {
                 it.requestMatchers("/api/user/**").hasAuthority("USER")//Only Users Can Access
                 it.anyRequest().authenticated() // Secure all other endpoints
             }
+            .addFilterBefore(JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter::class.java) // Add JWT filter
             .formLogin { it.disable() } // Disable default form login
             .httpBasic { it.disable() } // Disable basic authentication
             .sessionManagement { it.disable() } // Make API stateless
@@ -31,6 +35,6 @@ class SecurityConfig {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder() // Use BCrypt for password hashing
+        return BCryptPasswordEncoder()
     }
 }

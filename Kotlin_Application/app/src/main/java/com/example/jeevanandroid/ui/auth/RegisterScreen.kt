@@ -9,15 +9,34 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -25,19 +44,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.jeevanandroid.R
 import com.example.jeevanandroid.ui.theme.JeevanAndroidTheme
+import com.example.jeevanandroid.utils.PrefsManager
+import com.example.jeevanandroid.viewmodel.AuthViewModel
+import com.example.jeevanandroid.viewmodel.AuthViewModelFactory
 
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var reEnterPassword by remember { mutableStateOf("") }
@@ -45,6 +68,9 @@ fun RegisterScreen(navController: NavController) {
     var visible by remember { mutableStateOf(true) }
     var passwordVisible by remember { mutableStateOf(false) }
     var reEnterPasswordVisible by remember { mutableStateOf(false) }
+    val prefsManager = PrefsManager(context)
+    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(prefsManager))
+    val authResponse by authViewModel.authResponse.observeAsState()
 
     // Validation states
     var emailError by remember { mutableStateOf(false) }
@@ -74,13 +100,23 @@ fun RegisterScreen(navController: NavController) {
         ) {
             AnimatedVisibility(
                 visible = visible,
-                enter = slideInVertically(initialOffsetY = { -40 }, animationSpec = tween(durationMillis = 500)) + fadeIn(animationSpec = tween(durationMillis = 500)),
-                exit = slideOutVertically(targetOffsetY = { 40 }, animationSpec = tween(durationMillis = 500)) + shrinkOut(animationSpec = tween(durationMillis = 500))
+                enter = slideInVertically(
+                    initialOffsetY = { -40 },
+                    animationSpec = tween(durationMillis = 500)
+                ) + fadeIn(animationSpec = tween(durationMillis = 500)),
+                exit = slideOutVertically(
+                    targetOffsetY = { 40 },
+                    animationSpec = tween(durationMillis = 500)
+                ) + shrinkOut(animationSpec = tween(durationMillis = 500))
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     // Logo Image
                     val logo = painterResource(id = R.drawable.heart_logo)
-                    Image(painter = logo, contentDescription = "App Logo", modifier = Modifier.size(200.dp))
+                    Image(
+                        painter = logo,
+                        contentDescription = "App Logo",
+                        modifier = Modifier.size(200.dp)
+                    )
 
                     Spacer(modifier = Modifier.height(5.dp))
 
@@ -144,7 +180,8 @@ fun RegisterScreen(navController: NavController) {
                                 value = password,
                                 onValueChange = {
                                     password = it
-                                    passwordError = it.length < 8 || !it.any { char -> char.isDigit() } || !it.any { char -> !char.isLetterOrDigit() }
+                                    passwordError =
+                                        it.length < 8 || !it.any { char -> char.isDigit() } || !it.any { char -> !char.isLetterOrDigit() }
                                 },
                                 modifier = Modifier
                                     .weight(1f)
@@ -157,7 +194,11 @@ fun RegisterScreen(navController: NavController) {
                                 )
                             ) { innerTextField ->
                                 if (password.isEmpty()) {
-                                    Text(text = "PASSWORD", color = Color(0xFF484C4C), fontSize = 12.sp)
+                                    Text(
+                                        text = "PASSWORD",
+                                        color = Color(0xFF484C4C),
+                                        fontSize = 12.sp
+                                    )
                                 }
                                 innerTextField()
                             }
@@ -177,7 +218,11 @@ fun RegisterScreen(navController: NavController) {
                         )
                     }
                     if (passwordError) {
-                        Text(text = "Contain Character And Symbols (maximum 8 character)", color = Color.Red, fontSize = 10.sp)
+                        Text(
+                            text = "Contain Character And Symbols (maximum 8 character)",
+                            color = Color.Red,
+                            fontSize = 10.sp
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -206,11 +251,17 @@ fun RegisterScreen(navController: NavController) {
                                 )
                             ) { innerTextField ->
                                 if (reEnterPassword.isEmpty()) {
-                                    Text(text = "RE-ENTER PASSWORD", color = Color(0xFF484C4C), fontSize = 12.sp)
+                                    Text(
+                                        text = "RE-ENTER PASSWORD",
+                                        color = Color(0xFF484C4C),
+                                        fontSize = 12.sp
+                                    )
                                 }
                                 innerTextField()
                             }
-                            IconButton(onClick = { reEnterPasswordVisible = !reEnterPasswordVisible }) {
+                            IconButton(onClick = {
+                                reEnterPasswordVisible = !reEnterPasswordVisible
+                            }) {
                                 Icon(
                                     imageVector = if (reEnterPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                                     contentDescription = "Toggle Re-enter Password Visibility"
@@ -234,11 +285,13 @@ fun RegisterScreen(navController: NavController) {
                     // Register Button
                     Button(
                         onClick = {
+                            authViewModel.register(email, password)
                             // Handle registration logic here
                             if (!emailError && !passwordError && !reEnterPasswordError) {
                                 Toast.makeText(context, "Registered", Toast.LENGTH_SHORT).show()
                             } else {
-                                Toast.makeText(context, "Please fix the errors", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Please fix the errors", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         },
                         modifier = Modifier
@@ -254,6 +307,15 @@ fun RegisterScreen(navController: NavController) {
                     }
 
                     Spacer(modifier = Modifier.height(70.dp))
+                    authResponse?.message?.let { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
+                        Text(
+                            text = message,
+                            color = if (message.contains("sent")) Color.Green else Color.Red,
+                            fontSize = 14.sp
+                        )
+                    }
 
                     // Navigate to the Login screen
                     Text("Already have an account?", color = Color(0xFF08BAED))
