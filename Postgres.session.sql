@@ -1,4 +1,1 @@
-
-drop table users
-
-
+SELECT * FROM users
