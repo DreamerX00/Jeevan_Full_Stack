@@ -2,6 +2,9 @@ package com.example.jeevanandroid.ui.auth
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.shrinkOut
@@ -9,6 +12,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,10 +45,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -72,6 +80,21 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(prefsManager))
     val authResponse by authViewModel.authResponse.observeAsState()
 
+    // Floating Label Effect for Email
+    val isEmailFocused = remember { mutableStateOf(false) }
+    val emailLabelYPosition by animateDpAsState(if (isEmailFocused.value || email.isNotEmpty()) 0.dp else 16.dp)
+    val emailLabelFontSize by animateFloatAsState(if (isEmailFocused.value || email.isNotEmpty()) 12f else 16f) // Updated to use Float
+
+    // Floating Label Effect for Password
+    val isPasswordFocused = remember { mutableStateOf(false) }
+    val passwordLabelYPosition by animateDpAsState(if (isPasswordFocused.value || password.isNotEmpty()) 0.dp else 16.dp)
+    val passwordLabelFontSize by animateFloatAsState(if (isPasswordFocused.value || password.isNotEmpty()) 12f else 16f) // Updated to use Float
+
+    // Floating Label Effect for Re-enter Password
+    val isReEnterPasswordFocused = remember { mutableStateOf(false) }
+    val reEnterPasswordLabelYPosition by animateDpAsState(if (isReEnterPasswordFocused.value || reEnterPassword.isNotEmpty()) 0.dp else 16.dp)
+    val reEnterPasswordLabelFontSize by animateFloatAsState(if (isReEnterPasswordFocused.value || reEnterPassword.isNotEmpty()) 12f else 16f) // Updated to use Float
+
     // Validation states
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
@@ -80,6 +103,13 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    isEmailFocused.value = false
+                    isPasswordFocused.value = false
+                    isReEnterPasswordFocused.value = false
+                })
+            }
     ) {
         // Background Image
         Image(
@@ -129,10 +159,25 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
 
                     Spacer(Modifier.height(12.dp))
 
-                    // Email Field with Underline and Validation
+                    // Email Field with Floating Label
                     Box(
                         modifier = Modifier
-                            .height(40.dp)
+                            .height(20.dp)
+                            .width(220.dp)
+                    ) {
+                    Text(
+                        text = "EMAIL",
+                        color = Color(0xFF484C4C),
+                        fontSize = emailLabelFontSize.sp, // Updated to use sp extension function
+                        modifier = Modifier
+                            .padding(start = 2.dp)
+                            .offset(y = emailLabelYPosition)
+                            .animateContentSize()
+                    )
+                        }
+                    Box(
+                        modifier = Modifier
+                            .height(20.dp)
                             .width(220.dp)
                     ) {
                         BasicTextField(
@@ -143,36 +188,56 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .onFocusChanged {
+                                    isEmailFocused.value = it.isFocused
+                                }
                                 .background(Color.Transparent)
-                                .padding(bottom = 4.dp),
+                                .padding(bottom = 2.dp), // Adjusted padding
                             singleLine = true,
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Email
+                            ),
+                            textStyle = TextStyle(
+                                color = if (emailError) Color.Red else Color.Black,
+                                fontSize = 16.sp
                             )
-                        ) {
-                            if (email.isEmpty()) {
-                                Text(text = "EMAIL", color = Color(0xFF484C4C), fontSize = 12.sp)
-                            }
-                            Text(text = email, color = if (emailError) Color.Red else Color.Black)
-                        }
+                        )
+
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .background(if (emailError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
-                        )
+                        ){
+                            if (emailError) {
+                                Text(text = "Invalid email address", color = Color.Red, fontSize = 12.sp)
+                            }
+                        }
                     }
-                    if (emailError) {
-                        Text(text = "Invalid email address", color = Color.Red, fontSize = 12.sp)
-                    }
+
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Password Field with Eye Icon and Validation
+                    // Password Field with Floating Label
                     Box(
                         modifier = Modifier
-                            .height(40.dp)
+                            .height(20.dp)
+                            .width(220.dp)
+                    ) {
+                        Text(
+                            text = "PASSWORD",
+                            color = Color(0xFF484C4C),
+                            fontSize = passwordLabelFontSize.sp, // Updated to use sp extension function
+                            modifier = Modifier
+                                .padding(start = 2.dp)
+                                .offset(y = passwordLabelYPosition)
+                                .animateContentSize()
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .height(20.dp)
                             .width(220.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -180,28 +245,26 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                 value = password,
                                 onValueChange = {
                                     password = it
-                                    passwordError =
-                                        it.length < 8 || !it.any { char -> char.isDigit() } || !it.any { char -> !char.isLetterOrDigit() }
+                                    passwordError = it.length < 8 || !it.any { char -> char.isDigit() } || !it.any { char -> !char.isLetterOrDigit() }
                                 },
                                 modifier = Modifier
                                     .weight(1f)
+                                    .onFocusChanged {
+                                        isPasswordFocused.value = it.isFocused
+                                    }
                                     .background(Color.Transparent)
-                                    .padding(bottom = 4.dp),
+                                    .padding(bottom = 2.dp),
                                 singleLine = true,
                                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                 keyboardOptions = KeyboardOptions.Default.copy(
                                     keyboardType = KeyboardType.Password
+                                ),
+                                textStyle = TextStyle(
+                                    color = if (passwordError) Color.Red else Color.Black,
+                                    fontSize = 16.sp
                                 )
-                            ) { innerTextField ->
-                                if (password.isEmpty()) {
-                                    Text(
-                                        text = "PASSWORD",
-                                        color = Color(0xFF484C4C),
-                                        fontSize = 12.sp
-                                    )
-                                }
-                                innerTextField()
-                            }
+                            )
+
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
                                     imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
@@ -209,28 +272,47 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                 )
                             }
                         }
+
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .background(if (passwordError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
-                        )
+                        ){
+                            if (passwordError) {
+                                Text(
+                                    text = "Contain Character And Symbols (maximum 8 character)",
+                                    color = Color.Red,
+                                    fontSize = 10.sp
+                                )
+                            }
+                        }
                     }
-                    if (passwordError) {
-                        Text(
-                            text = "Contain Character And Symbols (maximum 8 character)",
-                            color = Color.Red,
-                            fontSize = 10.sp
-                        )
-                    }
+
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Re-enter Password Field with Eye Icon and Validation
+                    // Re-enter Password Field with Floating Label
                     Box(
                         modifier = Modifier
-                            .height(40.dp)
+                            .height(20.dp)
+                            .width(220.dp)
+                    )
+                    {
+                        Text(
+                            text = "RE-ENTER PASSWORD",
+                            color = Color(0xFF484C4C),
+                            fontSize = reEnterPasswordLabelFontSize.sp, // Updated to use sp extension function
+                            modifier = Modifier
+                                .padding(start = 2.dp)
+                                .offset(y = reEnterPasswordLabelYPosition)
+                                .animateContentSize()
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .height(20.dp)
                             .width(220.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -242,23 +324,21 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                 },
                                 modifier = Modifier
                                     .weight(1f)
+                                    .onFocusChanged {
+                                        isReEnterPasswordFocused.value = it.isFocused
+                                    }
                                     .background(Color.Transparent)
-                                    .padding(bottom = 4.dp),
+                                    .padding(bottom = 2.dp),
                                 singleLine = true,
                                 visualTransformation = if (reEnterPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                 keyboardOptions = KeyboardOptions.Default.copy(
                                     keyboardType = KeyboardType.Password
+                                ),
+                                textStyle = TextStyle(
+                                    color = if (reEnterPasswordError) Color.Red else Color.Black,
+                                    fontSize = 16.sp
                                 )
-                            ) { innerTextField ->
-                                if (reEnterPassword.isEmpty()) {
-                                    Text(
-                                        text = "RE-ENTER PASSWORD",
-                                        color = Color(0xFF484C4C),
-                                        fontSize = 12.sp
-                                    )
-                                }
-                                innerTextField()
-                            }
+                            )
                             IconButton(onClick = {
                                 reEnterPasswordVisible = !reEnterPasswordVisible
                             }) {
@@ -268,17 +348,21 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                 )
                             }
                         }
+
+
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .background(if (reEnterPasswordError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
-                        )
+                        ){
+                            if (reEnterPasswordError) {
+                                Text(text = "Passwords do not match", color = Color.Red, fontSize = 12.sp)
+                            }
+                        }
                     }
-                    if (reEnterPasswordError) {
-                        Text(text = "Passwords do not match", color = Color.Red, fontSize = 12.sp)
-                    }
+
 
                     Spacer(modifier = Modifier.height(25.dp))
 
