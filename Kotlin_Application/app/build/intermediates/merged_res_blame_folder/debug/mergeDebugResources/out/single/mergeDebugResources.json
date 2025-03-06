@@ -1,11 +1,15 @@
 [
     {
+        "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\drawable_vaccination.png.flat",
+        "source": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-main-59:\\drawable\\vaccination.png"
+    },
+    {
         "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\drawable_registration_back.jpg.flat",
         "source": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-main-59:\\drawable\\registration_back.jpg"
     },
     {
-        "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\drawable_vaccination.png.flat",
-        "source": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-main-59:\\drawable\\vaccination.png"
+        "merged": "com.example.jeevanandroid.app-debug-57:/drawable_ic_dustbin.png.flat",
+        "source": "com.example.jeevanandroid.app-main-59:/drawable/ic_dustbin.png"
     },
     {
         "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\drawable_forgot_password_bg.jpg.flat",
@@ -20,12 +24,12 @@
         "source": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-main-59:\\mipmap-mdpi\\ic_launcher.webp"
     },
     {
-        "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-main-59:\\mipmap-hdpi\\ic_launcher_round.webp"
-    },
-    {
         "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\drawable_hospital_icon.png.flat",
         "source": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-main-59:\\drawable\\hospital_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-main-59:\\mipmap-hdpi\\ic_launcher_round.webp"
     },
     {
         "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\xml_data_extraction_rules.xml.flat",
@@ -58,10 +62,6 @@
     {
         "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
         "source": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-main-59:\\mipmap-xxhdpi\\ic_launcher_round.webp"
-    },
-    {
-        "merged": "com.example.jeevanandroid.app-debug-57:/drawable_appointment.png.flat",
-        "source": "com.example.jeevanandroid.app-main-59:/drawable/appointment.png"
     },
     {
         "merged": "C:\\Users\\akash\\.gradle\\daemon\\8.11.1\\com.example.jeevanandroid.app-debug-57:\\drawable_shield_logo.png.flat",

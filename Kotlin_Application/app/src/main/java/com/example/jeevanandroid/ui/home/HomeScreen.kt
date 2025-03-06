@@ -21,16 +21,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -43,6 +46,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -68,6 +72,20 @@ fun HomeScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var showNotifications by remember { mutableStateOf(false) }
+
+    val notifications = remember {
+        mutableStateListOf(
+            Notification("Your appointment is confirmed for tomorrow.", false),
+            Notification("New medicine is available in the shop.", false),
+            Notification("Your recent test results are ready.", true) // Example of a read notification
+        )
+    }
+
+    // Function to mark a notification as read
+    fun markNotificationAsRead(index: Int) {
+        notifications[index] = notifications[index].copy(read = true)
+    }
 
     // Navigation Drawer Content
     ModalNavigationDrawer(
@@ -163,6 +181,7 @@ fun HomeScreen(navController: NavController) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             IconButton(onClick = {
+                                showNotifications = true
                                 Toast.makeText(context, "Notifications", Toast.LENGTH_SHORT).show()
                             }) {
                                 Icon(
@@ -263,6 +282,104 @@ fun HomeScreen(navController: NavController) {
 
                     RecommendationSection(navController)
                 }
+            }
+            if (showNotifications) {
+                NotificationPopup(
+                    notifications = notifications,
+                    onClose = { showNotifications = false },
+                    onMarkAsRead = { index -> markNotificationAsRead(index) }
+                )
+            }
+        }
+    }
+}
+data class Notification(
+    val message: String,
+    val read: Boolean
+)
+
+@Composable
+fun NotificationPopup(
+    notifications: List<Notification>,
+    onClose: () -> Unit,
+    onMarkAsRead: (Int) -> Unit // Callback to mark a notification as read
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f)) // Semi-transparent background
+            .clickable { onClose() }, // Close pop-up when clicking outside
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(0.8f) // 80% of screen width
+                .padding(16.dp)
+                .background(Color.White, RoundedCornerShape(16.dp)) // White background with rounded corners
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (notifications.isEmpty()) {
+                // Show dustbin icon if no notifications
+                Icon(
+                    imageVector = Icons.Default.Delete, // Fallback icon
+                    contentDescription = "No Notifications",
+                    modifier = Modifier.size(48.dp),
+                    tint = Color.Gray
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "No Notifications",
+                    fontSize = 18.sp,
+                    color = Color.Gray
+                )
+            } else {
+                // Scrollable notification list
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 400.dp) // Maximum height for the scrollable area
+                        .padding(8.dp)
+                ) {
+                    items(notifications.size) { index ->
+                        val notification = notifications[index]
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    if (notification.read) Color.Gray else Color(0xFFFF5656), // White for read, dark for unread
+                                    RoundedCornerShape(8.dp)
+                                )
+                                .clickable {
+                                    onMarkAsRead(index) // Mark the notification as read when clicked
+                                }
+                                .padding(12.dp)
+                        ) {
+                            Text(
+                                text = notification.message,
+                                fontSize = 16.sp,
+                                color = if (notification.read) Color.Black else Color.White, // White text for unread, black for read
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Close Button
+            Button(
+                onClick = onClose,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF08BAED), // Medical-themed blue color
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Close", fontSize = 16.sp)
             }
         }
     }
