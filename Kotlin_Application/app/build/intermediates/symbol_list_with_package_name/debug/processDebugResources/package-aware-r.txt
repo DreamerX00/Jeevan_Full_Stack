@@ -76,8 +76,12 @@ dimen notification_small_icon_size_as_large
 dimen notification_subtext_size
 dimen notification_top_pad
 dimen notification_top_pad_large_text
+drawable appointment
+drawable cart
+drawable diagnose
 drawable forgot_password_bg
 drawable heart_logo
+drawable hospital_icon
 drawable ic_call_answer
 drawable ic_call_answer_low
 drawable ic_call_answer_video
@@ -86,7 +90,9 @@ drawable ic_call_decline
 drawable ic_call_decline_low
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable imagenotfound
 drawable login_back
+drawable medical_kit
 drawable notification_action_background
 drawable notification_bg
 drawable notification_bg_low
@@ -100,8 +106,13 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable pharamcy_icon
+drawable profile_placeholder
 drawable registration_back
 drawable shield_logo
+drawable shop
+drawable symptoms
+drawable vaccination
 id accessibility_action_clickable_span
 id accessibility_custom_action_0
 id accessibility_custom_action_1

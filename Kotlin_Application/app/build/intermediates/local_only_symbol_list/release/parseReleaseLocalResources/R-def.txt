@@ -7,9 +7,13 @@ color purple_700
 color teal_200
 color teal_700
 color white
+drawable forgot_password_bg
 drawable heart_logo
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable login_back
+drawable profile_placeholder
+drawable registration_back
 drawable shield_logo
 mipmap ic_launcher
 mipmap ic_launcher_round

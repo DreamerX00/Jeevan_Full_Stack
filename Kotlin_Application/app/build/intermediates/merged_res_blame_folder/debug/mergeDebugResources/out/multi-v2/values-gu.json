@@ -4,7 +4,24 @@
             "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-55:/values-gu/values-gu.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\656bdad62ce2e86ac770c3f2783eb793\\transformed\\core-1.15.0\\res\\values-gu\\values-gu.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\43c88073670b1a22a2fbc974a253aae9\\transformed\\foundation-release\\res\\values-gu\\values-gu.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,140",
+                        "endColumns": "84,84",
+                        "endOffsets": "135,220"
+                    },
+                    "to": {
+                        "startLines": "84,85",
+                        "startColumns": "4,4",
+                        "startOffsets": "8592,8677",
+                        "endColumns": "84,84",
+                        "endOffsets": "8672,8757"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\cda7a64575b459ecae6c420e70f23c20\\transformed\\core-1.15.0\\res\\values-gu\\values-gu.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -21,24 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\9c3ec49f43d14fceedd20f8dff13989d\\transformed\\ui-release\\res\\values-gu\\values-gu.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,197,279,372,471,558,644,745,832,918,1001,1084,1159,1234,1309,1384,1460,1526",
-                        "endColumns": "91,81,92,98,86,85,100,86,85,82,82,74,74,74,74,75,65,115",
-                        "endOffsets": "192,274,367,466,553,639,740,827,913,996,1079,1154,1229,1304,1379,1455,1521,1637"
-                    },
-                    "to": {
-                        "startLines": "9,10,11,12,13,14,15,72,73,74,75,76,77,78,79,81,82,83",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "823,915,997,1090,1189,1276,1362,7594,7681,7767,7850,7933,8008,8083,8158,8334,8410,8476",
-                        "endColumns": "91,81,92,98,86,85,100,86,85,82,82,74,74,74,74,75,65,115",
-                        "endOffsets": "910,992,1085,1184,1271,1357,1458,7676,7762,7845,7928,8003,8078,8153,8228,8405,8471,8587"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\4e80e8d46635cedd5db187f21e00c5c4\\transformed\\material3-release\\res\\values-gu\\values-gu.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\c1769ca092e1174166f3f570dfa13c55\\transformed\\material3-release\\res\\values-gu\\values-gu.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -55,20 +55,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\607b8aecc94de673aa0509854d66fe0b\\transformed\\foundation-release\\res\\values-gu\\values-gu.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\024b8988645c4ad8fa1038db3ef6c63c\\transformed\\ui-release\\res\\values-gu\\values-gu.xml",
                     "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,140",
-                        "endColumns": "84,84",
-                        "endOffsets": "135,220"
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,197,279,372,471,558,644,745,832,918,1001,1084,1159,1234,1309,1384,1460,1526",
+                        "endColumns": "91,81,92,98,86,85,100,86,85,82,82,74,74,74,74,75,65,115",
+                        "endOffsets": "192,274,367,466,553,639,740,827,913,996,1079,1154,1229,1304,1379,1455,1521,1637"
                     },
                     "to": {
-                        "startLines": "84,85",
-                        "startColumns": "4,4",
-                        "startOffsets": "8592,8677",
-                        "endColumns": "84,84",
-                        "endOffsets": "8672,8757"
+                        "startLines": "9,10,11,12,13,14,15,72,73,74,75,76,77,78,79,81,82,83",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "823,915,997,1090,1189,1276,1362,7594,7681,7767,7850,7933,8008,8083,8158,8334,8410,8476",
+                        "endColumns": "91,81,92,98,86,85,100,86,85,82,82,74,74,74,74,75,65,115",
+                        "endOffsets": "910,992,1085,1184,1271,1357,1458,7676,7762,7845,7928,8003,8078,8153,8228,8405,8471,8587"
                     }
                 }
             ]

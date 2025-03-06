@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-39:/values-sk/values-sk.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-51:/values-sk/values-sk.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\d223efed7c9b71e5170a4e85d2ac6918\\transformed\\ui-release\\res\\values-sk\\values-sk.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,200,284,379,482,574,653,747,837,918,987,1056,1139,1226,1298,1376,1444",
-                        "endColumns": "94,83,94,102,91,78,93,89,80,68,68,82,86,71,77,67,113",
-                        "endOffsets": "195,279,374,477,569,648,742,832,913,982,1051,1134,1221,1293,1371,1439,1553"
-                    },
-                    "to": {
-                        "startLines": "9,10,11,12,13,14,15,72,73,74,75,76,77,78,80,81,82",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "842,937,1021,1116,1219,1311,1390,7563,7653,7734,7803,7872,7955,8042,8215,8293,8361",
-                        "endColumns": "94,83,94,102,91,78,93,89,80,68,68,82,86,71,77,67,113",
-                        "endOffsets": "932,1016,1111,1214,1306,1385,1479,7648,7729,7798,7867,7950,8037,8109,8288,8356,8470"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\a575f2fdfb28ee7d8146806f00191903\\transformed\\foundation-release\\res\\values-sk\\values-sk.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\43c88073670b1a22a2fbc974a253aae9\\transformed\\foundation-release\\res\\values-sk\\values-sk.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -30,15 +13,15 @@
                         "endOffsets": "134,221"
                     },
                     "to": {
-                        "startLines": "83,84",
+                        "startLines": "84,85",
                         "startColumns": "4,4",
-                        "startOffsets": "8475,8559",
+                        "startOffsets": "8566,8650",
                         "endColumns": "83,86",
-                        "endOffsets": "8554,8641"
+                        "endOffsets": "8645,8732"
                     }
                 },
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\f98ee3d67031989130b5c72a257577d6\\transformed\\core-1.15.0\\res\\values-sk\\values-sk.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\cda7a64575b459ecae6c420e70f23c20\\transformed\\core-1.15.0\\res\\values-sk\\values-sk.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -47,15 +30,32 @@
                         "endOffsets": "146,248,349,447,557,665,787,888"
                     },
                     "to": {
-                        "startLines": "2,3,4,5,6,7,8,79",
+                        "startLines": "2,3,4,5,6,7,8,80",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,201,303,404,502,612,720,8114",
+                        "startOffsets": "105,201,303,404,502,612,720,8205",
                         "endColumns": "95,101,100,97,109,107,121,100",
-                        "endOffsets": "196,298,399,497,607,715,837,8210"
+                        "endOffsets": "196,298,399,497,607,715,837,8301"
                     }
                 },
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.10.2\\transforms\\3bdae484d8629b91b71d2a8e711d605e\\transformed\\material3-release\\res\\values-sk\\values-sk.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\024b8988645c4ad8fa1038db3ef6c63c\\transformed\\ui-release\\res\\values-sk\\values-sk.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,200,284,379,482,574,653,747,837,918,1001,1088,1160,1238,1314,1389,1467,1535",
+                        "endColumns": "94,83,94,102,91,78,93,89,80,82,86,71,77,75,74,77,67,113",
+                        "endOffsets": "195,279,374,477,569,648,742,832,913,996,1083,1155,1233,1309,1384,1462,1530,1644"
+                    },
+                    "to": {
+                        "startLines": "9,10,11,12,13,14,15,72,73,74,75,76,77,78,79,81,82,83",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "842,937,1021,1116,1219,1311,1390,7563,7653,7734,7817,7904,7976,8054,8130,8306,8384,8452",
+                        "endColumns": "94,83,94,102,91,78,93,89,80,82,86,71,77,75,74,77,67,113",
+                        "endOffsets": "932,1016,1111,1214,1306,1385,1479,7648,7729,7812,7899,7971,8049,8125,8200,8379,8447,8561"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\c1769ca092e1174166f3f570dfa13c55\\transformed\\material3-release\\res\\values-sk\\values-sk.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

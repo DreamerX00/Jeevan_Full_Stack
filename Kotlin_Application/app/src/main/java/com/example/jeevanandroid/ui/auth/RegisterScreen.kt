@@ -209,10 +209,19 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                 .background(if (emailError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
-                        ){
-                            if (emailError) {
-                                Text(text = "Invalid email address", color = Color.Red, fontSize = 12.sp)
-                            }
+                        )
+                    }
+                    if (emailError) {
+                        Box(
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(220.dp)
+                        ) {
+                            Text(
+                                text = "Invalid email address",
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
                         }
                     }
 
@@ -279,14 +288,19 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                 .background(if (passwordError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
-                        ){
-                            if (passwordError) {
-                                Text(
-                                    text = "Contain Character And Symbols (maximum 8 character)",
-                                    color = Color.Red,
-                                    fontSize = 10.sp
-                                )
-                            }
+                        )
+                    }
+                    if (passwordError) {
+                        Box(
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(220.dp)
+                        ) {
+                            Text(
+                                text = "Invalid email address",
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
                         }
                     }
 
@@ -349,19 +363,28 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                             }
                         }
 
-
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .background(if (reEnterPasswordError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
-                        ){
-                            if (reEnterPasswordError) {
-                                Text(text = "Passwords do not match", color = Color.Red, fontSize = 12.sp)
-                            }
+                        )
+                    }
+                    if (reEnterPasswordError) {
+                        Box(
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(220.dp)
+                        ) {
+                            Text(
+                                text = "Passwords do not match",
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
                         }
                     }
+
 
 
                     Spacer(modifier = Modifier.height(25.dp))

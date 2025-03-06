@@ -165,7 +165,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                                     isEmailFocused.value = it.isFocused
                                 }
                                 .background(Color.Transparent)
-                                .padding(bottom = 2.dp), // Adjusted padding
+                                .padding(bottom = 2.dp),
                             singleLine = true,
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Email
@@ -182,18 +182,25 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                                 .background(if (emailError) Color.Red else Color.Gray)
                                 .height(1.dp)
                                 .fillMaxWidth()
-                        ){
-                            if (emailError) {
-                                Text(text = "Invalid email address", color = Color.Red, fontSize = 12.sp)
-                            }
-                        }
-
+                        )
                     }
-
+                    if (emailError) {
+                        Box(
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(220.dp)
+                        ) {
+                            Text(
+                                text = "Invalid email address",
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    // Password Field with Floating Label
+// Password Field with Floating Label
                     Box(
                         modifier = Modifier
                             .height(20.dp)
@@ -239,8 +246,6 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                                 )
                             )
 
-
-
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
                                     imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
@@ -258,12 +263,22 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                         )
                     }
                     if (passwordError) {
-                        Text(text = "Password Must Contain Symbols And Characters", color = Color.Red, fontSize = 12.sp)
+                        Box(
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(220.dp)
+                        ) {
+                            Text(
+                                text = "Password Must Contain Symbols And Characters",
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Login Button
+// Login Button
                     Button(
                         onClick = {
                             if (!emailError && !passwordError) {
@@ -272,6 +287,10 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                             } else {
                                 Toast.makeText(context, "Please fix the errors", Toast.LENGTH_SHORT).show()
                             }
+
+                                visible = !visible
+                                navController.navigate("home_screen")
+
                         },
                         modifier = Modifier
                             .width(180.dp)
@@ -284,6 +303,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                     ) {
                         Text("Log in", fontSize = 20.sp)
                     }
+
 
                     Spacer(modifier = Modifier.height(10.dp))
 

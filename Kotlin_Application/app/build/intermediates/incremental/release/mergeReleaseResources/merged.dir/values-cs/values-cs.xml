@@ -72,11 +72,12 @@
     <string msgid="5460405025248574620" name="m3c_tooltip_pane_description">"Popisek"</string>
     <string msgid="542007171693138492" name="navigation_menu">"Navigační nabídka"</string>
     <string msgid="6610465462668679431" name="not_selected">"Nevybráno"</string>
-    <string msgid="875452955155264703" name="off">"Vypnuto"</string>
-    <string msgid="8655164131929253426" name="on">"Zapnuto"</string>
     <string msgid="5941395253238309765" name="range_end">"Konec rozsahu"</string>
     <string msgid="7097486360902471446" name="range_start">"Začátek rozsahu"</string>
     <string msgid="6043586758067023" name="selected">"Vybráno"</string>
+    <string msgid="4139871816613051306" name="state_empty">"Prázdné"</string>
+    <string msgid="5834637030682409883" name="state_off">"Vypnuto"</string>
+    <string msgid="1490883874751719580" name="state_on">"Zapnuto"</string>
     <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
     <string msgid="2561197295334830845" name="switch_role">"Přepnout"</string>
     <string msgid="1672349317127674378" name="tab">"Karta"</string>

@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.jeevanandroid.ui.auth.ForgotPasswordScreen
 import com.example.jeevanandroid.ui.auth.LoginScreen
 import com.example.jeevanandroid.ui.auth.RegisterScreen
+import com.example.jeevanandroid.ui.home.HomeScreen
 import com.example.jeevanandroid.ui.theme.JeevanAndroidTheme
 import com.example.jeevanandroid.utils.PrefsManager
 import com.example.jeevanandroid.viewmodel.AuthViewModel
@@ -49,6 +50,9 @@ class MainActivity : ComponentActivity() {
                         // Define the forgot password screen route
                         composable("forgot_password") {
                             ForgotPasswordScreen(navController = navController, authViewModel = authViewModel)  // Passing navController and authViewModel
+                        }
+                        composable("home_screen"){
+                            HomeScreen(navController = navController)
                         }
                     }
                 }
