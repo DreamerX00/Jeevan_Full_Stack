@@ -28,7 +28,7 @@ const Carousel = () => {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const goToSlide = (index) => {
     setCurrentSlide(index);
