@@ -19,6 +19,7 @@ The **Jeevan Full Stack Project** aims to develop a comprehensive medical applic
 
 ### API Technologies 🌐
 - **RESTful API** - [Learn More](https://restfulapi.net/)
+- **Spring Initializer** - (https://start.spring.io/#!type=gradle-project-kotlin&language=kotlin&platformVersion=3.4.3&packaging=jar&jvmVersion=21&groupId=com.jeevan&artifactId=backend&name=backend&description=backend%20project%20for%20jeevan&packageName=com.jeevan.backend&dependencies=web,data-jpa,postgresql,security,validation,lombok,devtools,actuator)
 
 
 
