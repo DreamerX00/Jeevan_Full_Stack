@@ -33,10 +33,12 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -392,13 +394,10 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                     // Register Button
                     Button(
                         onClick = {
-                            authViewModel.register(email, password)
-                            // Handle registration logic here
                             if (!emailError && !passwordError && !reEnterPasswordError) {
-                                Toast.makeText(context, "Registered", Toast.LENGTH_SHORT).show()
+                                authViewModel.register(email, password)
                             } else {
-                                Toast.makeText(context, "Please fix the errors", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(context, "Please fix the errors", Toast.LENGTH_SHORT).show()
                             }
                         },
                         modifier = Modifier
@@ -408,9 +407,31 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,
                             contentColor = Color(0xFF08BAED)
-                        )
+                        ),
+                        enabled = !authViewModel.isLoading.value!!
                     ) {
-                        Text("Register", fontSize = 20.sp)
+                        if (authViewModel.isLoading.value!!) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = Color(0xFF08BAED)
+                            )
+                        } else {
+                            Text("Register", fontSize = 20.sp)
+                        }
+                    }
+
+                    // Observe auth response
+                    authViewModel.authResponse.value?.let { response ->
+                        if (response.error != null) {
+                            Toast.makeText(context, response.error, Toast.LENGTH_SHORT).show()
+                        } else if (response.token != null) {
+                            LaunchedEffect(Unit) {
+                                visible = !visible
+                                navController.navigate("home_screen") {
+                                    popUpTo("register") { inclusive = true }
+                                }
+                            }
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(70.dp))

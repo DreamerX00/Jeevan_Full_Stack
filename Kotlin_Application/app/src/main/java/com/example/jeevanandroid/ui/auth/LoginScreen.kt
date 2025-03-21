@@ -34,10 +34,12 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -282,15 +284,10 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                     Button(
                         onClick = {
                             if (!emailError && !passwordError) {
-                                authViewModel.login(email, password)  // Use the AuthViewModel to log in
-                                Toast.makeText(context, "Logged In", Toast.LENGTH_SHORT).show()
+                                authViewModel.login(email, password)
                             } else {
                                 Toast.makeText(context, "Please fix the errors", Toast.LENGTH_SHORT).show()
                             }
-
-                                visible = !visible
-                                navController.navigate("home_screen")
-
                         },
                         modifier = Modifier
                             .width(180.dp)
@@ -299,11 +296,32 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,
                             contentColor = Color(0xFF08BAED)
-                        )
+                        ),
+                        enabled = !authViewModel.isLoading.value!!
                     ) {
-                        Text("Log in", fontSize = 20.sp)
+                        if (authViewModel.isLoading.value!!) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = Color(0xFF08BAED)
+                            )
+                        } else {
+                            Text("Log in", fontSize = 20.sp)
+                        }
                     }
 
+                    // Observe auth response
+                    LaunchedEffect(Unit) {
+                        authViewModel.authResponse.value?.let { response ->
+                            if (response.error != null) {
+                                Toast.makeText(context, response.error, Toast.LENGTH_SHORT).show()
+                            } else if (response.token != null) {
+                                visible = !visible
+                                navController.navigate("home_screen") {
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            }
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(10.dp))
 

@@ -27,8 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -60,20 +58,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jeevanandroid.R
 import com.example.jeevanandroid.ui.components.MedicalThemeColorChangingButton
-import com.example.jeevanandroid.utils.PrefsManager
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
-    val prefsManager = remember { PrefsManager(context) }
     var searchQuery by remember { mutableStateOf("") }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -204,57 +199,116 @@ fun HomeScreen(navController: NavController) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState()) // Make this column scrollable
+                        .weight(1f) // Take up remaining space
+                        .padding(horizontal = 8.dp)
                 ) {
-                    // Add the Dashboard component
-                    DashboardScreen(prefsManager)
-                    
-                    // Additional sections can be added here
                     Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // Example of additional content after the dashboard
-                    SpecialtiesSection(navController)
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
+
+                    // Sliding Carousel
+                    Text(
+                        text = "Offers",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    AutoSlidingCarousel(navController = navController)
+
+
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Specialities Section
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .shadow(4.dp, RoundedCornerShape(8.dp)) // Add shadow to the box
+                            .background(Color(0xFFE3F2FD), RoundedCornerShape(8.dp)) // Light blue background
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(6.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            Text(
+                                text = "Specialities",
+                                fontSize = 20.sp,
+                                color = Color(0xFF08BAED), // Medical-themed blue color
+                                modifier = Modifier.padding(8.dp)
+                            )
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            // 6 Speciality Buttons in 2 Rows
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                SpecialityButton(R.drawable.symptoms, "Symptoms")
+                                SpecialityButton(R.drawable.appointment, "Appointment")
+                                SpecialityButton(R.drawable.diagnose, "Diagnose")
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                SpecialityButton(R.drawable.cart, "Shop")
+                                SpecialityButton(R.drawable.medical_kit, "Kit")
+                                SpecialityButton(R.drawable.vaccination, "Vaccination")
+                            }
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                MedicalThemeColorChangingButton(text = "See All") {
+                                    // Handle "See All" button click
+                                }
+                            }
+                        }
+                    }
+
                     RecommendationSection(navController)
                 }
             }
-            
-            // Show notifications panel if showNotifications is true
             if (showNotifications) {
-                NotificationsPanel(
+                NotificationPopup(
                     notifications = notifications,
-                    onDismiss = { showNotifications = false },
-                    onDelete = { index ->
-                        notifications.removeAt(index)
-                    },
-                    onMarkAsRead = { index ->
-                        markNotificationAsRead(index)
-                    }
+                    onClose = { showNotifications = false },
+                    onMarkAsRead = { index -> markNotificationAsRead(index) }
                 )
             }
         }
     }
 }
-
 data class Notification(
     val message: String,
     val read: Boolean
 )
 
 @Composable
-fun NotificationsPanel(
+fun NotificationPopup(
     notifications: List<Notification>,
-    onDismiss: () -> Unit,
-    onDelete: (Int) -> Unit,
-    onMarkAsRead: (Int) -> Unit
+    onClose: () -> Unit,
+    onMarkAsRead: (Int) -> Unit // Callback to mark a notification as read
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.5f)) // Semi-transparent background
-            .clickable { onDismiss() }, // Close pop-up when clicking outside
+            .clickable { onClose() }, // Close pop-up when clicking outside
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
@@ -262,20 +316,11 @@ fun NotificationsPanel(
                 .fillMaxWidth(0.8f) // 80% of screen width
                 .padding(16.dp)
                 .background(Color.White, RoundedCornerShape(16.dp)) // White background with rounded corners
-                .padding(16.dp)
-                .clickable(enabled = false) {}, // Prevent click propagation to Box
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Notifications",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF08BAED),
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            
             if (notifications.isEmpty()) {
-                // Show message if no notifications
+                // Show dustbin icon if no notifications
                 Icon(
                     imageVector = Icons.Default.Delete, // Fallback icon
                     contentDescription = "No Notifications",
@@ -302,7 +347,7 @@ fun NotificationsPanel(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(
-                                    if (notification.read) Color(0xFFE0E0E0) else Color(0xFF08BAED).copy(alpha = 0.8f), 
+                                    if (notification.read) Color.Gray else Color(0xFFFF5656), // White for read, dark for unread
                                     RoundedCornerShape(8.dp)
                                 )
                                 .clickable {
@@ -310,27 +355,11 @@ fun NotificationsPanel(
                                 }
                                 .padding(12.dp)
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = notification.message,
-                                    fontSize = 16.sp,
-                                    color = if (notification.read) Color.Black else Color.White,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                
-                                IconButton(
-                                    onClick = { onDelete(index) }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = "Delete",
-                                        tint = if (notification.read) Color.Black else Color.White
-                                    )
-                                }
-                            }
+                            Text(
+                                text = notification.message,
+                                fontSize = 16.sp,
+                                color = if (notification.read) Color.Black else Color.White, // White text for unread, black for read
+                            )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
@@ -341,7 +370,7 @@ fun NotificationsPanel(
 
             // Close Button
             Button(
-                onClick = onDismiss,
+                onClick = onClose,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -433,63 +462,80 @@ fun DrawerContent(navController: NavController, onItemClick: () -> Unit) {
 }
 
 @Composable
-fun SpecialtiesSection(navController: NavController) {
-    // Specialties Section
+fun SpecialityButton(imageResId: Int, text: String) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .size(100.dp) // Increased size for better usability
+            .padding(4.dp)
+            .clickable {
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = imageResId),
+            contentDescription = text,
+            modifier = Modifier.size(50.dp) // Increased image size
+        )
+        Text(text = text, fontSize = 14.sp, color = Color.Black) // Increased text size
+    }
+}
+
+@Composable
+fun AutoSlidingCarousel(navController: NavController) {
+    val images = listOf(
+        R.drawable.imagenotfound,
+        R.drawable.imagenotfound,
+        R.drawable.imagenotfound,
+        R.drawable.imagenotfound,
+        R.drawable.imagenotfound,
+        R.drawable.imagenotfound,
+    )
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val offsetX by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = -images.size * 320f, // Adjust based on image width and spacing
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 40000 , easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .height(200.dp) // Increased height
+            .shadow(8.dp, RoundedCornerShape(16.dp)) // Added shadow
+            .background(Color.White, RoundedCornerShape(16.dp)) // White background with rounded corners
             .padding(8.dp)
-            .shadow(4.dp, RoundedCornerShape(8.dp)) // Add shadow to the box
-            .background(Color(0xFFE3F2FD), RoundedCornerShape(8.dp)) // Light blue background
+            .horizontalScroll(rememberScrollState())
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.Start
+                .offset(x = offsetX.dp)
+                .width((images.size * 320).dp) // Adjust width based on image count and size
+                .padding(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                text = "Specialties",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF08BAED), // Medical-themed blue color
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                SpecialtyItem("Cardiology", R.drawable.profile_placeholder)
-                SpecialtyItem("Neurology", R.drawable.profile_placeholder)
-                SpecialtyItem("Orthopedics", R.drawable.profile_placeholder)
+            images.forEach { imageResId ->
+                Image(
+                    painter = painterResource(id = imageResId),
+                    contentDescription = "Carousel Image",
+                    modifier = Modifier
+                        .size(300.dp) // Adjust image size
+                        .clickable {
+                            // Navigate to another screen or link
+                            navController.navigate("offer_detail_screen")
+                        }
+                )
             }
         }
     }
 }
 
-@Composable
-fun SpecialtyItem(name: String, iconResId: Int) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(8.dp)
-            .clickable { /* Handle click */ }
-    ) {
-        Image(
-            painter = painterResource(id = iconResId),
-            contentDescription = name,
-            modifier = Modifier
-                .size(60.dp)
-                .padding(8.dp)
-        )
-        Text(
-            text = name,
-            fontSize = 14.sp,
-            color = Color.Black
-        )
-    }
-}
 
 @Composable
 fun RecommendationSection(navController: NavController) {
@@ -507,9 +553,8 @@ fun RecommendationSection(navController: NavController) {
             Text(
                 text = "Nearby",
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
                 color = Color(0xFF08BAED), // Medical-themed blue color
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
             Row(
@@ -520,48 +565,32 @@ fun RecommendationSection(navController: NavController) {
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f)
-                        .background(Color.White, RoundedCornerShape(8.dp))
-                        .padding(16.dp)
                         .clickable { /* Navigate or perform an action */ },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.profile_placeholder),
+                        painter = painterResource(id = R.drawable.pharamcy_icon),
                         contentDescription = "Pharmacy Icon",
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(64.dp)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Pharmacy",
-                        color = Color.Black,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Text("Pharmacy", color = Color.Black)
                 }
 
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f)
-                        .background(Color.White, RoundedCornerShape(8.dp))
-                        .padding(16.dp)
                         .clickable { /* Navigate or perform an action */ },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.profile_placeholder),
+                        painter = painterResource(id = R.drawable.hospital_icon),
                         contentDescription = "Hospital Icon",
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(64.dp)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Hospitals",
-                        color = Color.Black,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Text("Hospitals", color = Color.Black)
                 }
             }
         }
