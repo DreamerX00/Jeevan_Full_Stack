@@ -18,8 +18,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -120,7 +122,6 @@ fun ForgotPasswordScreen(navController: NavController, authViewModel: AuthViewMo
                 onClick = {
                     if (!emailError) {
                         authViewModel.forgotPassword(email)
-                        Toast.makeText(context, "Password reset link sent", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(context, "Please fix the errors", Toast.LENGTH_SHORT).show()
                     }
@@ -132,21 +133,30 @@ fun ForgotPasswordScreen(navController: NavController, authViewModel: AuthViewMo
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color(0xFF08BAED)
-                )
+                ),
+                enabled = !authViewModel.isLoading.value!!
             ) {
-                Text("Reset Password", fontSize = 20.sp)
+                if (authViewModel.isLoading.value!!) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Color(0xFF08BAED)
+                    )
+                } else {
+                    Text("Reset Password", fontSize = 20.sp)
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            authResponse?.let {
-                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                it.message?.let { it1 ->
-                    Text(
-                        text = it1,
-                        color = if (it.message.contains("sent")) Color.Green else Color.Red,
-                        fontSize = 14.sp
-                    )
+            // Observe auth response
+            authResponse?.let { response ->
+                if (response.error != null) {
+                    Toast.makeText(context, response.error, Toast.LENGTH_SHORT).show()
+                } else if (response.message != null) {
+                    Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                    LaunchedEffect(Unit) {
+                        navController.popBackStack()
+                    }
                 }
             }
 

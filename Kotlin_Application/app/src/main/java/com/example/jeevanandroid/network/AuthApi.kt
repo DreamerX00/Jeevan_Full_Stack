@@ -1,8 +1,9 @@
 package com.example.jeevanandroid.network
 
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
-import com.example.jeevanandroid.utils.PrefsManager
 
 // Define API endpoints for authentication
 interface AuthApi {
@@ -15,16 +16,16 @@ interface AuthApi {
     @POST("api/auth/forgot-password")
     suspend fun forgotPassword(@Body request: ForgotPasswordRequest): AuthResponse
 
-    @POST("api/auth/reset-password")
-    suspend fun resetPassword(@Body request: ResetPasswordRequest): AuthResponse
-
     companion object {
         private var retrofitService: AuthApi? = null
 
         fun getInstance(): AuthApi {
             if (retrofitService == null) {
-                retrofitService = RetrofitClient.createClient()
-                    .create(AuthApi::class.java)
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("http://10.0.2.2:8080/") // Updated base URL for Android emulator
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                retrofitService = retrofit.create(AuthApi::class.java)
             }
             return retrofitService!!
         }
@@ -46,9 +47,4 @@ data class AuthResponse(
 
 data class ForgotPasswordRequest(
     val email: String
-)
-
-data class ResetPasswordRequest(
-    val token: String,
-    val password: String
 )

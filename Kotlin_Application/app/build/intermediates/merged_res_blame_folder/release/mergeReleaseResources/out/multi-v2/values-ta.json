@@ -4,7 +4,7 @@
             "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-51:/values-ta/values-ta.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\024b8988645c4ad8fa1038db3ef6c63c\\transformed\\ui-release\\res\\values-ta\\values-ta.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\1234a5318ac8ae212f0955bc80485f0c\\transformed\\ui-release\\res\\values-ta\\values-ta.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\cda7a64575b459ecae6c420e70f23c20\\transformed\\core-1.15.0\\res\\values-ta\\values-ta.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\12372ec76eccb7d5b87a6877a2c698d3\\transformed\\core-1.15.0\\res\\values-ta\\values-ta.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -38,24 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\43c88073670b1a22a2fbc974a253aae9\\transformed\\foundation-release\\res\\values-ta\\values-ta.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,148",
-                        "endColumns": "92,97",
-                        "endOffsets": "143,241"
-                    },
-                    "to": {
-                        "startLines": "84,85",
-                        "startColumns": "4,4",
-                        "startOffsets": "9015,9108",
-                        "endColumns": "92,97",
-                        "endOffsets": "9103,9201"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\c1769ca092e1174166f3f570dfa13c55\\transformed\\material3-release\\res\\values-ta\\values-ta.xml",
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\925d5715590ac3d4a3439e0c77284f33\\transformed\\material3-release\\res\\values-ta\\values-ta.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -69,6 +52,23 @@
                         "startOffsets": "1510,1636,1762,1883,2007,2108,2204,2317,2468,2599,2740,2824,2928,3028,3136,3253,3376,3485,3631,3775,3909,4115,4244,4365,4490,4636,4737,4835,4981,5117,5223,5336,5443,5589,5741,5850,5962,6040,6142,6245,6331,6424,6537,6617,6705,6804,6924,7019,7124,7213,7335,7439,7546,7679,7759,7870",
                         "endColumns": "125,125,120,123,100,95,112,150,130,140,83,103,99,107,116,122,108,145,143,133,205,128,120,124,145,100,97,145,135,105,112,106,145,151,108,111,77,101,102,85,92,112,79,87,98,119,94,104,88,121,103,106,132,79,110,101",
                         "endOffsets": "1631,1757,1878,2002,2103,2199,2312,2463,2594,2735,2819,2923,3023,3131,3248,3371,3480,3626,3770,3904,4110,4239,4360,4485,4631,4732,4830,4976,5112,5218,5331,5438,5584,5736,5845,5957,6035,6137,6240,6326,6419,6532,6612,6700,6799,6919,7014,7119,7208,7330,7434,7541,7674,7754,7865,7967"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\a1e04694fec51b9947337759ad1e6836\\transformed\\foundation-release\\res\\values-ta\\values-ta.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,148",
+                        "endColumns": "92,97",
+                        "endOffsets": "143,241"
+                    },
+                    "to": {
+                        "startLines": "84,85",
+                        "startColumns": "4,4",
+                        "startOffsets": "9015,9108",
+                        "endColumns": "92,97",
+                        "endOffsets": "9103,9201"
                     }
                 }
             ]
