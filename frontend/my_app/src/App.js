@@ -18,6 +18,8 @@ function App() {
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/emergency-contacts" element={<UserDashboard />} />
+
+        
       </Routes>
     </Router>
   );
