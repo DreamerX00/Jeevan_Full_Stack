@@ -74,12 +74,12 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     // Floating Label Effect for Email
     val isEmailFocused = remember { mutableStateOf(false) }
     val emailLabelYPosition by animateDpAsState(if (isEmailFocused.value || email.isNotEmpty()) 0.dp else 16.dp)
-    val emailLabelFontSize by animateFloatAsState(if (isEmailFocused.value || email.isNotEmpty()) 12f else 16f) // Updated to use Float
+    val emailLabelFontSize by animateFloatAsState(if (isEmailFocused.value || email.isNotEmpty()) 12f else 16f)
 
     // Floating Label Effect for Password
     val isPasswordFocused = remember { mutableStateOf(false) }
     val passwordLabelYPosition by animateDpAsState(if (isPasswordFocused.value || password.isNotEmpty()) 0.dp else 16.dp)
-    val passwordLabelFontSize by animateFloatAsState(if (isPasswordFocused.value || password.isNotEmpty()) 12f else 16f) // Updated to use Float
+    val passwordLabelFontSize by animateFloatAsState(if (isPasswordFocused.value || password.isNotEmpty()) 12f else 16f)
 
     // Validation states
     var emailError by remember { mutableStateOf(false) }
@@ -88,13 +88,12 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit){
+            .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     isEmailFocused.value = false
                     isPasswordFocused.value = false
                 })
             }
-
     ) {
         // Background Image
         Image(
@@ -134,12 +133,8 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // Email Field with Floating Label
-                    Box(
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(220.dp)
-                    ) {
+                    // Email Field
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                         Text(
                             text = "EMAIL",
                             color = Color(0xFF484C4C),
@@ -149,65 +144,57 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                                 .offset(y = emailLabelYPosition)
                                 .animateContentSize()
                         )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(220.dp)
-                    ) {
-                        BasicTextField(
-                            value = email,
-                            onValueChange = {
-                                email = it
-                                emailError = !it.contains("@")
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onFocusChanged {
-                                    isEmailFocused.value = it.isFocused
-                                }
-                                .background(Color.Transparent)
-                                .padding(bottom = 2.dp),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                keyboardType = KeyboardType.Email
-                            ),
-                            textStyle = TextStyle(
-                                color = if (emailError) Color.Red else Color.Black,
-                                fontSize = 16.sp
-                            )
-                        )
-
+                        
                         Box(
                             modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .background(if (emailError) Color.Red else Color.Gray)
-                                .height(1.dp)
                                 .fillMaxWidth()
-                        )
-                    }
-                    if (emailError) {
-                        Box(
-                            modifier = Modifier
-                                .height(20.dp)
-                                .width(220.dp)
+                                .padding(top = 8.dp)
                         ) {
+                            BasicTextField(
+                                value = email,
+                                onValueChange = {
+                                    email = it
+                                    emailError = !it.contains("@")
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .onFocusChanged {
+                                        isEmailFocused.value = it.isFocused
+                                    }
+                                    .background(Color.Transparent),
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Email
+                                ),
+                                textStyle = TextStyle(
+                                    color = if (emailError) Color.Red else Color.Black,
+                                    fontSize = 16.sp
+                                )
+                            )
+
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .background(if (emailError) Color.Red else Color.Gray)
+                                    .height(1.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
+
+                        if (emailError) {
                             Text(
                                 text = "Invalid email address",
                                 color = Color.Red,
-                                fontSize = 12.sp
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(top = 4.dp)
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-// Password Field with Floating Label
-                    Box(
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(220.dp)
-                    ) {
+                    // Password Field
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                         Text(
                             text = "PASSWORD",
                             color = Color(0xFF484C4C),
@@ -217,70 +204,69 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                                 .offset(y = passwordLabelYPosition)
                                 .animateContentSize()
                         )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(220.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            BasicTextField(
-                                value = password,
-                                onValueChange = {
-                                    password = it
-                                    passwordError = it.length < 8 || !it.any { char -> char.isDigit() } || !it.any { char -> !char.isLetterOrDigit() }
-                                },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .onFocusChanged {
-                                        isPasswordFocused.value = it.isFocused
-                                    }
-                                    .background(Color.Transparent)
-                                    .padding(bottom = 2.dp),
-                                singleLine = true,
-                                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                                keyboardOptions = KeyboardOptions.Default.copy(
-                                    keyboardType = KeyboardType.Password
-                                ),
-                                textStyle = TextStyle(
-                                    color = if (passwordError) Color.Red else Color.Black,
-                                    fontSize = 16.sp
-                                )
-                            )
-
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                    contentDescription = "Toggle Password Visibility"
-                                )
-                            }
-                        }
-
+                        
                         Box(
                             modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .background(if (passwordError) Color.Red else Color.Gray)
-                                .height(1.dp)
                                 .fillMaxWidth()
-                        )
-                    }
-                    if (passwordError) {
-                        Box(
-                            modifier = Modifier
-                                .height(20.dp)
-                                .width(220.dp)
+                                .padding(top = 8.dp)
                         ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                BasicTextField(
+                                    value = password,
+                                    onValueChange = {
+                                        password = it
+                                        passwordError = it.length < 8 || !it.any { char -> char.isDigit() } || !it.any { char -> !char.isLetterOrDigit() }
+                                    },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .onFocusChanged {
+                                            isPasswordFocused.value = it.isFocused
+                                        }
+                                        .background(Color.Transparent),
+                                    singleLine = true,
+                                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                                    keyboardOptions = KeyboardOptions.Default.copy(
+                                        keyboardType = KeyboardType.Password
+                                    ),
+                                    textStyle = TextStyle(
+                                        color = if (passwordError) Color.Red else Color.Black,
+                                        fontSize = 16.sp
+                                    )
+                                )
+
+                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                    Icon(
+                                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                        contentDescription = "Toggle Password Visibility"
+                                    )
+                                }
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .background(if (passwordError) Color.Red else Color.Gray)
+                                    .height(1.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
+
+                        if (passwordError) {
                             Text(
-                                text = "Password Must Contain Symbols And Characters",
+                                text = "Password must be at least 8 characters with numbers and symbols",
                                 color = Color.Red,
-                                fontSize = 12.sp
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(top = 4.dp)
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-// Login Button
+                    // Login Button
                     Button(
                         onClick = {
                             if (!emailError && !passwordError) {
@@ -297,9 +283,9 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                             containerColor = Color.White,
                             contentColor = Color(0xFF08BAED)
                         ),
-                        enabled = !authViewModel.isLoading.value!!
+                        enabled = !(authViewModel.isLoading.value ?: false)
                     ) {
-                        if (authViewModel.isLoading.value!!) {
+                        if (authViewModel.isLoading.value == true) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
                                 color = Color(0xFF08BAED)
@@ -310,7 +296,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                     }
 
                     // Observe auth response
-                    LaunchedEffect(Unit) {
+                    LaunchedEffect(authViewModel.authResponse.value) {
                         authViewModel.authResponse.value?.let { response ->
                             if (response.error != null) {
                                 Toast.makeText(context, response.error, Toast.LENGTH_SHORT).show()
@@ -323,7 +309,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     // Forgot Password Text
                     Text(
@@ -332,9 +318,9 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                         modifier = Modifier.clickable { navController.navigate("forgot_password") }
                     )
 
-                    Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                    // Navigate to the Register screen
+                    // Navigate to Register
                     Text("Don't have an account?", color = Color(0xFF08BAED))
                     Button(
                         onClick = {

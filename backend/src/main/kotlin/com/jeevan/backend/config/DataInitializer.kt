@@ -17,27 +17,35 @@ class DataInitializer {
             if (userRepository.count() == 0L) {
                 println("Initializing database with sample data...")
                 
-                // Create test users
+                // Create test users with @ symbol in password
                 val testUser1 = User(
                     email = "test@example.com",
-                    password = passwordEncoder.encode("password123"),
+                    password = passwordEncoder.encode("Test@123!"),
                 )
                 
                 val testUser2 = User(
                     email = "john.doe@example.com",
-                    password = passwordEncoder.encode("password123"),
+                    password = passwordEncoder.encode("John@123!"),
                 )
                 
                 val testUser3 = User(
                     email = "jane.doe@example.com",
-                    password = passwordEncoder.encode("password123"),
+                    password = passwordEncoder.encode("Jane@123!"),
                 )
                 
                 userRepository.saveAll(listOf(testUser1, testUser2, testUser3))
                 
                 println("Sample data initialization complete!")
             } else {
-                println("Database already contains data, skipping initialization.")
+                // Update existing test user's password
+                val testUser = userRepository.findByEmail("test@example.com")
+                testUser.ifPresent { user ->
+                    val updatedUser = user.copy(
+                        password = passwordEncoder.encode("Test@123!")
+                    )
+                    userRepository.save(updatedUser)
+                    println("Updated test user password!")
+                }
             }
         }
     }

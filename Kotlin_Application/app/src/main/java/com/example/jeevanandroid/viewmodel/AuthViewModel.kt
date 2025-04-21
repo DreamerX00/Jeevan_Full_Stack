@@ -16,7 +16,7 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
     private val _authResponse = MutableLiveData<AuthResponse>()
     val authResponse: LiveData<AuthResponse> = _authResponse
 
-    private val _isLoading = MutableLiveData<Boolean>()
+    private val _isLoading = MutableLiveData<Boolean>().apply { value = false }
     val isLoading: LiveData<Boolean> = _isLoading
 
     private val authApi = RetrofitClient.createService(AuthApi::class.java)
@@ -26,17 +26,17 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
             try {
                 _isLoading.value = true
                 val response = authApi.login(AuthRequest(email, password))
-                _authResponse.value = response
+                _authResponse.postValue(response)
 
                 response.token?.let { token ->
                     prefsManager.saveToken(token)
                 }
             } catch (e: Exception) {
-                _authResponse.value = AuthResponse(
+                _authResponse.postValue(AuthResponse(
                     token = null,
                     message = null,
-                    error = e.message ?: "An unknown error occurred"
-                )
+                    error = e.message
+                ))
             } finally {
                 _isLoading.value = false
             }
@@ -48,17 +48,17 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
             try {
                 _isLoading.value = true
                 val response = authApi.register(AuthRequest(email, password))
-                _authResponse.value = response
+                _authResponse.postValue(response)
 
                 response.token?.let { token ->
                     prefsManager.saveToken(token)
                 }
             } catch (e: Exception) {
-                _authResponse.value = AuthResponse(
+                _authResponse.postValue(AuthResponse(
                     token = null,
                     message = null,
-                    error = e.message ?: "An unknown error occurred"
-                )
+                    error = e.message
+                ))
             } finally {
                 _isLoading.value = false
             }
@@ -70,13 +70,13 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
             try {
                 _isLoading.value = true
                 val response = authApi.forgotPassword(ForgotPasswordRequest(email))
-                _authResponse.value = response
+                _authResponse.postValue(response)
             } catch (e: Exception) {
-                _authResponse.value = AuthResponse(
+                _authResponse.postValue(AuthResponse(
                     token = null,
                     message = null,
-                    error = e.message ?: "An unknown error occurred"
-                )
+                    error = e.message
+                ))
             } finally {
                 _isLoading.value = false
             }

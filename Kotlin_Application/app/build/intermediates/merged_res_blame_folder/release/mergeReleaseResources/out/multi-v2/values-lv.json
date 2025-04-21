@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-51:/values-lv/values-lv.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-52:/values-lv/values-lv.xml",
             "map": [
                 {
                     "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\a1e04694fec51b9947337759ad1e6836\\transformed\\foundation-release\\res\\values-lv\\values-lv.xml",
