@@ -1,134 +1,134 @@
 [
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_shop.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/shop.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_shield_logo.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/shield_logo.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-mdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-xhdpi/ic_launcher.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-xhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-xhdpi/ic_launcher_round.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_imagenotfound.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/imagenotfound.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_heart_logo.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/heart_logo.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_ic_dustbin.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/ic_dustbin.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/ic_launcher_foreground.xml"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_hospital_icon.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/hospital_icon.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_login_back.jpg.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/login_back.jpg"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_profile_placeholder.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/profile_placeholder.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_medical_kit.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/medical_kit.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-xhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-mdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-mdpi/ic_launcher_round.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_pharamcy_icon.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/pharamcy_icon.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-xxxhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_symptoms.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/symptoms.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_shop.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/shop.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/ic_launcher_background.xml"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_pharamcy_icon.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/pharamcy_icon.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-hdpi/ic_launcher_round.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_cart.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/cart.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_ic_dustbin.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/ic_dustbin.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_diagnose.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/diagnose.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_profile_placeholder.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/profile_placeholder.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-hdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_cart.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/cart.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/xml_backup_rules.xml.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/xml/backup_rules.xml"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-mdpi_ic_launcher.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-mdpi/ic_launcher.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_medical_kit.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/medical_kit.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_vaccination.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/vaccination.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-hdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_forgot_password_bg.jpg.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/forgot_password_bg.jpg"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_appointment.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/appointment.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "com.example.jeevanandroid.app-release-54:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/xml/data_extraction_rules.xml"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-xxxhdpi/ic_launcher_round.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-xxhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_imagenotfound.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/imagenotfound.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-xxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-xxhdpi/ic_launcher.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_forgot_password_bg.jpg.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/forgot_password_bg.jpg"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/xml_data_extraction_rules.xml.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/xml/data_extraction_rules.xml"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_heart_logo.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/heart_logo.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-hdpi/ic_launcher.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-xxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/xml_backup_rules.xml.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/xml/backup_rules.xml"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-mdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_shield_logo.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/shield_logo.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_hospital_icon.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/hospital_icon.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-xhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_registration_back.jpg.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/registration_back.jpg"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_symptoms.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/symptoms.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-xxxhdpi/ic_launcher.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_registration_back.jpg.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/registration_back.jpg"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_diagnose.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/diagnose.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_login_back.jpg.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/login_back.jpg"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/drawable_appointment.png.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/drawable/appointment.png"
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_vaccination.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/vaccination.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-53:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.jeevanandroid.app-main-54:/mipmap-xxhdpi/ic_launcher_round.webp"
+        "merged": "com.example.jeevanandroid.app-release-54:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/mipmap-xxxhdpi/ic_launcher.webp"
     }
 ]

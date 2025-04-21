@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-51:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-52:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\925d5715590ac3d4a3439e0c77284f33\\transformed\\material3-release\\res\\values-en-rXC\\values-en-rXC.xml",
