@@ -396,3 +396,4 @@ int styleable Navigator_android_id 1
 int styleable Navigator_route 2
 int xml backup_rules 0x7f0c0000
 int xml data_extraction_rules 0x7f0c0001
+int xml network_security_config 0x7f0c0002

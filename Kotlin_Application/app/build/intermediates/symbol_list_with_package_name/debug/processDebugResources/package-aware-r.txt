@@ -328,3 +328,4 @@ styleable NavInclude graph
 styleable Navigator android_label android_id route
 xml backup_rules
 xml data_extraction_rules
+xml network_security_config
