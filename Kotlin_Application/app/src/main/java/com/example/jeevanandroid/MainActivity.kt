@@ -36,23 +36,40 @@ class MainActivity : ComponentActivity() {
                 val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(prefsManager))
 
                 // Scaffold for consistent layout
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold { paddingValues ->
                     // Navigation Setup
-                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(innerPadding)) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = if (prefsManager.hasValidToken()) "home" else "login",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                    ) {
                         // Define the login screen route
                         composable("login") {
-                            LoginScreen(navController = navController, authViewModel = authViewModel)  // Passing navController and authViewModel
+                            LoginScreen(
+                                navController = navController,
+                                authViewModel = authViewModel
+                            )
                         }
                         // Define the registration screen route
                         composable("register") {
-                            RegisterScreen(navController = navController, authViewModel = authViewModel)  // Passing navController and authViewModel
+                            RegisterScreen(
+                                navController = navController,
+                                authViewModel = authViewModel
+                            )
                         }
                         // Define the forgot password screen route
-                        composable("forgot_password") {
-                            ForgotPasswordScreen(navController = navController, authViewModel = authViewModel)  // Passing navController and authViewModel
+                        composable("forgot-password") {
+                            ForgotPasswordScreen(
+                                navController = navController,
+                                authViewModel = authViewModel
+                            )
                         }
-                        composable("home_screen"){
-                            HomeScreen(navController = navController)
+                        composable("home") {
+                            HomeScreen(
+                                navController = navController
+                            )
                         }
                     }
                 }
