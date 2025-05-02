@@ -1,51 +1,198 @@
-# Jeevan Full Stack Project 🚀
+# Jeevan - Healthcare Management System
 
-## Overview 📖
-The **Jeevan Full Stack Project** aims to develop a comprehensive medical application and website with a simplified and user-friendly interface. The project integrates features from medical, fitness, pharma, and diet applications into a single platform. Built using modern technologies, it ensures scalability and performance while maintaining simplicity.
+A comprehensive healthcare management system built with modern technologies, featuring a Kotlin Android app, Spring Boot backend, and React frontend.
 
-## Technologies Used 🛠️
+## Project Overview
 
-### Web Technologies 🌐
-- **HTML** - [Learn More](https://developer.mozilla.org/en-US/docs/Web/HTML)
-- **CSS** - [Learn More](https://developer.mozilla.org/en-US/docs/Web/CSS)
-- **React.js** - [Learn More](https://react.dev/)
+Jeevan is a full-stack healthcare management system that provides:
+- Patient management
+- Medical records
+- Appointment scheduling
+- Authentication and authorization
+- Cross-platform access (Web, Mobile)
 
-### Backend & Frameworks Technologies 🔗
-- **PostgreSQL** - [Learn More](https://www.postgresql.org/)
-- **Spring Boot** - [Learn More](https://spring.io/projects/spring-boot)
+## Technology Stack
 
-### Application Technologies 📱
-- **Kotlin with Compose** - [Learn More](https://developer.android.com/jetpack/compose)
+### Mobile Application (Kotlin)
+- Kotlin with Jetpack Compose
+- Material3 Design
+- MVVM Architecture
+- Coroutines for async operations
+- Retrofit for API calls
 
-### API Technologies 🌐
-- **RESTful API** - [Learn More](https://restfulapi.net/)
+### Backend (Spring Boot)
+- Kotlin with Spring Boot
+- PostgreSQL Database
+- JWT Authentication
+- RESTful APIs
+- Spring Security
 
+### Web Frontend (React)
+- React with TypeScript
+- Material-UI
+- Redux Toolkit
+- Vite build system
+- Axios for API calls
 
+## Project Structure
+```
+.
+├── Kotlin_Application/     # Android mobile app
+├── backend/               # Spring Boot backend
+├── frontend/             # React web application
+├── docker-compose.yml    # Docker configuration
+└── DOCKER_README.md      # Docker setup guide
+```
 
-## Features ✨
-- Unified platform for medical, fitness, pharma, and diet services.
-- Simplified and intuitive UI/UX.
-- Cross-platform accessibility through a web application and a mobile app.
+## Quick Start
 
-## Get Started 🚀
-1. Clone the repository (ensure you have access):
+### Prerequisites
+- Docker and Docker Compose
+- JDK 17 or later
+- Node.js 16+ (for local frontend development)
+- Android Studio (for mobile development)
+
+### Using Docker (Recommended)
+1. Clone the repository:
    ```bash
-   git clone https://github.com/DreamerX00/Jeevan_Full_Stack.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd jeevan-full-stack
-   ```
-3. Docker Postgres Setup Command:
-   ```bash
-   docker run --hostname=096e7cdee4b5 --mac-address=02:42:ac:11:00:02 --env=POSTGRES_USER=jeevan --env=POSTGRES_PASSWORD=G1@4424 --env=POSTGRES_DB=jeevanDB --env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/17/bin --env=GOSU_VERSION=1.17 --env=LANG=en_US.utf8 --env=PG_MAJOR=17 --env=PG_VERSION=17.2-1.pgdg120+1 --env=PGDATA=/var/lib/postgresql/data --volume=/var/lib/postgresql/data --network=bridge -p 5432:5432 --restart=no --runtime=runc -d postgres:latest
+   git clone <repository-url>
+   cd jeevan
    ```
 
-## Contributing 🤝
-We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) to learn about our development process.
+2. Start all services:
+   ```bash
+   docker-compose up --build
+   ```
 
-## License 🐜
-This project is licensed under the [MIT License](LICENSE).
+3. Access the applications:
+   - Web Frontend: http://localhost:3000
+   - Backend API: http://localhost:8080
+   - PostgreSQL: localhost:5432
+
+### Manual Setup
+
+#### Backend
+1. Navigate to backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Build and run:
+   ```bash
+   ./gradlew build
+   java -jar build/libs/*.jar
+   ```
+
+#### Frontend
+1. Navigate to frontend directory:
+   ```bash
+   cd frontend/my_app
+   ```
+
+2. Install dependencies and run:
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+#### Android App
+1. Open Kotlin_Application in Android Studio
+2. Sync Gradle files
+3. Run on emulator or physical device
+
+## Features
+
+### Authentication
+- Secure login/registration
+- Password recovery
+- JWT-based authentication
+- Role-based access control
+
+### User Interface
+- Modern Material Design
+- Responsive layouts
+- Dark/Light themes
+- Custom loading indicators
+- Animated transitions
+
+### Data Management
+- Real-time updates
+- Offline support
+- Data synchronization
+- Secure storage
+
+## Development
+
+### Code Style
+- Follow Kotlin style guide for Android and backend
+- Use ESLint and Prettier for frontend
+- Maintain consistent naming conventions
+
+### Testing
+- Unit tests for all components
+- Integration tests for backend
+- UI tests for frontend
+- E2E tests for critical flows
+
+### Documentation
+- API documentation with Swagger
+- Component documentation
+- Setup guides
+- Architecture diagrams
+
+## Docker Support
+
+The project is containerized using Docker for consistent development and deployment environments. See [DOCKER_README.md](DOCKER_README.md) for detailed Docker setup instructions.
+
+### Key Docker Features
+- Multi-stage builds
+- Environment configuration
+- Volume management
+- Network isolation
+- Health checks
+
+## Security
+
+- JWT-based authentication
+- Password encryption
+- HTTPS support
+- Input validation
+- XSS protection
+- CSRF protection
+
+## Performance
+
+- Code splitting
+- Lazy loading
+- Image optimization
+- Caching strategies
+- Database optimization
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support, please:
+1. Check the documentation
+2. Search existing issues
+3. Create a new issue if needed
+
+## Acknowledgments
+
+- Material Design for UI components
+- Spring Boot team for backend framework
+- React team for frontend framework
+- Android team for mobile platform
 
 ---
 

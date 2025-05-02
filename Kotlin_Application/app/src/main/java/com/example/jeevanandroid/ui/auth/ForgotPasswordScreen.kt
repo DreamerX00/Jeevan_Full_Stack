@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,8 +32,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -40,10 +44,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.jeevanandroid.R
+import com.example.jeevanandroid.ui.components.HeartbeatLoadingIndicator
 import com.example.jeevanandroid.ui.theme.JeevanAndroidTheme
 import com.example.jeevanandroid.viewmodel.AuthViewModel
 
@@ -53,6 +59,8 @@ fun ForgotPasswordScreen(navController: NavController, authViewModel: AuthViewMo
     val context = LocalContext.current
     var emailError by remember { mutableStateOf(false) }
     val authResponse by authViewModel.authResponse.observeAsState()
+    var visible by remember { mutableStateOf(true) }
+    val isLoading by authViewModel.isLoading.observeAsState(initial = false)
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -128,23 +136,16 @@ fun ForgotPasswordScreen(navController: NavController, authViewModel: AuthViewMo
                     }
                 },
                 modifier = Modifier
-                    .width(200.dp)
+                    .width(180.dp)
                     .height(40.dp)
                     .shadow(4.dp, shape = RoundedCornerShape(18.dp)),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color(0xFF08BAED)
                 ),
-                enabled = !authViewModel.isLoading.value!!
+                enabled = !isLoading
             ) {
-                if (authViewModel.isLoading.value!!) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = Color(0xFF08BAED)
-                    )
-                } else {
-                    Text("Reset Password", fontSize = 20.sp)
-                }
+                Text("Send Reset Link", fontSize = 18.sp)
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -182,6 +183,28 @@ fun ForgotPasswordScreen(navController: NavController, authViewModel: AuthViewMo
                 )
             ) {
                 Text("Log in")
+            }
+        }
+
+        // Loading Overlay
+        if (isLoading) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(0.8f)
+                    .zIndex(10f),
+                color = Color.Black.copy(alpha = 0.5f)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    HeartbeatLoadingIndicator(
+                        modifier = Modifier.size(150.dp),
+                        color = Color(0xFF08BAED),
+                        message = "Sending reset link..."
+                    )
+                }
             }
         }
     }
