@@ -1,33 +1,33 @@
-# Jeevan - Healthcare Management System
+# Jeevan - Healthcare Management System 🏥
 
 A comprehensive healthcare management system built with modern technologies, featuring a Kotlin Android app, Spring Boot backend, and React frontend.
 
-## Project Overview
+## Project Overview 📋
 
 Jeevan is a full-stack healthcare management system that provides:
-- Patient management
-- Medical records
-- Appointment scheduling
-- Authentication and authorization
-- Cross-platform access (Web, Mobile)
+- 👥 Patient management
+- 📋 Medical records
+- 📅 Appointment scheduling
+- 🔐 Authentication and authorization
+- 📱 Cross-platform access (Web, Mobile)
 
-## Technology Stack
+## Technology Stack 🛠️
 
-### Mobile Application (Kotlin)
+### Mobile Application (Kotlin) 📱
 - Kotlin with Jetpack Compose
 - Material3 Design
 - MVVM Architecture
 - Coroutines for async operations
 - Retrofit for API calls
 
-### Backend (Spring Boot)
-- Kotlin with Spring Boot
+### Backend (Spring Boot) ⚙️
+- Kotlin with Spring Boot - [Spring Initializer](https://start.spring.io/#!type=gradle-project-kotlin&language=kotlin&platformVersion=3.4.3&packaging=jar&jvmVersion=21&groupId=com.jeevan&artifactId=backend&name=backend&description=backend%20project%20for%20jeevan&packageName=com.jeevan.backend&dependencies=web,data-jpa,postgresql,security,validation,lombok,devtools,actuator)
 - PostgreSQL Database
 - JWT Authentication
-- RESTful APIs
+- RESTful APIs - [Learn More](https://restfulapi.net/)
 - Spring Security
 
-### Web Frontend (React)
+### Web Frontend (React) 🌐
 - React with TypeScript
 - Material-UI
 - Redux Toolkit
