@@ -10,6 +10,7 @@ class PrefsManager(context: Context) {
     companion object {
         private const val KEY_TOKEN = "jwt_token"
         private const val KEY_TOKEN_TIMESTAMP = "jwt_token_timestamp"
+        private const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         private const val TOKEN_VALIDITY_DURATION = 23 * 60 * 60 * 1000 // 23 hours in milliseconds
     }
 
@@ -50,5 +51,23 @@ class PrefsManager(context: Context) {
 
     fun hasValidToken(): Boolean {
         return getToken() != null
+    }
+    
+    fun markOnboardingCompleted() {
+        sharedPreferences.edit().apply {
+            putBoolean(KEY_ONBOARDING_COMPLETED, true)
+            apply()
+        }
+    }
+    
+    fun hasCompletedOnboarding(): Boolean {
+        return sharedPreferences.getBoolean(KEY_ONBOARDING_COMPLETED, false)
+    }
+    
+    fun clearOnboardingStatus() {
+        sharedPreferences.edit().apply {
+            remove(KEY_ONBOARDING_COMPLETED)
+            apply()
+        }
     }
 }

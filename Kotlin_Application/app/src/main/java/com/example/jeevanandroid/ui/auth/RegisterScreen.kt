@@ -407,14 +407,22 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                         }
 
                         // Observe auth response
-                        LaunchedEffect(authViewModel.authResponse.value) {
+                        LaunchedEffect(authViewModel.authResponse.value, authViewModel.isRegistered.value) {
                             authViewModel.authResponse.value?.let { response ->
                                 if (response.error != null) {
                                     Toast.makeText(context, response.error, Toast.LENGTH_SHORT).show()
                                 } else if (response.token != null) {
                                     visible = !visible
-                                    navController.navigate("home_screen") {
-                                        popUpTo("register") { inclusive = true }
+                                    
+                                    // If registered, go to welcome screen instead of home
+                                    if (authViewModel.isRegistered.value == true) {
+                                        navController.navigate("welcome") {
+                                            popUpTo("register") { inclusive = true }
+                                        }
+                                    } else {
+                                        navController.navigate("home") {
+                                            popUpTo("register") { inclusive = true }
+                                        }
                                     }
                                 }
                             }

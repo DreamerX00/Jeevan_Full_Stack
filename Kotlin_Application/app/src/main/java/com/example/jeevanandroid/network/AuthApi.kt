@@ -21,11 +21,7 @@ interface AuthApi {
 
         fun getInstance(): AuthApi {
             if (retrofitService == null) {
-                val retrofit = Retrofit.Builder()
-                    .baseUrl("http://10.0.2.2:8080/") // Updated base URL for Android emulator
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                retrofitService = retrofit.create(AuthApi::class.java)
+                retrofitService = RetrofitClient.createService(AuthApi::class.java)
             }
             return retrofitService!!
         }

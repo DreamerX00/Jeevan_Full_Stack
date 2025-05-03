@@ -16,12 +16,12 @@
         "source": "com.example.jeevanandroid.app-main-55:/drawable/imagenotfound.png"
     },
     {
-        "merged": "com.example.jeevanandroid.app-release-54:/drawable_ic_dustbin.png.flat",
-        "source": "com.example.jeevanandroid.app-main-55:/drawable/ic_dustbin.png"
-    },
-    {
         "merged": "com.example.jeevanandroid.app-release-54:/drawable_hospital_icon.png.flat",
         "source": "com.example.jeevanandroid.app-main-55:/drawable/hospital_icon.png"
+    },
+    {
+        "merged": "com.example.jeevanandroid.app-release-54:/drawable_ic_dustbin.png.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/drawable/ic_dustbin.png"
     },
     {
         "merged": "com.example.jeevanandroid.app-release-54:/drawable_profile_placeholder.png.flat",
@@ -94,6 +94,10 @@
     {
         "merged": "com.example.jeevanandroid.app-release-54:/drawable_heart_logo.png.flat",
         "source": "com.example.jeevanandroid.app-main-55:/drawable/heart_logo.png"
+    },
+    {
+        "merged": "com.example.jeevanandroid.app-release-54:/xml_network_security_config.xml.flat",
+        "source": "com.example.jeevanandroid.app-main-55:/xml/network_security_config.xml"
     },
     {
         "merged": "com.example.jeevanandroid.app-release-54:/mipmap-xxhdpi_ic_launcher.webp.flat",

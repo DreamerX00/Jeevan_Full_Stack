@@ -1,5 +1,6 @@
 package com.example.jeevanandroid.network
 
+import com.example.jeevanandroid.utils.NetworkUtils
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,7 +12,14 @@ import javax.net.ssl.X509TrustManager
 import java.security.cert.X509Certificate
 
 object RetrofitClient {
-    private const val BASE_URL = "http://10.0.2.2:8080/" // Android emulator localhost
+    // For emulator use 10.0.2.2, for physical device use your computer's IP address
+    private const val EMULATOR_URL = "http://10.0.2.2:8080/"
+    private const val DEVICE_URL = "http://172.16.0.150:8080/" // Your computer's actual IP address
+    
+    // Get the appropriate base URL
+    private fun getBaseUrl(): String {
+        return NetworkUtils.getBaseUrl(EMULATOR_URL, DEVICE_URL)
+    }
 
     private val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
         override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
@@ -47,11 +55,13 @@ object RetrofitClient {
         }
     }.build()
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    private val retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(getBaseUrl())
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 
     fun <T> createService(serviceClass: Class<T>): T {
         return retrofit.create(serviceClass)

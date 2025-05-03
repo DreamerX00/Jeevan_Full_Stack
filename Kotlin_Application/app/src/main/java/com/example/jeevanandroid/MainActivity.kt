@@ -16,10 +16,13 @@ import com.example.jeevanandroid.ui.auth.ForgotPasswordScreen
 import com.example.jeevanandroid.ui.auth.LoginScreen
 import com.example.jeevanandroid.ui.auth.RegisterScreen
 import com.example.jeevanandroid.ui.home.HomeScreen
+import com.example.jeevanandroid.ui.onboarding.WelcomeScreen
 import com.example.jeevanandroid.ui.theme.JeevanAndroidTheme
 import com.example.jeevanandroid.utils.PrefsManager
 import com.example.jeevanandroid.viewmodel.AuthViewModel
 import com.example.jeevanandroid.viewmodel.AuthViewModelFactory
+import com.example.jeevanandroid.viewmodel.UserProfileViewModel
+import com.example.jeevanandroid.viewmodel.UserProfileViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,13 +37,18 @@ class MainActivity : ComponentActivity() {
 
                 // Initialize AuthViewModel using the factory
                 val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(prefsManager))
+                
+                // Initialize UserProfileViewModel using the factory
+                val userProfileViewModel: UserProfileViewModel = viewModel(factory = UserProfileViewModelFactory(prefsManager))
 
                 // Scaffold for consistent layout
                 Scaffold { paddingValues ->
                     // Navigation Setup
                     NavHost(
                         navController = navController,
-                        startDestination = if (prefsManager.hasValidToken()) "home" else "login",
+                        startDestination = if (prefsManager.hasValidToken()) {
+                            if (prefsManager.hasCompletedOnboarding()) "home" else "welcome"
+                        } else "login",
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(paddingValues)
@@ -66,6 +74,14 @@ class MainActivity : ComponentActivity() {
                                 authViewModel = authViewModel
                             )
                         }
+                        // Define the welcome/onboarding screen route
+                        composable("welcome") {
+                            WelcomeScreen(
+                                navController = navController,
+                                userProfileViewModel = userProfileViewModel
+                            )
+                        }
+                        // Define the home screen route
                         composable("home") {
                             HomeScreen(
                                 navController = navController

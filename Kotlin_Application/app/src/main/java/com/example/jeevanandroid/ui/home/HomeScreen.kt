@@ -414,6 +414,22 @@ fun DrawerContent(navController: NavController, onItemClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // Edit Profile Option - New Addition
+        Text(
+            text = "Edit Profile",
+            fontSize = 16.sp,
+            color = Color(0xFF08BAED), // Highlighted with medical blue color
+            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp)
+                .clickable {
+                    navController.navigate("welcome")
+                    Toast.makeText(context, "Edit Profile", Toast.LENGTH_SHORT).show()
+                    onItemClick()
+                }
+        )
+
         // Navigation Options
         val options = listOf(
             "My Profile",
