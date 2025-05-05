@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   FaHome, 
   FaCalendarAlt, 
@@ -15,6 +15,7 @@ import {
 
 const Sidebar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   const menuItems = [
     { icon: FaHome, label: 'Home', path: '/' },
@@ -33,6 +34,11 @@ const Sidebar = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Function to check if a menu item is active
+  const isActive = (path) => {
+    return location.pathname === path;
   };
 
   return (
@@ -54,7 +60,9 @@ const Sidebar = () => {
                 <Link
                   key={index}
                   to={item.path}
-                  className="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
+                  className={`flex items-center px-4 py-3 text-gray-700 rounded-lg transition-colors duration-200 ${
+                    isActive(item.path) ? 'bg-blue-50 text-blue-600' : 'hover:bg-blue-50 hover:text-blue-600'
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <item.icon className="h-5 w-5" />
@@ -69,7 +77,9 @@ const Sidebar = () => {
               <Link
                 key={index}
                 to={item.path}
-                className="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
+                className={`flex items-center px-4 py-3 text-gray-700 rounded-lg transition-colors duration-200 ${
+                  isActive(item.path) ? 'bg-blue-50 text-blue-600' : 'hover:bg-blue-50 hover:text-blue-600'
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <item.icon className="h-5 w-5" />

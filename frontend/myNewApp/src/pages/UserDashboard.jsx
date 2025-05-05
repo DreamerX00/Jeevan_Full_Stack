@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { 
@@ -13,16 +13,49 @@ import {
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const location = useLocation();
+
+  // Handle tab routing from URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get('tab');
+    
+    if (tab) {
+      // Map the tab parameter to the corresponding tab
+      switch(tab.toLowerCase()) {
+        case 'records':
+          setActiveTab('records');
+          break;
+        case 'appointments':
+          setActiveTab('appointments');
+          break;
+        case 'medications':
+        case 'prescriptions':
+          setActiveTab('prescriptions');
+          break;
+        case 'tracker':
+        case 'health':
+          setActiveTab('health');
+          break;
+        case 'doctors':
+          setActiveTab('doctors');
+          break;
+        default:
+          // Default to overview if tab not recognized
+          setActiveTab('overview');
+      }
+    }
+  }, [location.search]);
 
   // Mock data
   const upcomingAppointments = [
-    { id: 1, doctor: 'Dr. Sarah Johnson', specialty: 'Cardiologist', date: '15 May 2023', time: '10:00 AM' },
-    { id: 2, doctor: 'Dr. Robert Williams', specialty: 'Dermatologist', date: '22 May 2023', time: '2:30 PM' },
+    { id: 1, doctor: 'Dr. Sunil Pratap Singh', specialty: 'HOD', date: '15 May 2023', time: '10:00 AM' },
+    { id: 2, doctor: 'Dr. Rakhee Sharma', specialty: 'Mentor1', date: '22 May 2023', time: '2:30 PM' },
   ];
 
   const recentPrescriptions = [
-    { id: 1, medication: 'Amlodipine', dosage: '5mg', frequency: 'Once daily', prescribed: '01 May 2023' },
-    { id: 2, medication: 'Metformin', dosage: '500mg', frequency: 'Twice daily', prescribed: '28 Apr 2023' },
+    { id: 1, medication: 'Paracetamol', dosage: '5mg', frequency: 'Once daily', prescribed: '01 May 2023' },
+    { id: 2, medication: 'Crocin', dosage: '500mg', frequency: 'Twice daily', prescribed: '28 Apr 2023' },
   ];
 
   return (
@@ -111,6 +144,16 @@ const UserDashboard = () => {
                   }`}
                 >
                   Prescriptions
+                </button>
+                <button
+                  onClick={() => setActiveTab('health')}
+                  className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'health'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Health Tracker
                 </button>
                 <button
                   onClick={() => setActiveTab('doctors')}

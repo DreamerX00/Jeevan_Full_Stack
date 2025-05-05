@@ -6,7 +6,7 @@ const Carousel = () => {
 
   const slides = [
     {
-      image: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&h=400&q=80',
+      image: 'https://images.unsplash.com/photo-1633219664572-473fd988a44f?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       title: 'Expert Medical Care',
       description: 'Get the best healthcare from our experienced doctors'
     },

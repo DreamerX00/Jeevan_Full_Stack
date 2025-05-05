@@ -9,6 +9,12 @@ import ForgotPassword from './pages/ForgotPassword';
 import UserDashboard from './pages/UserDashboard';
 import Profile from './pages/Profile';
 import MedicalShop from './pages/MedicalShop';
+import Cart from './pages/Cart';
+import NearbyHospitals from './pages/NearbyHospitals';
+import NearbyPharmacies from './pages/NearbyPharmacies';
+import MedicalRecords from './pages/MedicalRecords';
+import Appointments from './pages/Appointments';
+import Prescriptions from './pages/Prescriptions';
 
 function App() {
   return (
@@ -21,6 +27,12 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/emergency-contacts" element={<UserDashboard />} />
       <Route path="/shop" element={<MedicalShop />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/nearby-hospitals" element={<NearbyHospitals />} />
+      <Route path="/nearby-pharmacies" element={<NearbyPharmacies />} />
+      <Route path="/records" element={<MedicalRecords />} />
+      <Route path="/appointments" element={<Appointments />} />
+      <Route path="/prescriptions" element={<Prescriptions />} />
     </Routes>
   );
 }

@@ -1,14 +1,20 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { FaShoppingCart, FaSearch, FaFilter, FaStar, FaHeart } from 'react-icons/fa';
+import { useCart } from '../context/CartContext';
 
 const MedicalShop = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Get cart functions from context
+  const { cartItems, addToCart, itemsCount } = useCart();
 
+  // IMPORTANT: Define products BEFORE using it in useEffect
   // Mock product data
   const products = [
     {
@@ -67,6 +73,41 @@ const MedicalShop = () => {
     }
   ];
 
+  // Check for product ID in URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const productId = params.get('product');
+    
+    if (productId) {
+      // Find the product by ID
+      const product = products.find(p => p.id === parseInt(productId));
+      
+      // If found, scroll to it and optionally highlight it
+      if (product) {
+        // Set category filter if needed
+        if (product.category !== selectedCategory && selectedCategory !== 'all') {
+          setSelectedCategory(product.category);
+        }
+        
+        // Add a small delay to ensure rendering completes
+        setTimeout(() => {
+          const element = document.getElementById(`product-${productId}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Add highlighting effect
+            element.classList.add('ring-2', 'ring-blue-500', 'shadow-lg');
+            
+            // Remove highlight after a delay
+            setTimeout(() => {
+              element.classList.remove('ring-2', 'ring-blue-500', 'shadow-lg');
+            }, 2000);
+          }
+        }, 300);
+      }
+    }
+  }, [location.search, products, selectedCategory]);
+
   // Filter products based on search term and category
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -75,17 +116,16 @@ const MedicalShop = () => {
     return matchesSearch && matchesCategory;
   });
 
-  // Add product to cart
-  const addToCart = (product) => {
-    const existingItem = cartItems.find(item => item.id === product.id);
-    
-    if (existingItem) {
-      setCartItems(cartItems.map(item => 
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      ));
-    } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
+  const goToCart = () => {
+    navigate('/cart');
+  };
+
+  // Add debug information
+  const handleAddToCart = (product) => {
+    console.log("Adding product to cart:", product);
+    addToCart(product);
+    // Show a confirmation message
+    alert(`${product.name} has been added to your cart!`);
   };
 
   return (
@@ -102,14 +142,13 @@ const MedicalShop = () => {
                 <p className="mt-1 text-lg text-gray-600">Find medicines, health essentials, and more at your convenience.</p>
               </div>
               <div className="mt-4 lg:mt-0 flex items-center">
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaShoppingCart className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <button className="inline-flex items-center pl-10 pr-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                    Cart ({cartItems.reduce((total, item) => total + item.quantity, 0)})
-                  </button>
-                </div>
+                <button 
+                  onClick={goToCart}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+                >
+                  <FaShoppingCart className="mr-2" />
+                  Cart ({itemsCount})
+                </button>
               </div>
             </div>
           </div>
@@ -158,7 +197,11 @@ const MedicalShop = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
-                  <div key={product.id} className="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300">
+                  <div 
+                    key={product.id} 
+                    id={`product-${product.id}`} 
+                    className="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
+                  >
                     <div className="relative">
                       <img 
                         src={product.image} 
@@ -184,7 +227,7 @@ const MedicalShop = () => {
                       <div className="mt-4 flex items-center justify-between">
                         <span className="text-lg font-bold text-gray-900">₹{product.price}</span>
                         <button
-                          onClick={() => addToCart(product)}
+                          onClick={() => handleAddToCart(product)}
                           className="px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           Add to cart
@@ -202,26 +245,6 @@ const MedicalShop = () => {
                   <p className="mt-1 text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Shop information */}
-          <div className="bg-blue-50 border-t border-blue-100">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Free Delivery</h3>
-                  <p className="mt-1 text-gray-600">On orders above ₹499</p>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Secure Payments</h3>
-                  <p className="mt-1 text-gray-600">100% secure payment methods</p>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">24/7 Support</h3>
-                  <p className="mt-1 text-gray-600">Call us anytime at our helpline</p>
-                </div>
-              </div>
             </div>
           </div>
         </main>

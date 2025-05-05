@@ -8,16 +8,16 @@ const Profile = () => {
   
   // Mock user data
   const [userData, setUserData] = useState({
-    fullName: 'John Doe',
-    email: 'johndoe@example.com',
-    phone: '+91 9876543210',
-    dateOfBirth: '15/04/1985',
-    address: '123 Main Street, Bangalore, Karnataka',
+    fullName: 'Ayush Sharma ',
+    email: 'ayushsharma.mca@bvicam.in',
+    phone: '+91 9760287614',
+    dateOfBirth: '13/02/2002',
+    address: 'Madhuban Enclave, near Madipur metro station, New Delhi',
     bloodGroup: 'B+',
-    height: '175',
-    weight: '70',
-    allergies: 'Peanuts, Penicillin',
-    medicalConditions: 'Hypertension',
+    height: '170',
+    weight: '61',
+    allergies: 'Curd',
+    medicalConditions: 'College tension',
   });
 
   const handleChange = (e) => {
