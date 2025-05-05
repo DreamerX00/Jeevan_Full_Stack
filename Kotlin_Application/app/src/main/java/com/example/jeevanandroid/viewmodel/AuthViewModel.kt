@@ -21,6 +21,9 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
 
     private val _isLoggedIn = MutableLiveData<Boolean>().apply { value = false }
     val isLoggedIn: LiveData<Boolean> = _isLoggedIn
+    
+    private val _isRegistered = MutableLiveData<Boolean>().apply { value = false }
+    val isRegistered: LiveData<Boolean> = _isRegistered
 
     private val authApi = RetrofitClient.createService(AuthApi::class.java)
 
@@ -67,6 +70,12 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
                 if (response.token != null) {
                     prefsManager.saveToken(response.token)
                     _isLoggedIn.value = true
+                    
+                    // Clear onboarding status for new registrations
+                    prefsManager.clearOnboardingStatus()
+                    
+                    // Mark as registered to navigate to welcome screen
+                    _isRegistered.value = true
                 }
                 
                 _authResponse.postValue(response)
@@ -77,12 +86,13 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
                     error = e.message
                 ))
                 _isLoggedIn.value = false
+                _isRegistered.value = false
             } finally {
                 _isLoading.value = false
             }
         }
     }
-
+    
     fun forgotPassword(email: String) {
         viewModelScope.launch {
             try {
@@ -100,11 +110,10 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
             }
         }
     }
-
+    
     fun logout() {
         prefsManager.clearToken()
         _isLoggedIn.value = false
-        _authResponse.value = null
     }
 
     fun getStoredToken(): String? {

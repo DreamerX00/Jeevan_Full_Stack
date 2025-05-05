@@ -9,6 +9,21 @@
         android:targetSdkVersion="35" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Include required permissions for Google Maps API to run. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <queries>
+
+        <!-- Needs to be explicitly declared on Android R+ -->
+        <package android:name="com.google.android.apps.maps" />
+    </queries>
 
     <permission
         android:name="com.example.jeevanandroid.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
@@ -17,6 +32,7 @@
     <uses-permission android:name="com.example.jeevanandroid.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
+        android:name="com.example.jeevanandroid.JeevanApplication"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -31,6 +47,12 @@
         android:testOnly="true"
         android:theme="@style/Theme.JeevanAndroid"
         android:usesCleartextTraffic="true" >
+
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCzdG6W3NuCNElD4ZOFBS6iWX_SHirxr9A" />
+
         <activity
             android:name="com.example.jeevanandroid.MainActivity"
             android:exported="true"
@@ -42,6 +64,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Needs to be explicitly declared on P+ -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name="androidx.activity.ComponentActivity"
             android:exported="true" />
