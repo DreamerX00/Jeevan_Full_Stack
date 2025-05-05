@@ -45,6 +45,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -64,15 +65,24 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jeevanandroid.R
 import com.example.jeevanandroid.ui.components.MedicalThemeColorChangingButton
+import com.example.jeevanandroid.viewmodel.UserProfileViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    navController: NavController,
+    userProfileViewModel: UserProfileViewModel
+) {
     val context = LocalContext.current
     var searchQuery by remember { mutableStateOf("") }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showNotifications by remember { mutableStateOf(false) }
+
+    // Load user profile data
+    LaunchedEffect(Unit) {
+        userProfileViewModel.loadUserProfile()
+    }
 
     val notifications = remember {
         mutableStateListOf(
@@ -99,7 +109,10 @@ fun HomeScreen(navController: NavController) {
                     .background(Color(0xFFF5F5F5)) // Light gray background for the drawer
                     .shadow(4.dp) // Add shadow to the drawer
             ) {
-                DrawerContent(navController) {
+                DrawerContent(
+                    navController = navController,
+                    userProfileViewModel = userProfileViewModel
+                ) {
                     scope.launch {
                         drawerState.close() // Close the drawer when an option is clicked
                     }
@@ -386,7 +399,11 @@ fun NotificationPopup(
 }
 
 @Composable
-fun DrawerContent(navController: NavController, onItemClick: () -> Unit) {
+fun DrawerContent(
+    navController: NavController,
+    userProfileViewModel: UserProfileViewModel,
+    onItemClick: () -> Unit
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -406,7 +423,7 @@ fun DrawerContent(navController: NavController, onItemClick: () -> Unit) {
 
         // Name
         Text(
-            text = "User Name",
+            text = userProfileViewModel.userProfile.value?.let { "${it.firstName} ${it.lastName}" } ?: "User Name",
             fontSize = 18.sp,
             color = Color(0xFF08BAED), // Medical-themed blue color
             modifier = Modifier.padding(8.dp)
@@ -425,7 +442,6 @@ fun DrawerContent(navController: NavController, onItemClick: () -> Unit) {
                 .padding(vertical = 12.dp)
                 .clickable {
                     navController.navigate("welcome")
-                    Toast.makeText(context, "Edit Profile", Toast.LENGTH_SHORT).show()
                     onItemClick()
                 }
         )
@@ -449,8 +465,16 @@ fun DrawerContent(navController: NavController, onItemClick: () -> Unit) {
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
                     .clickable {
-                        Toast.makeText(context, option, Toast.LENGTH_SHORT).show()
-                        onItemClick()
+                        when (option) {
+                            "My Profile" -> {
+                                navController.navigate("profile")
+                                onItemClick()
+                            }
+                            else -> {
+                                Toast.makeText(context, option, Toast.LENGTH_SHORT).show()
+                                onItemClick()
+                            }
+                        }
                     }
             )
         }
@@ -502,18 +526,18 @@ fun SpecialityButton(imageResId: Int, text: String) {
 @Composable
 fun AutoSlidingCarousel(navController: NavController) {
     val images = listOf(
-        R.drawable.imagenotfound,
-        R.drawable.imagenotfound,
-        R.drawable.imagenotfound,
-        R.drawable.imagenotfound,
-        R.drawable.imagenotfound,
-        R.drawable.imagenotfound,
+        R.drawable.ambulance,
+        R.drawable.doctor,
+        R.drawable.laptoap,
+        R.drawable.medicine,
+        R.drawable.monitor,
+        R.drawable.kailashhospital
     )
 
     val infiniteTransition = rememberInfiniteTransition()
     val offsetX by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = -images.size * 320f, // Adjust based on image width and spacing
+        targetValue = -images.size * 300f, // Adjust based on image width and spacing
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 40000 , easing = LinearEasing),
             repeatMode = RepeatMode.Restart
@@ -581,7 +605,9 @@ fun RecommendationSection(navController: NavController) {
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f)
-                        .clickable { /* Navigate or perform an action */ },
+                        .clickable { 
+                            navController.navigate("pharmacy")
+                        },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -597,7 +623,9 @@ fun RecommendationSection(navController: NavController) {
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f)
-                        .clickable { /* Navigate or perform an action */ },
+                        .clickable { 
+                            navController.navigate("hospitals")
+                        },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {

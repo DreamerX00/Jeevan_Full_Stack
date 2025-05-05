@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-56:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeDebugResources-61:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "C:\\Users\\HP\\.gradle\\caches\\8.11.1\\transforms\\0e336f2f161288d1db1a26de64baff65\\transformed\\ui-release\\res\\values-en-rXC\\values-en-rXC.xml",

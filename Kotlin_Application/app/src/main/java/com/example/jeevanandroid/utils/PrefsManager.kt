@@ -70,4 +70,16 @@ class PrefsManager(context: Context) {
             apply()
         }
     }
+
+    fun getAuthToken(): String {
+        val token = getToken()
+        val result = if (token != null) {
+            println("PrefsManager: Found valid token: ${token.take(10)}...")
+            token
+        } else {
+            println("PrefsManager: No valid token found")
+            ""
+        }
+        return result
+    }
 }

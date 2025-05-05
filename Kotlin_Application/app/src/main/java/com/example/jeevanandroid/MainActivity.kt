@@ -16,11 +16,17 @@ import com.example.jeevanandroid.ui.auth.ForgotPasswordScreen
 import com.example.jeevanandroid.ui.auth.LoginScreen
 import com.example.jeevanandroid.ui.auth.RegisterScreen
 import com.example.jeevanandroid.ui.home.HomeScreen
+import com.example.jeevanandroid.ui.home.ProfileScreen
+import com.example.jeevanandroid.ui.nearby.HospitalScreen
+import com.example.jeevanandroid.ui.nearby.PharmacyScreen
 import com.example.jeevanandroid.ui.onboarding.WelcomeScreen
 import com.example.jeevanandroid.ui.theme.JeevanAndroidTheme
 import com.example.jeevanandroid.utils.PrefsManager
 import com.example.jeevanandroid.viewmodel.AuthViewModel
 import com.example.jeevanandroid.viewmodel.AuthViewModelFactory
+import com.example.jeevanandroid.viewmodel.HospitalViewModel
+import com.example.jeevanandroid.viewmodel.NearbyViewModel
+import com.example.jeevanandroid.viewmodel.NearbyViewModelFactory
 import com.example.jeevanandroid.viewmodel.UserProfileViewModel
 import com.example.jeevanandroid.viewmodel.UserProfileViewModelFactory
 
@@ -35,11 +41,11 @@ class MainActivity : ComponentActivity() {
                 // Initialize PrefsManager
                 val prefsManager = PrefsManager(this)
 
-                // Initialize AuthViewModel using the factory
+                // Initialize ViewModels using factories
                 val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(prefsManager))
-                
-                // Initialize UserProfileViewModel using the factory
                 val userProfileViewModel: UserProfileViewModel = viewModel(factory = UserProfileViewModelFactory(prefsManager))
+                val nearbyViewModel: NearbyViewModel = viewModel(factory = NearbyViewModelFactory(application))
+                val hospitalViewModel: HospitalViewModel = viewModel()
 
                 // Scaffold for consistent layout
                 Scaffold { paddingValues ->
@@ -84,7 +90,29 @@ class MainActivity : ComponentActivity() {
                         // Define the home screen route
                         composable("home") {
                             HomeScreen(
-                                navController = navController
+                                navController = navController,
+                                userProfileViewModel = userProfileViewModel
+                            )
+                        }
+                        // Define the profile screen route
+                        composable("profile") {
+                            ProfileScreen(
+                                navController = navController,
+                                userProfileViewModel = userProfileViewModel
+                            )
+                        }
+                        // Define the pharmacy screen route
+                        composable("pharmacy") {
+                            PharmacyScreen(
+                                navController = navController,
+                                nearbyViewModel = nearbyViewModel
+                            )
+                        }
+                        // Define the hospitals screen route
+                        composable("hospitals") {
+                            HospitalScreen(
+                                navController = navController,
+                                hospitalViewModel = hospitalViewModel
                             )
                         }
                     }

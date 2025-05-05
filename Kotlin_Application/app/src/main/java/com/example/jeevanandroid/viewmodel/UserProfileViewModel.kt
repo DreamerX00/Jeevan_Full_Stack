@@ -61,14 +61,19 @@ class UserProfileViewModel(private val prefsManager: PrefsManager) : ViewModel()
         viewModelScope.launch {
             try {
                 _isLoading.value = true
+                println("ProfileDebug: Loading user profile...")
                 val response = userProfileApi.getUserProfile()
                 
                 if (response.profile != null) {
+                    println("ProfileDebug: Successfully loaded profile: ${response.profile}")
                     _userProfile.value = response.profile
                 } else {
+                    println("ProfileDebug: Error loading profile: ${response.error}")
                     _error.value = response.error ?: "Failed to load profile data"
                 }
             } catch (e: Exception) {
+                println("ProfileDebug: Exception loading profile: ${e.message}")
+                e.printStackTrace()
                 _error.value = e.message
             } finally {
                 _isLoading.value = false
@@ -80,13 +85,17 @@ class UserProfileViewModel(private val prefsManager: PrefsManager) : ViewModel()
         viewModelScope.launch {
             try {
                 _isLoading.value = true
+                println("ProfileDebug: Saving user profile: ${_userProfile.value}")
                 val response = userProfileApi.createOrUpdateProfile(_userProfile.value!!)
+                println("ProfileDebug: Save response: ${response.message}")
                 
                 // Mark onboarding as completed when profile is saved
                 prefsManager.markOnboardingCompleted()
                 
                 _saveSuccess.value = true
             } catch (e: Exception) {
+                println("ProfileDebug: Exception saving profile: ${e.message}")
+                e.printStackTrace()
                 _error.value = e.message
                 _saveSuccess.value = false
             } finally {
