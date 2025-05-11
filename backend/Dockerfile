@@ -1,14 +1,17 @@
-FROM amazoncorretto:23-alpine
+# Build stage
+FROM gradle:8.5-jdk17 AS build
 WORKDIR /app
+COPY . .
+RUN gradle build --no-daemon
 
-# Copy the JAR file into the container
-COPY build/libs/backend-all.jar app.jar
+# Run stage
+FROM openjdk:17-slim
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
 
-# Expose the port (default for Spring Boot is 8080)
+# Create a non-root user
+RUN useradd -m -u 1000 appuser
+USER appuser
+
 EXPOSE 8080
-
-# Health check (optional)
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl --fail http://localhost:8080/actuator/health || exit 1
-
-# Run the application
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"] 

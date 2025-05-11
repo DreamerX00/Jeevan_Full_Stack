@@ -1,51 +1,65 @@
-version: '3.9'
+version: '3.8'
 
 services:
+  # PostgreSQL Database
   postgres:
-    image: postgres:latest
-    container_name: postgres_container
+    image: postgres:15-alpine
+    container_name: jeevan_postgres
     environment:
-      POSTGRES_USER: jeevan
-      POSTGRES_PASSWORD: G1@4424
       POSTGRES_DB: jeevanDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - app-network
+      - jeevan_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d jeevanDB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # Backend Service
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: backend_container
+    container_name: jeevan_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jeevanDB
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: your_jwt_secret_key_here
+      SERVER_PORT: 8080
     ports:
       - "8080:8080"
-    depends_on:
-      - postgres
-    environment:
-      DB_URL: jdbc:postgresql://postgres:5432/jeevanDB
-      DB_USER: jeevan
-      DB_PASSWORD: G1@4424
     networks:
-      - app-network
+      - jeevan_network
 
+  # Frontend Service
   frontend:
     build:
-      context: ./frontend
+      context: ./frontend/myNewApp
       dockerfile: Dockerfile
-    container_name: frontend_container
-    ports:
-      - "3000:80" # Serving the React app on port 80 of the container
+    container_name: jeevan_frontend
     environment:
-      REACT_APP_API_URL: http://backend:8080  # Connecting to backend via service name
+      VITE_API_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
     networks:
-      - app-network
-
-volumes:
-  postgres_data:
+      - jeevan_network
+    depends_on:
+      - backend
 
 networks:
-  app-network:
+  jeevan_network:
     driver: bridge
+
+volumes:
+  postgres_data: 
