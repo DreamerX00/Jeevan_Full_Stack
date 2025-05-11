@@ -62,7 +62,7 @@ jeevan/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/jeevan.git
+   git clone https://github.com/DreamerX00/Jeevan_Full_Stack
    cd jeevan/backend
    ```
 
