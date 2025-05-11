@@ -16,6 +16,10 @@ data class User(
     @Column(nullable = false)
     val password: String,
     
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    val role: UserRole = UserRole.USER,
+    
     @Column(name = "reset_token")
     val resetToken: String? = null,
     
@@ -27,4 +31,11 @@ data class User(
     
     @Column(name = "updated_at")
     val updatedAt: LocalDateTime = LocalDateTime.now()
-) 
+)
+
+enum class UserRole {
+    USER,
+    ADMIN,
+    DOCTOR,
+    PHARMACIST
+} 

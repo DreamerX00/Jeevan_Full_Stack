@@ -14,27 +14,34 @@ data class MedicalRecord(
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
     
-    @Column(nullable = false)
-    val recordType: String, // e.g., "Lab Test", "Imaging", "Surgery", "Vaccination"
-    
-    @Column(nullable = false)
-    val recordDate: LocalDateTime,
-    
-    @Column(nullable = false)
-    val providerName: String,
-    
-    @Column(nullable = false, columnDefinition = "TEXT")
-    val description: String,
+    @Column(columnDefinition = "TEXT")
+    val diagnosis: String? = null,
     
     @Column(columnDefinition = "TEXT")
-    val results: String? = null,
+    val prescription: String? = null,
     
-    @Column
-    val attachmentUrl: String? = null,
+    @Column(columnDefinition = "TEXT")
+    val notes: String? = null,
+    
+    @Column(name = "visit_date")
+    val visitDate: LocalDateTime? = null,
+    
+    @Column(name = "doctor_name")
+    val doctorName: String? = null,
+    
+    @Column(name = "hospital_name")
+    val hospitalName: String? = null,
+    
+    @Column(name = "follow_up_date")
+    val followUpDate: LocalDateTime? = null,
     
     @Column(name = "created_at")
     val createdAt: LocalDateTime = LocalDateTime.now(),
     
     @Column(name = "updated_at")
-    val updatedAt: LocalDateTime = LocalDateTime.now()
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
+    
+    @Version
+    @Column(name = "version")
+    val version: Long = 0
 ) 

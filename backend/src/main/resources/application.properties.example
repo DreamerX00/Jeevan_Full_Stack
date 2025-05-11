@@ -1,0 +1,52 @@
+# Server Configuration
+server.port=8080
+server.servlet.context-path=/api
+
+# Database Configuration
+spring.datasource.url=jdbc:postgresql://localhost:5432/jeevan_db
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA Configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+# JWT Configuration
+jwt.secret=your_jwt_secret_key_here
+jwt.expiration=86400000
+
+# File Upload Configuration
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+
+# Logging Configuration
+logging.level.root=INFO
+logging.level.com.jeevan.backend=DEBUG
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+
+# WebSocket Configuration
+websocket.allowed-origins=http://localhost:3000,https://jeevan.com
+
+# Email Configuration
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=your_email@gmail.com
+spring.mail.password=your_app_password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Security Configuration
+security.jwt.token.expire-length=86400000
+security.jwt.token.secret-key=your_secret_key_here
+security.jwt.token.header-string=Authorization
+security.jwt.token.prefix=Bearer 
+
+# CORS Configuration
+cors.allowed-origins=http://localhost:3000,https://jeevan.com
+cors.allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+cors.allowed-headers=Authorization,Content-Type,X-Requested-With,Accept,Origin
+cors.allow-credentials=true
+cors.max-age=3600 
