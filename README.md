@@ -63,7 +63,7 @@ jeevan/
 1. Clone the repository:
    ```bash
    git clone https://github.com/DreamerX00/Jeevan_Full_Stack
-   cd jeevan/backend
+   cd Jeevan_Full_Stack
    ```
 
 2. Configure the database:
@@ -85,12 +85,12 @@ jeevan/
 
 2. Install dependencies:
    ```bash
-   npm install
+   npm i
    ```
 
 3. Start development server:
    ```bash
-   npm start
+   npm run dev
    ```
 
 ### Android Setup
@@ -168,4 +168,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, email support@jeevan.com or create an issue in the repository.
+For support, email akashsinghaa008@gmail.com or create an issue in the repository.
