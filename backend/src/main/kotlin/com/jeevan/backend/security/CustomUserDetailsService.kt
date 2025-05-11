@@ -1,5 +1,6 @@
 package com.jeevan.backend.security
 
+import com.jeevan.backend.models.UserRole
 import com.jeevan.backend.repositories.UserRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
@@ -21,7 +22,7 @@ class CustomUserDetailsService(
         }
         
         val user = userOptional.get()
-        val authorities = listOf(SimpleGrantedAuthority("USER"))
+        val authorities = listOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
         
         return User(
             user.email,
