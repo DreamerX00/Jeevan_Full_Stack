@@ -17,7 +17,7 @@ class JwtService {
     private lateinit var secretString: String
 
     @Value("\${jwt.expiration:86400000}") // 24 hours in milliseconds
-    private val jwtExpiration: Long = 0
+    private var jwtExpiration: Long = 86400000 // Default to 24 hours if not set
 
     private val secretKey: SecretKey by lazy {
         Keys.hmacShaKeyFor(secretString.toByteArray())

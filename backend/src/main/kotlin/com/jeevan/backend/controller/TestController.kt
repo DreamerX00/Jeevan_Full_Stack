@@ -70,12 +70,18 @@ class TestController(
         )
         
         val usersColumns = jdbcTemplate.queryForList(
-            "SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'users'"
+            """
+            SELECT column_name, data_type, is_nullable 
+            FROM information_schema.columns 
+            WHERE table_schema = 'public' 
+            AND table_name = 'users'
+            """
         )
         
         val response = mapOf(
             "tables" to tables,
-            "users_table_columns" to usersColumns
+            "users_table_columns" to usersColumns,
+            "database_type" to jdbcTemplate.dataSource?.connection?.metaData?.databaseProductName ?: "Unknown"
         )
         
         return ResponseEntity.ok(response)
