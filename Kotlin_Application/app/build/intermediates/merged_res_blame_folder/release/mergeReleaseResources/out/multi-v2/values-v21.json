@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-51:/values-v21/values-v21.xml",
+            "outputFile": "com.example.jeevanandroid.app-mergeReleaseResources-52:/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\akash\\.gradle\\caches\\8.11.1\\transforms\\12372ec76eccb7d5b87a6877a2c698d3\\transformed\\core-1.15.0\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\HP\\.gradle\\caches\\8.11.1\\transforms\\c612a8c5ee696e32faaa3bf6618e03ca\\transformed\\core-1.15.0\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",

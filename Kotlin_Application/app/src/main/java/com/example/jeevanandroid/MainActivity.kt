@@ -16,10 +16,19 @@ import com.example.jeevanandroid.ui.auth.ForgotPasswordScreen
 import com.example.jeevanandroid.ui.auth.LoginScreen
 import com.example.jeevanandroid.ui.auth.RegisterScreen
 import com.example.jeevanandroid.ui.home.HomeScreen
+import com.example.jeevanandroid.ui.home.ProfileScreen
+import com.example.jeevanandroid.ui.nearby.HospitalScreen
+import com.example.jeevanandroid.ui.nearby.PharmacyScreen
+import com.example.jeevanandroid.ui.onboarding.WelcomeScreen
 import com.example.jeevanandroid.ui.theme.JeevanAndroidTheme
 import com.example.jeevanandroid.utils.PrefsManager
 import com.example.jeevanandroid.viewmodel.AuthViewModel
 import com.example.jeevanandroid.viewmodel.AuthViewModelFactory
+import com.example.jeevanandroid.viewmodel.HospitalViewModel
+import com.example.jeevanandroid.viewmodel.NearbyViewModel
+import com.example.jeevanandroid.viewmodel.NearbyViewModelFactory
+import com.example.jeevanandroid.viewmodel.UserProfileViewModel
+import com.example.jeevanandroid.viewmodel.UserProfileViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,27 +41,79 @@ class MainActivity : ComponentActivity() {
                 // Initialize PrefsManager
                 val prefsManager = PrefsManager(this)
 
-                // Initialize AuthViewModel using the factory
+                // Initialize ViewModels using factories
                 val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(prefsManager))
+                val userProfileViewModel: UserProfileViewModel = viewModel(factory = UserProfileViewModelFactory(prefsManager))
+                val nearbyViewModel: NearbyViewModel = viewModel(factory = NearbyViewModelFactory(application))
+                val hospitalViewModel: HospitalViewModel = viewModel()
 
                 // Scaffold for consistent layout
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold { paddingValues ->
                     // Navigation Setup
-                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(innerPadding)) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = if (prefsManager.hasValidToken()) {
+                            if (prefsManager.hasCompletedOnboarding()) "home" else "welcome"
+                        } else "login",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                    ) {
                         // Define the login screen route
                         composable("login") {
-                            LoginScreen(navController = navController, authViewModel = authViewModel)  // Passing navController and authViewModel
+                            LoginScreen(
+                                navController = navController,
+                                authViewModel = authViewModel
+                            )
                         }
                         // Define the registration screen route
                         composable("register") {
-                            RegisterScreen(navController = navController, authViewModel = authViewModel)  // Passing navController and authViewModel
+                            RegisterScreen(
+                                navController = navController,
+                                authViewModel = authViewModel
+                            )
                         }
                         // Define the forgot password screen route
-                        composable("forgot_password") {
-                            ForgotPasswordScreen(navController = navController, authViewModel = authViewModel)  // Passing navController and authViewModel
+                        composable("forgot-password") {
+                            ForgotPasswordScreen(
+                                navController = navController,
+                                authViewModel = authViewModel
+                            )
                         }
-                        composable("home_screen"){
-                            HomeScreen(navController = navController)
+                        // Define the welcome/onboarding screen route
+                        composable("welcome") {
+                            WelcomeScreen(
+                                navController = navController,
+                                userProfileViewModel = userProfileViewModel
+                            )
+                        }
+                        // Define the home screen route
+                        composable("home") {
+                            HomeScreen(
+                                navController = navController,
+                                userProfileViewModel = userProfileViewModel
+                            )
+                        }
+                        // Define the profile screen route
+                        composable("profile") {
+                            ProfileScreen(
+                                navController = navController,
+                                userProfileViewModel = userProfileViewModel
+                            )
+                        }
+                        // Define the pharmacy screen route
+                        composable("pharmacy") {
+                            PharmacyScreen(
+                                navController = navController,
+                                nearbyViewModel = nearbyViewModel
+                            )
+                        }
+                        // Define the hospitals screen route
+                        composable("hospitals") {
+                            HospitalScreen(
+                                navController = navController,
+                                hospitalViewModel = hospitalViewModel
+                            )
                         }
                     }
                 }

@@ -7,9 +7,11 @@ color purple_700
 color teal_200
 color teal_700
 color white
+drawable ambulance
 drawable appointment
 drawable cart
 drawable diagnose
+drawable doctor
 drawable forgot_password_bg
 drawable heart_logo
 drawable hospital_icon
@@ -17,8 +19,12 @@ drawable ic_dustbin
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable imagenotfound
+drawable kailashhospital
+drawable laptoap
 drawable login_back
 drawable medical_kit
+drawable medicine
+drawable monitor
 drawable pharamcy_icon
 drawable profile_placeholder
 drawable registration_back
@@ -32,3 +38,4 @@ string app_name
 style Theme.JeevanAndroid
 xml backup_rules
 xml data_extraction_rules
+xml network_security_config

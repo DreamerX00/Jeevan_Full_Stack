@@ -16,27 +16,45 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
     private val _authResponse = MutableLiveData<AuthResponse>()
     val authResponse: LiveData<AuthResponse> = _authResponse
 
-    private val _isLoading = MutableLiveData<Boolean>()
+    private val _isLoading = MutableLiveData<Boolean>().apply { value = false }
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _isLoggedIn = MutableLiveData<Boolean>().apply { value = false }
+    val isLoggedIn: LiveData<Boolean> = _isLoggedIn
+    
+    private val _isRegistered = MutableLiveData<Boolean>().apply { value = false }
+    val isRegistered: LiveData<Boolean> = _isRegistered
+
     private val authApi = RetrofitClient.createService(AuthApi::class.java)
+
+    init {
+        // Check for valid cached token on initialization
+        checkLoginStatus()
+    }
+
+    private fun checkLoginStatus() {
+        _isLoggedIn.value = prefsManager.hasValidToken()
+    }
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
                 val response = authApi.login(AuthRequest(email, password))
-                _authResponse.value = response
-
-                response.token?.let { token ->
-                    prefsManager.saveToken(token)
+                
+                if (response.token != null) {
+                    prefsManager.saveToken(response.token)
+                    _isLoggedIn.value = true
                 }
+                
+                _authResponse.postValue(response)
             } catch (e: Exception) {
-                _authResponse.value = AuthResponse(
+                _authResponse.postValue(AuthResponse(
                     token = null,
                     message = null,
-                    error = e.message ?: "An unknown error occurred"
-                )
+                    error = e.message
+                ))
+                _isLoggedIn.value = false
             } finally {
                 _isLoading.value = false
             }
@@ -48,39 +66,54 @@ class AuthViewModel(private val prefsManager: PrefsManager) : ViewModel() {
             try {
                 _isLoading.value = true
                 val response = authApi.register(AuthRequest(email, password))
-                _authResponse.value = response
-
-                response.token?.let { token ->
-                    prefsManager.saveToken(token)
+                
+                if (response.token != null) {
+                    prefsManager.saveToken(response.token)
+                    _isLoggedIn.value = true
+                    
+                    // Clear onboarding status for new registrations
+                    prefsManager.clearOnboardingStatus()
+                    
+                    // Mark as registered to navigate to welcome screen
+                    _isRegistered.value = true
                 }
+                
+                _authResponse.postValue(response)
             } catch (e: Exception) {
-                _authResponse.value = AuthResponse(
+                _authResponse.postValue(AuthResponse(
                     token = null,
                     message = null,
-                    error = e.message ?: "An unknown error occurred"
-                )
+                    error = e.message
+                ))
+                _isLoggedIn.value = false
+                _isRegistered.value = false
             } finally {
                 _isLoading.value = false
             }
         }
     }
-
+    
     fun forgotPassword(email: String) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
                 val response = authApi.forgotPassword(ForgotPasswordRequest(email))
-                _authResponse.value = response
+                _authResponse.postValue(response)
             } catch (e: Exception) {
-                _authResponse.value = AuthResponse(
+                _authResponse.postValue(AuthResponse(
                     token = null,
                     message = null,
-                    error = e.message ?: "An unknown error occurred"
-                )
+                    error = e.message
+                ))
             } finally {
                 _isLoading.value = false
             }
         }
+    }
+    
+    fun logout() {
+        prefsManager.clearToken()
+        _isLoggedIn.value = false
     }
 
     fun getStoredToken(): String? {

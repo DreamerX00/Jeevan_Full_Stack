@@ -9,9 +9,8 @@ import com.jeevan.backend.security.JwtService
 import org.springframework.http.ResponseEntity
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.bind.annotation.*
 import java.util.HashMap
 
 @RestController
@@ -21,7 +20,8 @@ class TestController(
     private val jdbcTemplate: JdbcTemplate,
     private val authService: AuthService,
     private val userDetailsService: UserDetailsService,
-    private val jwtService: JwtService
+    private val jwtService: JwtService,
+    private val passwordEncoder: PasswordEncoder
 ) {
     
     @GetMapping("/status")
@@ -133,6 +133,31 @@ class TestController(
             "token" to token,
             "dashboardUrl" to "/api/dashboard/info",
             "howToUse" to "Add this token to your Authorization header as 'Bearer $token'"
+        ))
+    }
+
+    @PostMapping("/update-password")
+    fun updateUserPassword(
+        @RequestParam email: String,
+        @RequestParam newPassword: String
+    ): ResponseEntity<Map<String, String>> {
+        val userOptional = userRepository.findByEmail(email)
+        
+        if (userOptional.isEmpty) {
+            return ResponseEntity.badRequest().body(mapOf(
+                "message" to "User not found"
+            ))
+        }
+
+        val user = userOptional.get()
+        val updatedUser = user.copy(
+            password = passwordEncoder.encode(newPassword)
+        )
+        userRepository.save(updatedUser)
+
+        return ResponseEntity.ok(mapOf(
+            "message" to "Password updated successfully",
+            "email" to email
         ))
     }
 } 
