@@ -25,18 +25,20 @@
 
 ## Project Structure
 ```
-my_app/
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/         # Page components
-│   ├── services/      # API services
-│   ├── store/         # Redux store
-│   ├── types/         # TypeScript types
-│   ├── utils/         # Utility functions
-│   ├── hooks/         # Custom hooks
-│   └── assets/        # Static assets
-├── public/            # Public assets
-└── package.json       # Dependencies
+frontend/
+├── myNewApp/          # React application
+│   ├── src/
+│   │   ├── components/   # Reusable UI components
+│   │   ├── pages/        # Page components
+│   │   ├── services/     # API services
+│   │   ├── store/        # Redux store
+│   │   ├── types/        # TypeScript types
+│   │   ├── utils/        # Utility functions
+│   │   ├── hooks/        # Custom hooks
+│   │   └── assets/       # Static assets
+│   ├── public/           # Public assets
+│   └── package.json      # Dependencies
+└── Information.md        # Documentation
 ```
 
 ## Key Features
@@ -63,13 +65,20 @@ my_app/
 - Node.js 16+
 - npm 7+ or yarn 1.22+
 - Modern browser with dev tools
+- Access to backend API endpoints
 
 ## Configuration
-- Environment variables
-- API endpoints
+- Environment variables in .env files
+- API endpoints configuration
 - Theme configuration
 - Route configuration
 - Authentication settings
+
+## Docker Integration
+- Containerized via docker-compose.yml
+- Environment variable setup for API connection
+- Port 3000 exposed for web access
+- Connected to backend services
 
 ## Testing
 - Jest for unit testing
@@ -90,13 +99,6 @@ my_app/
 - CSRF protection
 - Secure storage
 - Input sanitization
-
-## Docker Support
-- Development container
-- Production build
-- Environment configuration
-- Volume mapping
-- Network setup
 
 ## Build and Deployment
 - Production build process

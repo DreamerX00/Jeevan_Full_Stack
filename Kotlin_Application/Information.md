@@ -5,7 +5,7 @@
 - **Framework**: Android Jetpack Compose
 - **Minimum SDK**: 24 (Android 7.0)
 - **Target SDK**: 34 (Android 14)
-- **Build System**: Gradle
+- **Build System**: Gradle (Kotlin DSL)
 
 ## Key Dependencies
 - **Jetpack Compose**: UI toolkit for native Android development
@@ -19,19 +19,22 @@
 
 ## Project Structure
 ```
-app/
-├── src/
-│   ├── main/
-│   │   ├── java/com/example/jeevanandroid/
-│   │   │   ├── ui/
-│   │   │   │   ├── auth/           # Authentication screens
-│   │   │   │   ├── components/     # Reusable UI components
-│   │   │   │   └── theme/          # App theming
-│   │   │   ├── utils/              # Utility classes
-│   │   │   └── viewmodel/          # ViewModels
-│   │   └── res/                    # Resources
-│   └── test/                       # Unit tests
-└── build.gradle                    # Build configuration
+Kotlin_Application/
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/jeevan/android/
+│   │   │   │   ├── ui/
+│   │   │   │   │   ├── auth/           # Authentication screens
+│   │   │   │   │   ├── components/     # Reusable UI components
+│   │   │   │   │   └── theme/          # App theming
+│   │   │   │   ├── utils/              # Utility classes
+│   │   │   │   └── viewmodel/          # ViewModels
+│   │   │   └── res/                    # Resources
+│   │   └── test/                       # Unit tests
+│   └── build.gradle.kts                # App build configuration
+├── build.gradle.kts                    # Project build configuration
+└── Information.md                      # Documentation
 ```
 
 ## Key Features
@@ -39,30 +42,42 @@ app/
    - Login
    - Registration
    - Password Recovery
-2. Modern UI Components
+2. Healthcare Management
+   - Patient Profile
+   - Medical Records
+   - Appointment Scheduling
+   - Medication Tracking
+3. Modern UI Components
    - Custom Loading Indicators
    - Animated Transitions
    - Material Design Elements
-3. State Management
+4. State Management
    - ViewModel-based architecture
    - LiveData for reactive updates
    - Coroutines for async operations
 
 ## Build Requirements
 - Android Studio Arctic Fox or newer
-- JDK 11 or newer
+- JDK 17 or newer
 - Android SDK 34
 - Gradle 7.0 or newer
 
 ## Configuration
-- The app requires backend API endpoints to be configured
-- Environment variables for API URLs should be set in local.properties
-- Firebase configuration (if used) should be added to google-services.json
+- Backend API connection settings in local.properties
+- Environment-specific configurations
+- API URL configuration
+
+## Integration with Backend
+- RESTful API calls to Spring Boot backend
+- JWT authentication
+- Data synchronization
+- Error handling
 
 ## Testing
-- Unit tests are located in the test directory
-- UI tests use Compose testing framework
+- Unit tests with JUnit
+- UI tests with Compose testing framework
 - Mockito for mocking dependencies
+- Integration tests
 
 ## Security Considerations
 - Secure storage for sensitive data
@@ -80,4 +95,6 @@ app/
 - Offline support
 - Push notifications
 - Deep linking
-- Analytics integration 
+- Analytics integration
+- Telemedicine features
+- Health tracking integration 

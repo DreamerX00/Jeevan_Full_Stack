@@ -20,19 +20,23 @@
 
 ## Project Structure
 ```
-src/
-├── main/
-│   ├── kotlin/com/example/jeevan/
-│   │   ├── config/          # Configuration classes
-│   │   ├── controller/      # REST controllers
-│   │   ├── model/          # Data models
-│   │   ├── repository/     # Data access layer
-│   │   ├── service/        # Business logic
-│   │   └── security/       # Security configuration
-│   └── resources/
-│       ├── application.yml # Application configuration
-│       └── db/            # Database migrations
-└── test/                  # Test cases
+backend/
+├── src/
+│   ├── main/
+│   │   ├── kotlin/com/jeevan/backend/
+│   │   │   ├── config/          # Configuration classes
+│   │   │   ├── controller/      # REST controllers
+│   │   │   ├── model/          # Data models
+│   │   │   ├── repository/     # Data access layer
+│   │   │   ├── service/        # Business logic
+│   │   │   └── security/       # Security configuration
+│   │   └── resources/
+│   │       ├── application.yml # Application configuration
+│   │       └── db/            # Database migrations
+│   └── test/                  # Test cases
+├── build.gradle.kts           # Gradle build configuration
+├── Dockerfile                 # Docker configuration
+└── Information.md             # Documentation
 ```
 
 ## API Endpoints
@@ -52,6 +56,8 @@ src/
 - Authentication tokens
 - User profiles
 - Audit logs
+- Medical records
+- Appointments
 
 ## Security Features
 - JWT-based authentication
@@ -62,11 +68,18 @@ src/
 - Input validation
 
 ## Configuration
-- Database connection settings
-- JWT secret key
-- Server port
+- Database connection settings in application.yml
+- JWT secret key configuration
+- Server port (default: 8080)
 - Logging configuration
 - Environment-specific properties
+
+## Docker Integration
+- Multi-stage Docker build
+- Environment variable configuration via docker-compose.yml
+- Container dependencies defined
+- Database connectivity
+- Exposed on port 8080
 
 ## Testing
 - Unit tests with JUnit
@@ -87,12 +100,6 @@ src/
 - Metrics collection
 - Health checks
 
-## Docker Support
-- Multi-stage builds
-- Environment variable configuration
-- Volume mapping for persistent data
-- Network configuration
-
 ## Deployment
 - Docker containerization
 - Kubernetes support
@@ -104,4 +111,5 @@ src/
 - Message queue integration
 - Caching layer
 - API versioning
-- Enhanced monitoring 
+- Enhanced monitoring
+- GraphQL API support 
