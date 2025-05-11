@@ -6,9 +6,9 @@ services:
     image: postgres:15-alpine
     container_name: jeevan_postgres
     environment:
-      POSTGRES_DB: jeevan_db
-      POSTGRES_USER: jeevan_user
-      POSTGRES_PASSWORD: jeevan_password
+      POSTGRES_DB: jeevanDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
@@ -16,7 +16,7 @@ services:
     networks:
       - jeevan_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U jeevan_user -d jeevan_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d jeevanDB"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,9 +31,9 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jeevan_db
-      SPRING_DATASOURCE_USERNAME: jeevan_user
-      SPRING_DATASOURCE_PASSWORD: jeevan_password
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jeevanDB
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       JWT_SECRET: your_jwt_secret_key_here
       SERVER_PORT: 8080
@@ -45,7 +45,7 @@ services:
   # Frontend Service
   frontend:
     build:
-      context: ./frontend/my_app
+      context: ./frontend/myNewApp
       dockerfile: Dockerfile
     container_name: jeevan_frontend
     environment:
