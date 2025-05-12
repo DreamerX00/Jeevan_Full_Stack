@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useSearch } from '../context/SearchContext';
+import { useTheme } from '../context/ThemeContext';
 
 // This component is a wrapper around search results that handles navigation properly
 const SearchResultItem = ({ result }) => {
   const navigate = useNavigate();
   const { setSearchTerm, setShowResults } = useSearch();
+  const { darkMode } = useTheme();
 
   const handleClick = (e) => {
     e.preventDefault(); // Prevent default anchor behavior
@@ -38,12 +40,18 @@ const SearchResultItem = ({ result }) => {
   return (
     <button
       onClick={handleClick}
-      className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 rounded"
+      className={`w-full text-left px-3 py-2 text-sm ${
+        darkMode 
+          ? 'text-gray-200 hover:bg-gray-700 hover:text-blue-400' 
+          : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+      } rounded transition-colors duration-200`}
     >
       {result.type === 'product' ? (
         <>
           <div>{result.displayTitle}</div>
-          <div className="text-xs text-gray-500">{result.subtitle}</div>
+          <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
+            {result.subtitle}
+          </div>
         </>
       ) : (
         <span>{result.displayTitle}</span>

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaPhone, FaExclamationCircle } from 'react-icons/fa';
 import authService from '../services/authService';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +17,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { darkMode } = useTheme();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -69,25 +72,33 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+    <div className={`min-h-screen ${darkMode 
+      ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
+      : 'bg-gradient-to-br from-blue-50 to-blue-100'} 
+      py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center transition-colors duration-200`}>
+      {/* Theme Toggle in top-right corner */}
+      <div className="fixed top-4 right-4">
+        <ThemeToggle />
+      </div>
+      
+      <div className={`max-w-md w-full space-y-8 ${darkMode ? 'bg-dark-card' : 'bg-white'} p-8 rounded-xl shadow-lg transition-colors duration-200`}>
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className={`mt-6 text-center text-3xl font-extrabold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
             Create an Account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className={`mt-2 text-center text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-200`}>
             Join our medical platform for better healthcare
           </p>
         </div>
         
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded" role="alert">
+          <div className={`${darkMode ? 'bg-red-900 border-red-700' : 'bg-red-50 border-red-500'} border-l-4 p-4 rounded transition-colors duration-200`} role="alert">
             <div className="flex">
               <div className="flex-shrink-0">
-                <FaExclamationCircle className="h-5 w-5 text-red-500" />
+                <FaExclamationCircle className={`h-5 w-5 ${darkMode ? 'text-red-300' : 'text-red-500'} transition-colors duration-200`} />
               </div>
               <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
+                <p className={`text-sm ${darkMode ? 'text-red-200' : 'text-red-700'} transition-colors duration-200`}>{error}</p>
               </div>
             </div>
           </div>
@@ -99,13 +110,17 @@ const Signup = () => {
               <label htmlFor="fullName" className="sr-only">
                 Full Name
               </label>
-              <FaUser className="absolute top-3 left-3 text-gray-400" />
+              <FaUser className={`absolute top-3 left-3 ${darkMode ? 'text-gray-500' : 'text-gray-400'} transition-colors duration-200`} />
               <input
                 id="fullName"
                 name="fullName"
                 type="text"
                 required
-                className="appearance-none rounded-lg relative block w-full px-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className={`appearance-none rounded-lg relative block w-full px-10 py-2 border ${
+                  darkMode 
+                    ? 'bg-gray-800 border-gray-700 placeholder-gray-500 text-gray-100' 
+                    : 'border-gray-300 placeholder-gray-500 text-gray-900'
+                } focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors duration-200`}
                 placeholder="Full Name"
                 value={formData.fullName}
                 onChange={handleChange}
@@ -116,13 +131,17 @@ const Signup = () => {
               <label htmlFor="email" className="sr-only">
                 Email address
               </label>
-              <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
+              <FaEnvelope className={`absolute top-3 left-3 ${darkMode ? 'text-gray-500' : 'text-gray-400'} transition-colors duration-200`} />
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
-                className="appearance-none rounded-lg relative block w-full px-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className={`appearance-none rounded-lg relative block w-full px-10 py-2 border ${
+                  darkMode 
+                    ? 'bg-gray-800 border-gray-700 placeholder-gray-500 text-gray-100' 
+                    : 'border-gray-300 placeholder-gray-500 text-gray-900'
+                } focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors duration-200`}
                 placeholder="Email address"
                 value={formData.email}
                 onChange={handleChange}
@@ -133,13 +152,17 @@ const Signup = () => {
               <label htmlFor="phone" className="sr-only">
                 Phone Number
               </label>
-              <FaPhone className="absolute top-3 left-3 text-gray-400" />
+              <FaPhone className={`absolute top-3 left-3 ${darkMode ? 'text-gray-500' : 'text-gray-400'} transition-colors duration-200`} />
               <input
                 id="phone"
                 name="phone"
                 type="tel"
                 required
-                className="appearance-none rounded-lg relative block w-full px-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className={`appearance-none rounded-lg relative block w-full px-10 py-2 border ${
+                  darkMode 
+                    ? 'bg-gray-800 border-gray-700 placeholder-gray-500 text-gray-100' 
+                    : 'border-gray-300 placeholder-gray-500 text-gray-900'
+                } focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors duration-200`}
                 placeholder="Phone Number"
                 value={formData.phone}
                 onChange={handleChange}
@@ -150,13 +173,17 @@ const Signup = () => {
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
-              <FaLock className="absolute top-3 left-3 text-gray-400" />
+              <FaLock className={`absolute top-3 left-3 ${darkMode ? 'text-gray-500' : 'text-gray-400'} transition-colors duration-200`} />
               <input
                 id="password"
                 name="password"
                 type="password"
                 required
-                className="appearance-none rounded-lg relative block w-full px-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className={`appearance-none rounded-lg relative block w-full px-10 py-2 border ${
+                  darkMode 
+                    ? 'bg-gray-800 border-gray-700 placeholder-gray-500 text-gray-100' 
+                    : 'border-gray-300 placeholder-gray-500 text-gray-900'
+                } focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors duration-200`}
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
@@ -167,13 +194,17 @@ const Signup = () => {
               <label htmlFor="confirmPassword" className="sr-only">
                 Confirm Password
               </label>
-              <FaLock className="absolute top-3 left-3 text-gray-400" />
+              <FaLock className={`absolute top-3 left-3 ${darkMode ? 'text-gray-500' : 'text-gray-400'} transition-colors duration-200`} />
               <input
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
                 required
-                className="appearance-none rounded-lg relative block w-full px-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className={`appearance-none rounded-lg relative block w-full px-10 py-2 border ${
+                  darkMode 
+                    ? 'bg-gray-800 border-gray-700 placeholder-gray-500 text-gray-100' 
+                    : 'border-gray-300 placeholder-gray-500 text-gray-900'
+                } focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition-colors duration-200`}
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -191,9 +222,9 @@ const Signup = () => {
               checked={formData.agreeToTerms}
               onChange={handleChange}
             />
-            <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-900">
+            <label htmlFor="agree-terms" className={`ml-2 block text-sm ${darkMode ? 'text-gray-300' : 'text-gray-900'} transition-colors duration-200`}>
               I agree to the{' '}
-              <Link to="/terms" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link to="/terms" className={`font-medium ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'} transition-colors duration-200`}>
                 Terms and Conditions
               </Link>
             </label>
@@ -202,19 +233,23 @@ const Signup = () => {
           <div>
             <button
               type="submit"
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
-              }`}
               disabled={loading}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+                darkMode 
+                  ? 'bg-blue-600 hover:bg-blue-700'
+                  : 'bg-blue-600 hover:bg-blue-700'
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
+                loading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? 'Creating Account...' : 'Sign up'}
             </button>
           </div>
-
+          
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} transition-colors duration-200`}>
               Already have an account?{' '}
-              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link to="/login" className={`font-medium ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'} transition-colors duration-200`}>
                 Sign in
               </Link>
             </p>
