@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+import { useTheme } from '../context/ThemeContext';
 import { 
   FaCalendarCheck, 
   FaHeartbeat, 
@@ -14,6 +15,7 @@ import {
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const location = useLocation();
+  const { darkMode } = useTheme();
 
   // Handle tab routing from URL parameters
   useEffect(() => {
@@ -59,69 +61,69 @@ const UserDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${darkMode ? 'bg-dark-bg' : 'bg-gray-50'} transition-colors duration-200`}>
       <Navbar />
       <div className="flex">
         <Sidebar />
         <main className="flex-1 ml-64 pt-16 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="py-6">
-              <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-              <p className="mt-1 text-sm text-gray-500">View and manage your health information</p>
+              <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Dashboard</h1>
+              <p className={`mt-1 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>View and manage your health information</p>
             </div>
 
             {/* Dashboard Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-xl shadow-sm p-6 transition-colors duration-200`}>
                 <div className="flex items-center">
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <FaCalendarCheck className="h-6 w-6 text-blue-600" />
+                  <div className={`${darkMode ? 'bg-blue-900' : 'bg-blue-100'} p-3 rounded-full transition-colors duration-200`}>
+                    <FaCalendarCheck className={`h-6 w-6 ${darkMode ? 'text-blue-300' : 'text-blue-600'} transition-colors duration-200`} />
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-medium text-gray-900">Appointments</h3>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">2</p>
-                    <p className="text-sm text-gray-500">Upcoming</p>
+                    <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Appointments</h3>
+                    <p className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mt-1 transition-colors duration-200`}>2</p>
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>Upcoming</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-xl shadow-sm p-6 transition-colors duration-200`}>
                 <div className="flex items-center">
-                  <div className="bg-green-100 p-3 rounded-full">
-                    <FaHeartbeat className="h-6 w-6 text-green-600" />
+                  <div className={`${darkMode ? 'bg-green-900' : 'bg-green-100'} p-3 rounded-full transition-colors duration-200`}>
+                    <FaHeartbeat className={`h-6 w-6 ${darkMode ? 'text-green-300' : 'text-green-600'} transition-colors duration-200`} />
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-medium text-gray-900">Health Status</h3>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">Good</p>
-                    <p className="text-sm text-gray-500">Last checkup: 2 weeks ago</p>
+                    <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Health Status</h3>
+                    <p className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mt-1 transition-colors duration-200`}>Good</p>
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>Last checkup: 2 weeks ago</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-xl shadow-sm p-6 transition-colors duration-200`}>
                 <div className="flex items-center">
-                  <div className="bg-purple-100 p-3 rounded-full">
-                    <FaPills className="h-6 w-6 text-purple-600" />
+                  <div className={`${darkMode ? 'bg-purple-900' : 'bg-purple-100'} p-3 rounded-full transition-colors duration-200`}>
+                    <FaPills className={`h-6 w-6 ${darkMode ? 'text-purple-300' : 'text-purple-600'} transition-colors duration-200`} />
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-medium text-gray-900">Prescriptions</h3>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">2</p>
-                    <p className="text-sm text-gray-500">Active medications</p>
+                    <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Prescriptions</h3>
+                    <p className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mt-1 transition-colors duration-200`}>2</p>
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>Active medications</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-gray-200 mb-6">
+            <div className={`border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} mb-6 transition-colors duration-200`}>
               <nav className="-mb-px flex space-x-8">
                 <button
                   onClick={() => setActiveTab('overview')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'overview'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   Overview
                 </button>
@@ -129,9 +131,9 @@ const UserDashboard = () => {
                   onClick={() => setActiveTab('appointments')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'appointments'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   Appointments
                 </button>
@@ -139,9 +141,9 @@ const UserDashboard = () => {
                   onClick={() => setActiveTab('prescriptions')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'prescriptions'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   Prescriptions
                 </button>
@@ -149,9 +151,9 @@ const UserDashboard = () => {
                   onClick={() => setActiveTab('health')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'health'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   Health Tracker
                 </button>
@@ -159,9 +161,9 @@ const UserDashboard = () => {
                   onClick={() => setActiveTab('doctors')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'doctors'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   My Doctors
                 </button>
@@ -169,9 +171,9 @@ const UserDashboard = () => {
                   onClick={() => setActiveTab('records')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'records'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   Medical Records
                 </button>
@@ -183,77 +185,70 @@ const UserDashboard = () => {
               {activeTab === 'overview' && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Upcoming Appointments */}
-                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                      <h3 className="text-lg font-medium text-gray-900">Upcoming Appointments</h3>
-                      <Link to="/appointments" className="text-sm text-blue-600 hover:text-blue-500">View All</Link>
+                  <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-xl shadow-sm overflow-hidden transition-colors duration-200`}>
+                    <div className={`px-6 py-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex justify-between items-center transition-colors duration-200`}>
+                      <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Upcoming Appointments</h3>
+                      <Link to="/appointments" className={`text-sm ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'} transition-colors duration-200`}>View All</Link>
                     </div>
                     <div className="px-6 py-4">
                       {upcomingAppointments.length > 0 ? (
                         <div className="space-y-4">
                           {upcomingAppointments.map(appointment => (
-                            <div key={appointment.id} className="flex items-start p-3 border border-gray-200 rounded-lg">
-                              <div className="bg-blue-100 p-2 rounded-full">
-                                <FaUserMd className="h-5 w-5 text-blue-600" />
+                            <div key={appointment.id} className={`flex items-start p-3 border ${darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200'} rounded-lg transition-colors duration-200`}>
+                              <div className={`${darkMode ? 'bg-blue-900' : 'bg-blue-100'} p-2 rounded-full transition-colors duration-200`}>
+                                <FaUserMd className={`h-5 w-5 ${darkMode ? 'text-blue-300' : 'text-blue-600'} transition-colors duration-200`} />
                               </div>
                               <div className="ml-3">
-                                <p className="text-sm font-medium text-gray-900">{appointment.doctor}</p>
-                                <p className="text-sm text-gray-500">{appointment.specialty}</p>
-                                <p className="text-xs text-gray-500 mt-1">{appointment.date} • {appointment.time}</p>
+                                <p className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>{appointment.doctor}</p>
+                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>{appointment.specialty}</p>
+                                <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'} mt-1 transition-colors duration-200`}>{appointment.date} at {appointment.time}</p>
                               </div>
+                              <button className={`ml-auto inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded ${darkMode ? 'bg-blue-900 text-blue-300 hover:bg-blue-800' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'} transition-colors duration-200`}>
+                                <FaPhone className="mr-1" />
+                                Contact
+                              </button>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-gray-500 text-sm">No upcoming appointments</p>
+                        <div className="text-center py-4">
+                          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>No upcoming appointments</p>
+                        </div>
                       )}
                     </div>
                   </div>
 
                   {/* Recent Prescriptions */}
-                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                      <h3 className="text-lg font-medium text-gray-900">Recent Prescriptions</h3>
-                      <Link to="/prescriptions" className="text-sm text-blue-600 hover:text-blue-500">View All</Link>
+                  <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-xl shadow-sm overflow-hidden transition-colors duration-200`}>
+                    <div className={`px-6 py-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex justify-between items-center transition-colors duration-200`}>
+                      <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Recent Prescriptions</h3>
+                      <Link to="/prescriptions" className={`text-sm ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'} transition-colors duration-200`}>View All</Link>
                     </div>
                     <div className="px-6 py-4">
                       {recentPrescriptions.length > 0 ? (
                         <div className="space-y-4">
                           {recentPrescriptions.map(prescription => (
-                            <div key={prescription.id} className="flex items-start p-3 border border-gray-200 rounded-lg">
-                              <div className="bg-purple-100 p-2 rounded-full">
-                                <FaPills className="h-5 w-5 text-purple-600" />
+                            <div key={prescription.id} className={`flex items-start p-3 border ${darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200'} rounded-lg transition-colors duration-200`}>
+                              <div className={`${darkMode ? 'bg-purple-900' : 'bg-purple-100'} p-2 rounded-full transition-colors duration-200`}>
+                                <FaPills className={`h-5 w-5 ${darkMode ? 'text-purple-300' : 'text-purple-600'} transition-colors duration-200`} />
                               </div>
                               <div className="ml-3">
-                                <p className="text-sm font-medium text-gray-900">{prescription.medication} {prescription.dosage}</p>
-                                <p className="text-sm text-gray-500">{prescription.frequency}</p>
-                                <p className="text-xs text-gray-500 mt-1">Prescribed: {prescription.prescribed}</p>
+                                <p className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>{prescription.medication}</p>
+                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>{prescription.dosage}, {prescription.frequency}</p>
+                                <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-700'} mt-1 transition-colors duration-200`}>Prescribed: {prescription.prescribed}</p>
                               </div>
+                              <button className={`ml-auto inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded ${darkMode ? 'bg-purple-900 text-purple-300 hover:bg-purple-800' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'} transition-colors duration-200`}>
+                                <FaFileMedical className="mr-1" />
+                                Details
+                              </button>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-gray-500 text-sm">No recent prescriptions</p>
+                        <div className="text-center py-4">
+                          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>No recent prescriptions</p>
+                        </div>
                       )}
-                    </div>
-                  </div>
-
-                  {/* Emergency Contacts */}
-                  <div className="bg-white rounded-xl shadow-sm overflow-hidden lg:col-span-2">
-                    <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                      <h3 className="text-lg font-medium text-gray-900">Emergency Contacts</h3>
-                      <Link to="/emergency-contacts" className="text-sm text-blue-600 hover:text-blue-500">Manage</Link>
-                    </div>
-                    <div className="px-6 py-4">
-                      <div className="flex items-start p-3 border border-gray-200 rounded-lg">
-                        <div className="bg-red-100 p-2 rounded-full">
-                          <FaPhone className="h-5 w-5 text-red-600" />
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">Emergency Helpline</p>
-                          <p className="text-sm text-gray-500">108</p>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>

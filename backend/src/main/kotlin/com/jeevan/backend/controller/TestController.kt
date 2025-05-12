@@ -78,10 +78,12 @@ class TestController(
             """
         )
         
-        val response = mapOf(
+        val dbType = jdbcTemplate.dataSource?.connection?.metaData?.databaseProductName ?: "Unknown"
+        
+        val response = mapOf<String, Any>(
             "tables" to tables,
             "users_table_columns" to usersColumns,
-            "database_type" to jdbcTemplate.dataSource?.connection?.metaData?.databaseProductName ?: "Unknown"
+            "database_type" to dbType
         )
         
         return ResponseEntity.ok(response)

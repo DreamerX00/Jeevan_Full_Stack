@@ -43,10 +43,56 @@ Jeevan is a full-stack healthcare management system built with modern technologi
 ```
 jeevan/
 ├── backend/                 # Spring Boot Backend
+│   ├── src/                # Source code
+│   ├── build.gradle.kts    # Gradle build configuration
+│   └── application.properties.example  # Configuration template
 ├── frontend/               # React Web Application
+│   ├── myNewApp/          # Main React application
+│   └── DEVELOPMENT_GUIDE.md # Frontend development guide
 ├── android/               # Android Mobile Application
+│   ├── app/              # Android app source
+│   └── DEVELOPMENT_GUIDE.md # Android development guide
 └── docs/                  # Documentation
 ```
+
+## Important Guidelines
+
+### Files and Directories to Never Modify
+1. Core Configuration Files:
+   - `backend/build.gradle.kts`
+   - `frontend/myNewApp/package.json`
+   - `android/app/build.gradle.kts`
+   - `.gitignore`
+
+2. Security Files:
+   - `SECURITY.md`
+   - `backend/src/main/resources/application.properties`
+   - Any files containing credentials or secrets
+
+3. Documentation:
+   - `LICENSE`
+   - `README.md`
+   - `DEVELOPMENT_GUIDE.md` files
+
+### Development Workflow
+
+1. **Backend Development**:
+   - Follow the backend development guide
+   - Use Kotlin coding standards
+   - Write unit tests for new features
+   - Document API changes
+
+2. **Frontend Development**:
+   - Follow the frontend development guide
+   - Use TypeScript for type safety
+   - Follow React best practices
+   - Write component tests
+
+3. **Android Development**:
+   - Follow the Android development guide
+   - Use Jetpack Compose
+   - Follow Material Design guidelines
+   - Write UI tests
 
 ## Getting Started
 
@@ -80,7 +126,7 @@ jeevan/
 
 1. Navigate to frontend directory:
    ```bash
-   cd ../frontend
+   cd frontend/myNewApp
    ```
 
 2. Install dependencies:
@@ -100,48 +146,17 @@ jeevan/
 3. Sync Gradle files
 4. Run the application
 
-## Features
+## Security Guidelines
 
-### Patient Features
-- User registration and authentication
-- Medical record management
-- Appointment scheduling
-- Prescription tracking
-- Real-time notifications
+1. Never commit sensitive information:
+   - API keys
+   - Database credentials
+   - JWT secrets
+   - Environment variables
 
-### Doctor Features
-- Patient management
-- Appointment management
-- Prescription creation
-- Medical record updates
-- Real-time patient updates
-
-### Pharmacy Features
-- Prescription verification
-- Order management
-- Inventory tracking
-- Delivery status updates
-
-## API Documentation
-
-The API documentation is available at `/api/docs` when running the backend server.
-
-## Security
-
-- JWT-based authentication
-- Role-based access control
-- Secure file storage
-- Data encryption
-- CORS configuration
-- Rate limiting
-
-## Development Guidelines
-
-Please refer to the following documentation for development guidelines:
-
-- [Backend Development Guide](backend/DEVELOPMENT_GUIDE.md)
-- [Frontend Development Guide](frontend/DEVELOPMENT_GUIDE.md)
-- [Android Development Guide](android/DEVELOPMENT_GUIDE.md)
+2. Always use environment variables for sensitive data
+3. Follow security best practices in each component
+4. Review security documentation regularly
 
 ## Contributing
 
@@ -158,13 +173,6 @@ We use [SemVer](http://semver.org/) for versioning. Current version: 1.0.0
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Spring Boot Team
-- React Team
-- Android Team
-- All contributors
 
 ## Support
 

@@ -1,33 +1,38 @@
 import { useState, useEffect } from 'react';
 import { FaMapMarkerAlt, FaSpinner } from 'react-icons/fa';
+import { useTheme } from '../context/ThemeContext';
 
 // Placeholder component to show while the real map component loads
-const MapPlaceholder = ({ type, loading, error }) => (
-  <div className="flex flex-col items-center justify-center h-96 bg-gray-100 rounded-xl">
-    {loading ? (
-      <>
-        <FaSpinner className="h-10 w-10 text-blue-600 animate-spin mb-4" />
-        <p className="text-gray-700">Loading map...</p>
-      </>
-    ) : error ? (
-      <>
-        <FaMapMarkerAlt className="text-red-500 h-12 w-12 mb-4" />
-        <p className="text-gray-700 text-lg">{error}</p>
-        <button 
-          onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          Try Again
-        </button>
-      </>
-    ) : (
-      <>
-        <FaMapMarkerAlt className="text-blue-500 h-12 w-12 mb-4" />
-        <p className="text-gray-700">Finding nearby {type}...</p>
-      </>
-    )}
-  </div>
-);
+const MapPlaceholder = ({ type, loading, error }) => {
+  const { darkMode } = useTheme();
+  
+  return (
+    <div className={`flex flex-col items-center justify-center h-96 ${darkMode ? 'bg-gray-800' : 'bg-gray-100'} rounded-xl transition-colors duration-200`}>
+      {loading ? (
+        <>
+          <FaSpinner className={`h-10 w-10 ${darkMode ? 'text-blue-400' : 'text-blue-600'} animate-spin mb-4 transition-colors duration-200`} />
+          <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} transition-colors duration-200`}>Loading map...</p>
+        </>
+      ) : error ? (
+        <>
+          <FaMapMarkerAlt className="text-red-500 h-12 w-12 mb-4" />
+          <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} text-lg transition-colors duration-200`}>{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className={`mt-4 px-4 py-2 ${darkMode ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-md transition-colors duration-200`}
+          >
+            Try Again
+          </button>
+        </>
+      ) : (
+        <>
+          <FaMapMarkerAlt className={`${darkMode ? 'text-blue-400' : 'text-blue-500'} h-12 w-12 mb-4 transition-colors duration-200`} />
+          <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} transition-colors duration-200`}>Finding nearby {type}...</p>
+        </>
+      )}
+    </div>
+  );
+};
 
 // Mock data for faster development
 const MOCK_LOCATIONS = {
@@ -51,6 +56,7 @@ const Map = ({ type }) => {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [nearby, setNearby] = useState([]);
   const [useDevMode, setUseDevMode] = useState(false); // Change this to false when ready for production
+  const { darkMode } = useTheme();
 
   useEffect(() => {
     // In development mode, use mock data to avoid API calls
@@ -71,10 +77,10 @@ const Map = ({ type }) => {
         return;
       }
       
-      const API_KEY = ''; // ADD YOUR API KEY HERE
+      const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''; // Use environment variable
       
       if (!API_KEY) {
-        setError('Google Maps API key is missing. Please add your API key in the Map component.');
+        setError('Google Maps API key is missing. Please check your environment configuration.');
         setLoading(false);
         return;
       }
@@ -121,7 +127,87 @@ const Map = ({ type }) => {
             center: userLocation,
             zoom: 14,
             mapTypeControl: false,
-            streetViewControl: false
+            streetViewControl: false,
+            styles: darkMode ? [
+              { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+              { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+              { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+              {
+                featureType: "administrative.locality",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#d59563" }],
+              },
+              {
+                featureType: "poi",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#d59563" }],
+              },
+              {
+                featureType: "poi.park",
+                elementType: "geometry",
+                stylers: [{ color: "#263c3f" }],
+              },
+              {
+                featureType: "poi.park",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#6b9a76" }],
+              },
+              {
+                featureType: "road",
+                elementType: "geometry",
+                stylers: [{ color: "#38414e" }],
+              },
+              {
+                featureType: "road",
+                elementType: "geometry.stroke",
+                stylers: [{ color: "#212a37" }],
+              },
+              {
+                featureType: "road",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#9ca5b3" }],
+              },
+              {
+                featureType: "road.highway",
+                elementType: "geometry",
+                stylers: [{ color: "#746855" }],
+              },
+              {
+                featureType: "road.highway",
+                elementType: "geometry.stroke",
+                stylers: [{ color: "#1f2835" }],
+              },
+              {
+                featureType: "road.highway",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#f3d19c" }],
+              },
+              {
+                featureType: "transit",
+                elementType: "geometry",
+                stylers: [{ color: "#2f3948" }],
+              },
+              {
+                featureType: "transit.station",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#d59563" }],
+              },
+              {
+                featureType: "water",
+                elementType: "geometry",
+                stylers: [{ color: "#17263c" }],
+              },
+              {
+                featureType: "water",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#515c6d" }],
+              },
+              {
+                featureType: "water",
+                elementType: "labels.text.stroke",
+                stylers: [{ color: "#17263c" }],
+              },
+            ] : []
           });
           
           // Add marker for user's location
@@ -189,7 +275,7 @@ const Map = ({ type }) => {
       
       {/* Development mode message */}
       {useDevMode && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-lg">
+        <div className={`${darkMode ? 'bg-yellow-900 border-yellow-700' : 'bg-yellow-50 border-yellow-400'} border-l-4 p-4 mb-6 rounded-lg transition-colors duration-200`}>
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
@@ -197,7 +283,7 @@ const Map = ({ type }) => {
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-yellow-700">
+              <p className={`text-sm ${darkMode ? 'text-yellow-200' : 'text-yellow-700'} transition-colors duration-200`}>
                 Development mode: Using mock data instead of Google Maps API.
               </p>
             </div>
@@ -207,24 +293,29 @@ const Map = ({ type }) => {
       
       {/* List of nearby places */}
       <div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-4">Nearby {type}</h3>
+        <h3 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4 transition-colors duration-200`}>Nearby {type}</h3>
         {nearby.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {nearby.map((place, index) => (
-              <div key={place.id || place.place_id || index} className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <h4 className="font-medium text-lg">{place.name}</h4>
-                <p className="text-gray-600 text-sm">{place.vicinity}</p>
+              <div 
+                key={place.id || place.place_id || index} 
+                className={`${darkMode ? 'bg-dark-card' : 'bg-white'} p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200`}
+              >
+                <h4 className={`font-medium text-lg ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>{place.name}</h4>
+                <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm transition-colors duration-200`}>{place.vicinity}</p>
                 <div className="flex items-center mt-2">
                   {place.rating && (
                     <div className="flex items-center">
                       <span className="text-yellow-500 mr-1">★</span>
-                      <span className="text-gray-600 text-sm">{place.rating}</span>
+                      <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm transition-colors duration-200`}>{place.rating}</span>
                     </div>
                   )}
                   {(place.opening_hours || place.open_now !== undefined) && (
                     <span className={`ml-auto text-sm ${
-                      (place.opening_hours?.open_now || place.open_now) ? 'text-green-600' : 'text-red-600'
-                    }`}>
+                      (place.opening_hours?.open_now || place.open_now) 
+                        ? darkMode ? 'text-green-400' : 'text-green-600' 
+                        : darkMode ? 'text-red-400' : 'text-red-600'
+                    } transition-colors duration-200`}>
                       {(place.opening_hours?.open_now || place.open_now) ? 'Open' : 'Closed'}
                     </span>
                   )}
@@ -233,7 +324,7 @@ const Map = ({ type }) => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-600">No {type} found nearby.</p>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} transition-colors duration-200`}>No {type} found nearby.</p>
         )}
       </div>
     </div>
