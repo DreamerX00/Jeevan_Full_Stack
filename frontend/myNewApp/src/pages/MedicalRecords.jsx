@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+import { useTheme } from '../context/ThemeContext';
 import { 
   FaFileAlt, 
   FaCalendarCheck, 
@@ -20,6 +21,7 @@ import {
 const MedicalRecords = () => {
   const [activeTab, setActiveTab] = useState('health-history');
   const [timeFilter, setTimeFilter] = useState('all');
+  const { darkMode } = useTheme();
   
   // Mock data for health history
   const healthRecords = [
@@ -206,27 +208,27 @@ const MedicalRecords = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${darkMode ? 'bg-dark-bg' : 'bg-gray-50'} transition-colors duration-200`}>
       <Navbar />
       <div className="flex">
         <Sidebar />
         <main className="flex-1 ml-64 pt-16 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="mb-6">
-              <h1 className="text-3xl font-bold text-gray-900">Medical Records</h1>
-              <p className="mt-2 text-lg text-gray-600">View and manage your complete health information</p>
+              <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Medical Records</h1>
+              <p className={`mt-2 text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-200`}>View and manage your complete health information</p>
             </div>
             
             {/* Tabs */}
-            <div className="border-b border-gray-200 mb-6">
+            <div className={`border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} mb-6 transition-colors duration-200`}>
               <nav className="-mb-px flex space-x-8">
                 <button
                   onClick={() => setActiveTab('health-history')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'health-history'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   <FaFileAlt className="inline-block mr-2" />
                   Health History
@@ -235,9 +237,9 @@ const MedicalRecords = () => {
                   onClick={() => setActiveTab('appointments')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'appointments'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   <FaCalendarCheck className="inline-block mr-2" />
                   Previous Appointments
@@ -246,9 +248,9 @@ const MedicalRecords = () => {
                   onClick={() => setActiveTab('reports')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'reports'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   <FaFileMedical className="inline-block mr-2" />
                   Medical Reports
@@ -257,9 +259,9 @@ const MedicalRecords = () => {
                   onClick={() => setActiveTab('health-tracking')}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'health-tracking'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                      ? `border-blue-500 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300 hover:border-gray-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}`
+                  } transition-colors duration-200`}
                 >
                   <FaChartLine className="inline-block mr-2" />
                   Health Tracking
@@ -267,19 +269,20 @@ const MedicalRecords = () => {
               </nav>
             </div>
             
-            {/* Time filter */}
-            <div className="flex justify-between items-center mb-6">
-              <div>
+            {/* Filters */}
+            <div className={`flex flex-wrap items-center justify-between mb-6 pb-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} transition-colors duration-200`}>
+              <div className="flex items-center space-x-4">
                 <div className="flex items-center">
-                  <FaFilter className="text-gray-400 mr-2" />
-                  <label htmlFor="time-filter" className="text-sm text-gray-500 mr-2">
-                    Time Period:
-                  </label>
+                  <FaFilter className={`mr-2 h-4 w-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`} />
+                  <span className={`mr-2 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} transition-colors duration-200`}>Time Period:</span>
                   <select
-                    id="time-filter"
                     value={timeFilter}
                     onChange={(e) => setTimeFilter(e.target.value)}
-                    className="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className={`block py-2 px-3 border ${
+                      darkMode 
+                        ? 'bg-gray-800 border-gray-700 text-gray-200' 
+                        : 'bg-white border-gray-300 text-gray-700'
+                    } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors duration-200`}
                   >
                     <option value="all">All Time</option>
                     <option value="3-months">Last 3 Months</option>
@@ -288,73 +291,97 @@ const MedicalRecords = () => {
                   </select>
                 </div>
               </div>
-              
-              <div className="flex space-x-3">
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaSearch className="h-4 w-4 text-gray-400" />
+              <div className="mt-4 sm:mt-0">
+                {activeTab === 'health-tracking' ? (
+                  <button className={`inline-flex items-center px-4 py-2 border ${
+                    darkMode 
+                      ? 'border-blue-700 bg-blue-700 hover:bg-blue-800' 
+                      : 'border-blue-600 bg-blue-600 hover:bg-blue-700'
+                    } text-white font-medium rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200`}>
+                    <FaPlus className="mr-2 h-4 w-4" />
+                    Add Health Data
+                  </button>
+                ) : activeTab === 'reports' ? (
+                  <button className={`inline-flex items-center px-4 py-2 border ${
+                    darkMode 
+                      ? 'border-blue-700 bg-blue-700 hover:bg-blue-800' 
+                      : 'border-blue-600 bg-blue-600 hover:bg-blue-700'
+                    } text-white font-medium rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200`}>
+                    <FaDownload className="mr-2 h-4 w-4" />
+                    Download All
+                  </button>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      className={`block w-full pl-10 pr-3 py-2 border ${
+                        darkMode 
+                          ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500' 
+                          : 'bg-white border-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500'
+                        } rounded-md leading-5 focus:outline-none sm:text-sm transition-colors duration-200`}
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FaSearch className="h-4 w-4 text-gray-400" />
+                    </div>
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Search records..."
-                    className="pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  />
-                </div>
-                <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                  <FaDownload className="mr-2" />
-                  Export
-                </button>
-                <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                  <FaPlus className="mr-2" />
-                  Add Record
-                </button>
+                )}
               </div>
             </div>
             
-            {/* Tab Content */}
+            {/* Content based on active tab */}
             {activeTab === 'health-history' && (
-              <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                <ul className="divide-y divide-gray-200">
+              <div>
+                <h2 className={`text-xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Health History</h2>
+                <div className="space-y-4">
                   {filterByTime(healthRecords).map((record) => (
-                    <li key={record.id}>
-                      <div className="px-4 py-4 sm:px-6 hover:bg-gray-50">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                              <FaFileAlt className="h-5 w-5 text-blue-600" />
-                            </div>
-                            <div className="ml-4">
-                              <p className="text-sm font-medium text-gray-900">{record.title}</p>
-                              <p className="text-sm text-gray-500">{record.date} • {record.doctor}</p>
-                            </div>
-                          </div>
-                          <div className="ml-2 flex-shrink-0 flex">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                              {record.category}
-                            </span>
-                          </div>
+                    <div 
+                      key={record.id} 
+                      className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-lg shadow-sm p-4 transition-colors duration-200`}
+                    >
+                      <div className="flex flex-wrap justify-between items-start">
+                        <div>
+                          <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
+                            {record.title}
+                          </h3>
+                          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
+                            {record.date} • {record.doctor} • {record.category}
+                          </p>
                         </div>
-                        <div className="mt-2 sm:flex sm:justify-between">
-                          <div className="sm:flex">
-                            <p className="text-sm text-gray-500">{record.summary}</p>
-                          </div>
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                          <span className="mr-2">Documents:</span>
-                          {record.documents.map((doc, index) => (
-                            <Link 
-                              key={index}
-                              to="#" 
-                              className="ml-2 text-blue-600 hover:text-blue-800"
-                            >
-                              {doc}
-                            </Link>
-                          ))}
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          darkMode ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-800'
+                        } transition-colors duration-200`}>
+                          {record.category}
                         </div>
                       </div>
-                    </li>
+                      <p className={`mt-2 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-200`}>
+                        {record.summary}
+                      </p>
+                      {record.documents.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-dashed border-gray-300">
+                          <p className={`text-xs font-medium mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
+                            Documents:
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {record.documents.map((doc, idx) => (
+                              <a 
+                                key={idx} 
+                                href="#" 
+                                className={`text-xs px-3 py-1 rounded-full ${
+                                  darkMode 
+                                    ? 'bg-gray-700 text-blue-400 hover:bg-gray-600' 
+                                    : 'bg-gray-100 text-blue-600 hover:bg-gray-200'
+                                } transition-colors duration-200`}
+                              >
+                                {doc}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
             
