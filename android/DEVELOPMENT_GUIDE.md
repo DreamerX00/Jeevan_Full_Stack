@@ -9,23 +9,51 @@ android/
 │   │   ├── main/
 │   │   │   ├── java/com/jeevan/
 │   │   │   │   ├── data/           # Data layer
+│   │   │   │   │   ├── api/        # API interfaces
+│   │   │   │   │   ├── db/         # Room database
+│   │   │   │   │   ├── repository/ # Repository implementations
+│   │   │   │   │   └── model/      # Data models
 │   │   │   │   ├── domain/         # Domain layer
+│   │   │   │   │   ├── model/      # Domain models
+│   │   │   │   │   ├── repository/ # Repository interfaces
+│   │   │   │   │   └── usecase/    # Use cases
 │   │   │   │   ├── presentation/   # UI layer
+│   │   │   │   │   ├── ui/         # Compose UI components
+│   │   │   │   │   ├── viewmodel/  # ViewModels
+│   │   │   │   │   └── state/      # UI states
 │   │   │   │   └── utils/          # Utilities
 │   │   │   ├── res/                # Resources
 │   │   │   └── AndroidManifest.xml # App manifest
 │   │   └── test/                   # Unit tests
 │   └── build.gradle.kts           # App-level build config
-└── build.gradle.kts               # Project-level build config
+├── build.gradle.kts               # Project-level build config
+└── local.properties              # Local configuration (gitignored)
 ```
+
+## Environment Configuration
+
+### API Keys and Environment Variables
+1. Create a `local.properties` file in the root directory:
+   ```properties
+   MAPS_API_KEY=your_maps_api_key
+   API_BASE_URL=http://localhost:8080/api
+   ```
+
+2. Access environment variables in code:
+   ```kotlin
+   val mapsApiKey = BuildConfig.MAPS_API_KEY
+   ```
+
+3. Never commit `local.properties` to version control
+4. Use `local.properties.example` as a template
 
 ## Core Components
 
 ### 1. Data Layer (`data/`)
 - **Purpose**: Data sources and repositories
-- **Files**:
+- **Structure**:
   - `api/`: API interfaces and implementations
-  - `db/`: Local database
+  - `db/`: Room database
   - `repository/`: Repository implementations
   - `model/`: Data models
 - **When to Modify**:
@@ -38,7 +66,7 @@ android/
 
 ### 2. Domain Layer (`domain/`)
 - **Purpose**: Business logic
-- **Files**:
+- **Structure**:
   - `model/`: Domain models
   - `repository/`: Repository interfaces
   - `usecase/`: Use cases
@@ -52,8 +80,8 @@ android/
 
 ### 3. Presentation Layer (`presentation/`)
 - **Purpose**: UI components
-- **Files**:
-  - `ui/`: UI components
+- **Structure**:
+  - `ui/`: Compose UI components
   - `viewmodel/`: ViewModels
   - `state/`: UI states
 - **When to Modify**:
@@ -69,18 +97,18 @@ android/
 ### Adding New Features
 
 1. **Create/Update Data Layer**:
-   - Add data models
-   - Implement repositories
-   - Update data sources
+   - Add data models in `data/model/`
+   - Implement repositories in `data/repository/`
+   - Update data sources in `data/api/`
 
 2. **Create/Update Domain Layer**:
-   - Add use cases
+   - Add use cases in `domain/usecase/`
    - Update business logic
-   - Modify domain models
+   - Modify domain models in `domain/model/`
 
 3. **Create/Update Presentation Layer**:
-   - Add UI components
-   - Create ViewModels
+   - Add UI components in `presentation/ui/`
+   - Create ViewModels in `presentation/viewmodel/`
    - Implement navigation
 
 ### Best Practices
@@ -110,20 +138,20 @@ android/
 ### Where to Create New Files
 
 1. **New Feature**:
-   - Create data models
-   - Add repository
-   - Create use cases
-   - Add UI components
+   - Create data models in `data/model/`
+   - Add repository in `data/repository/`
+   - Create use cases in `domain/usecase/`
+   - Add UI components in `presentation/ui/`
 
 2. **New Screen**:
-   - Create composable
-   - Add ViewModel
-   - Update navigation
+   - Create composable in `presentation/ui/`
+   - Add ViewModel in `presentation/viewmodel/`
+   - Update navigation in `presentation/navigation/`
 
 3. **New Data Source**:
-   - Add API interface
-   - Implement repository
-   - Update models
+   - Add API interface in `data/api/`
+   - Implement repository in `data/repository/`
+   - Update models in `data/model/`
 
 ### Files to Never Modify
 
@@ -145,28 +173,28 @@ android/
 
 ### Adding New Screen
 
-1. Create composable
-2. Add ViewModel
-3. Update navigation
+1. Create composable in `presentation/ui/`
+2. Add ViewModel in `presentation/viewmodel/`
+3. Update navigation in `presentation/navigation/`
 4. Add state handling
 5. Implement UI logic
 6. Write tests
 
 ### Adding New Feature
 
-1. Create data models
-2. Add repository
-3. Create use cases
-4. Add UI components
+1. Create data models in `data/model/`
+2. Add repository in `data/repository/`
+3. Create use cases in `domain/usecase/`
+4. Add UI components in `presentation/ui/`
 5. Update navigation
 6. Write tests
 
 ### Adding New API Integration
 
-1. Add API interface
-2. Create repository
-3. Add use cases
-4. Update ViewModel
+1. Add API interface in `data/api/`
+2. Create repository in `data/repository/`
+3. Add use cases in `domain/usecase/`
+4. Update ViewModel in `presentation/viewmodel/`
 5. Test integration
 
 ## Testing
@@ -232,10 +260,10 @@ android/
    - Configure rollout
    - Monitor crashes
 
-3. **Monitor**:
-   - Track crashes
-   - Monitor performance
-   - Analyze usage
+3. **Environment**:
+   - Set up production environment
+   - Configure API endpoints
+   - Set up monitoring
 
 ## Troubleshooting
 
