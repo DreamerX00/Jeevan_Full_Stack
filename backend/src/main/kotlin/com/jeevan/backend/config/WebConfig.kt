@@ -9,9 +9,25 @@ class WebConfig : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            .allowedHeaders("*")
+            .allowedOrigins(
+                "http://localhost:3000",  // React development
+                "https://jeevan.com",     // Production website
+                "http://localhost:8080",  // Android emulator
+                "http://localhost:5173",  // Vite default dev server
+                "http://localhost:4173",  // Vite preview server
+                "http://127.0.0.1:5173",  // Vite alternative URL
+                "http://127.0.0.1:4173"   // Vite preview alternative URL
+            )
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+            .allowedHeaders(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"
+            )
             .allowCredentials(true)
             .maxAge(3600)
     }

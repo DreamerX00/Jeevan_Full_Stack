@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useTheme } from '../context/ThemeContext';
 
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { darkMode } = useTheme();
 
   const slides = [
     {
@@ -56,7 +58,7 @@ const Carousel = () => {
               alt={slide.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+            <div className={`absolute inset-0 ${darkMode ? 'bg-black bg-opacity-60' : 'bg-black bg-opacity-40'} flex items-center justify-center transition-colors duration-200`}>
               <div className="text-center text-white">
                 <h2 className="text-4xl font-bold mb-4">{slide.title}</h2>
                 <p className="text-xl">{slide.description}</p>
@@ -69,13 +71,21 @@ const Carousel = () => {
       {/* Navigation Buttons */}
       <button
         onClick={goToPrevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 text-gray-800"
+        className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
+          darkMode 
+            ? 'bg-gray-800 bg-opacity-70 hover:bg-opacity-90 text-gray-200' 
+            : 'bg-white bg-opacity-50 hover:bg-opacity-75 text-gray-800'
+        } rounded-full p-2 transition-colors duration-200`}
       >
         <FaChevronLeft className="w-6 h-6" />
       </button>
       <button
         onClick={goToNextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 text-gray-800"
+        className={`absolute right-4 top-1/2 transform -translate-y-1/2 ${
+          darkMode 
+            ? 'bg-gray-800 bg-opacity-70 hover:bg-opacity-90 text-gray-200' 
+            : 'bg-white bg-opacity-50 hover:bg-opacity-75 text-gray-800'
+        } rounded-full p-2 transition-colors duration-200`}
       >
         <FaChevronRight className="w-6 h-6" />
       </button>
@@ -87,7 +97,9 @@ const Carousel = () => {
             key={index}
             onClick={() => goToSlide(index)}
             className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-              currentSlide === index ? 'bg-white' : 'bg-white bg-opacity-50'
+              currentSlide === index 
+                ? darkMode ? 'bg-blue-400' : 'bg-white' 
+                : darkMode ? 'bg-gray-600' : 'bg-white bg-opacity-50'
             }`}
           />
         ))}

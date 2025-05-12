@@ -4,12 +4,14 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { FaShoppingCart, FaSearch, FaFilter, FaStar, FaHeart } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
+import { useTheme } from '../context/ThemeContext';
 
 const MedicalShop = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const { darkMode } = useTheme();
   
   // Get cart functions from context
   const { cartItems, addToCart, itemsCount } = useCart();
@@ -129,7 +131,7 @@ const MedicalShop = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${darkMode ? 'bg-dark-bg' : 'bg-gray-50'} transition-colors duration-200`}>
       <Navbar />
       <div className="flex">
         <Sidebar />
@@ -138,13 +140,13 @@ const MedicalShop = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-wrap items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Medical Shop</h1>
-                <p className="mt-1 text-lg text-gray-600">Find medicines, health essentials, and more at your convenience.</p>
+                <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Medical Shop</h1>
+                <p className={`mt-1 text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-200`}>Find medicines, health essentials, and more at your convenience.</p>
               </div>
               <div className="mt-4 lg:mt-0 flex items-center">
                 <button 
                   onClick={goToCart}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+                  className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'} transition-colors duration-200`}
                 >
                   <FaShoppingCart className="mr-2" />
                   Cart ({itemsCount})
@@ -154,7 +156,7 @@ const MedicalShop = () => {
           </div>
 
           {/* Search and Filter */}
-          <div className="bg-white shadow-sm">
+          <div className={`${darkMode ? 'bg-dark-card shadow-md' : 'bg-white shadow-sm'} transition-colors duration-200`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="flex flex-wrap items-center justify-between">
                 <div className="w-full lg:w-1/2 flex">
@@ -164,7 +166,11 @@ const MedicalShop = () => {
                     </div>
                     <input
                       type="text"
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className={`block w-full pl-10 pr-3 py-2 border ${
+                        darkMode 
+                          ? 'bg-gray-800 border-gray-700 text-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500' 
+                          : 'bg-white border-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500'
+                      } rounded-md leading-5 focus:outline-none sm:text-sm transition-colors duration-200`}
                       placeholder="Search for medicines, essentials..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -173,11 +179,15 @@ const MedicalShop = () => {
                 </div>
                 <div className="w-full lg:w-auto mt-4 lg:mt-0 flex items-center">
                   <div className="flex items-center">
-                    <FaFilter className="mr-2 h-5 w-5 text-gray-400" />
-                    <span className="mr-2 text-sm text-gray-500">Category:</span>
+                    <FaFilter className={`mr-2 h-5 w-5 ${darkMode ? 'text-gray-400' : 'text-gray-400'}`} />
+                    <span className={`mr-2 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>Category:</span>
                   </div>
                   <select
-                    className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className={`block w-full py-2 px-3 border ${
+                      darkMode 
+                        ? 'bg-gray-800 border-gray-700 text-gray-200' 
+                        : 'bg-white border-gray-300 text-gray-700'
+                    } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors duration-200`}
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                   >
@@ -200,7 +210,7 @@ const MedicalShop = () => {
                   <div 
                     key={product.id} 
                     id={`product-${product.id}`} 
-                    className="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
+                    className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-lg shadow overflow-hidden hover:shadow-md transition-all duration-300`}
                   >
                     <div className="relative">
                       <img 
@@ -208,27 +218,29 @@ const MedicalShop = () => {
                         alt={product.name} 
                         className="w-full h-48 object-cover"
                       />
-                      <button className="absolute top-2 right-2 p-1.5 rounded-full bg-white bg-opacity-75 hover:bg-opacity-100 text-red-500">
+                      <button className={`absolute top-2 right-2 p-1.5 rounded-full ${darkMode ? 'bg-gray-800 bg-opacity-75 hover:bg-opacity-100' : 'bg-white bg-opacity-75 hover:bg-opacity-100'} text-red-500 transition-colors duration-200`}>
                         <FaHeart className="h-5 w-5" />
                       </button>
                     </div>
                     <div className="p-4">
                       <div className="flex items-center justify-between">
-                        <span className="inline-block px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
+                        <span className={`inline-block px-2 py-1 text-xs font-semibold ${
+                          darkMode ? 'text-blue-300 bg-blue-900' : 'text-blue-800 bg-blue-100'
+                        } rounded-full transition-colors duration-200`}>
                           {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
                         </span>
                         <div className="flex items-center">
                           <FaStar className="text-yellow-400 h-4 w-4" />
-                          <span className="ml-1 text-sm text-gray-600">{product.rating}</span>
+                          <span className={`ml-1 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} transition-colors duration-200`}>{product.rating}</span>
                         </div>
                       </div>
-                      <h3 className="mt-2 text-lg font-medium text-gray-900">{product.name}</h3>
-                      <p className="mt-1 text-sm text-gray-500">{product.description}</p>
+                      <h3 className={`mt-2 text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>{product.name}</h3>
+                      <p className={`mt-1 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>{product.description}</p>
                       <div className="mt-4 flex items-center justify-between">
-                        <span className="text-lg font-bold text-gray-900">₹{product.price}</span>
+                        <span className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>₹{product.price}</span>
                         <button
                           onClick={() => handleAddToCart(product)}
-                          className="px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                          className={`px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200`}
                         >
                           Add to cart
                         </button>
@@ -237,12 +249,12 @@ const MedicalShop = () => {
                   </div>
                 ))
               ) : (
-                <div className="col-span-full flex flex-col items-center justify-center py-12">
-                  <svg className="h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className={`col-span-full flex flex-col items-center justify-center py-12 transition-colors duration-200`}>
+                  <svg className={`h-16 w-16 ${darkMode ? 'text-gray-600' : 'text-gray-400'} transition-colors duration-200`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 13a3 3 0 100-6 3 3 0 000 6z" />
                   </svg>
-                  <h3 className="mt-2 text-lg font-medium text-gray-900">No products found</h3>
-                  <p className="mt-1 text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+                  <h3 className={`mt-2 text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>No products found</h3>
+                  <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>Try adjusting your search or filter to find what you're looking for.</p>
                 </div>
               )}
             </div>
