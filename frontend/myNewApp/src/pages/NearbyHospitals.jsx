@@ -45,12 +45,22 @@ const NearbyHospitals = () => {
     // Case 2: Hospital has direct place_id
     else if (hospital.place_id || hospital.id) {
       const placeId = hospital.place_id || hospital.id;
-      return `https://www.google.com/maps/dir/?api=1&destination=place_id:${placeId}&travelmode=driving&dir_action=navigate`;
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hospital.name)}&query_place_id=${placeId}`;
     }
     // Case 3: Hospital has geometry (coordinates)
     else if (hospital.geometry) {
-      const destination = `${hospital.geometry.location.lat()},${hospital.geometry.location.lng()}`;
-      return `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving&dir_action=navigate`;
+      let lat, lng;
+      
+      // Handle both function-based location and direct value object
+      if (typeof hospital.geometry.location.lat === 'function') {
+        lat = hospital.geometry.location.lat();
+        lng = hospital.geometry.location.lng();
+      } else {
+        lat = hospital.geometry.location.lat;
+        lng = hospital.geometry.location.lng;
+      }
+      
+      return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
     }
     // Case 4: Hospital has no valid location data
     else {
@@ -115,11 +125,13 @@ const NearbyHospitals = () => {
     // If hospital is temporarily or permanently closed, return false
     if (hospital.business_status === 'CLOSED_TEMPORARILY' || 
         hospital.business_status === 'CLOSED_PERMANENTLY') {
+      console.log(`Hospital ${hospital.name || 'unknown'} is marked as ${hospital.business_status}`);
       return false;
     }
     
-    // Use pre-calculated isOpenNow value if available
+    // Use pre-calculated isOpenNow value if available - prioritize this over everything else
     if (hospital.isOpenNow !== undefined) {
+      console.log(`Hospital ${hospital.name || 'unknown'} using isOpenNow=${hospital.isOpenNow}`);
       return hospital.isOpenNow;
     }
     
@@ -127,19 +139,32 @@ const NearbyHospitals = () => {
     if (hospital.opening_hours) {
       if (typeof hospital.opening_hours.isOpen === 'function') {
         try {
-          return hospital.opening_hours.isOpen();
+          const isOpenValue = hospital.opening_hours.isOpen();
+          console.log(`Hospital ${hospital.name || 'unknown'} using isOpen() function: ${isOpenValue}`);
+          return isOpenValue;
         } catch (error) {
-          console.error("Error using isOpen function:", error);
-          return hospital.opening_hours.open_now !== undefined ? 
-            hospital.opening_hours.open_now : true; // Default to open for hospitals
+          console.error(`Error using isOpen function for ${hospital.name || 'unknown'}:`, error);
+          if (hospital.opening_hours.open_now !== undefined) {
+            console.log(`Hospital ${hospital.name || 'unknown'} fallback to open_now: ${hospital.opening_hours.open_now}`);
+            return hospital.opening_hours.open_now;
+          }
+          console.log(`Hospital ${hospital.name || 'unknown'} defaulting to open=true`);
+          return true; // Default to open for hospitals
         }
       }
       
-      return hospital.opening_hours.open_now !== undefined ? 
-        hospital.opening_hours.open_now : true; // Default to open for hospitals
+      if (hospital.opening_hours.open_now !== undefined) {
+        console.log(`Hospital ${hospital.name || 'unknown'} using open_now: ${hospital.opening_hours.open_now}`);
+        return hospital.opening_hours.open_now;
+      }
+      
+      // Default to open for hospitals
+      console.log(`Hospital ${hospital.name || 'unknown'} has opening_hours but no open_now, defaulting to open=true`);
+      return true;
     }
     
     // For hospitals, default to open (many hospitals operate 24/7 especially for emergencies)
+    console.log(`Hospital ${hospital.name || 'unknown'} has no opening_hours, defaulting to open=true`);
     return true;
   };
 

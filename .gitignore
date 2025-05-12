@@ -37,8 +37,19 @@ logs/
 # Environment files
 .env
 .env.*
+.env.local
+.env.development
+.env.test
+.env.production
 application-*.properties
 !application.properties.example
+!env.example
+
+# API Keys and Secrets
+**/apikey.properties
+**/google_maps_api.xml
+**/secrets.xml
+**/google-services.json
 
 # Database files
 *.db
@@ -48,7 +59,15 @@ application-*.properties
 # Node modules (for frontend)
 node_modules/
 dist/
+build/
+.cache/
+coverage/
 .next/
+
+# Frontend build artifacts
+frontend/myNewApp/dist/
+frontend/myNewApp/build/
+frontend/myNewApp/.vite/
 
 # Android
 *.apk
@@ -90,3 +109,13 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 *# 
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log* 

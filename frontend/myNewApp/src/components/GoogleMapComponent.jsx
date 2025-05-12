@@ -3,7 +3,10 @@ import { FaMapMarkerAlt, FaSpinner, FaSearch, FaPlus, FaMinus, FaLocationArrow, 
 import { useTheme } from '../context/ThemeContext';
 
 // Use environment variable for API key
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
+// For security, make sure to add key restrictions in Google Cloud Console
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_GOOGLE_MAPS_API_KEY';
+
+// Note: Create a .env file in frontend/myNewApp folder with: VITE_GOOGLE_MAPS_API_KEY=YOUR_API_KEY
 
 const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMarkerClick = false }) => {
   const [loading, setLoading] = useState(true);
@@ -226,6 +229,11 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
                         detailedPlace.business_status === 'CLOSED_PERMANENTLY') {
                       isOpenNow = false;
                     }
+                    // For hospitals, always set to open unless explicitly marked as closed
+                    else if (type === 'hospitals' || place.types?.includes('hospital')) {
+                      isOpenNow = true;
+                      console.log(`Setting hospital ${place.name} as OPEN`);
+                    }
                     // Next check - use opening_hours if available
                     else if (detailedPlace.opening_hours) {
                       if (typeof detailedPlace.opening_hours.isOpen === 'function') {
@@ -234,22 +242,12 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
                         } catch (error) {
                           console.error("Error with isOpen function:", error);
                           isOpenNow = detailedPlace.opening_hours.open_now !== undefined ? 
-                            detailedPlace.opening_hours.open_now : 
-                            // Default to true for hospitals/pharmacies that have no explicit opening hours
-                            // This is a reasonable assumption for emergency services
-                            (type === 'hospitals' || detailedPlace.types?.includes('hospital')) ? true : null;
+                            detailedPlace.opening_hours.open_now : null;
                         }
                       } else {
                         isOpenNow = detailedPlace.opening_hours.open_now !== undefined ? 
-                          detailedPlace.opening_hours.open_now : 
-                          // Default to true for hospitals/pharmacies that have no explicit opening hours
-                          (type === 'hospitals' || detailedPlace.types?.includes('hospital')) ? true : null;
+                          detailedPlace.opening_hours.open_now : null;
                       }
-                    }
-                    // For hospitals without opening hours info, default to open
-                    // Many hospitals are open 24/7 especially for emergencies
-                    else if (type === 'hospitals' || place.types?.includes('hospital')) {
-                      isOpenNow = true;
                     }
                     
                     // Enhance the original place object with detailed information
@@ -416,6 +414,11 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
                         detailedPlace.business_status === 'CLOSED_PERMANENTLY') {
                       calculatedIsOpen = false;
                     }
+                    // For hospitals, always set to open unless explicitly marked as closed
+                    else if (type === 'hospitals' || detailedPlace.types?.includes('hospital')) {
+                      calculatedIsOpen = true;
+                      console.log(`Setting selected hospital ${placeName} as OPEN`);
+                    }
                     // Next check - use most reliable indicator of open status
                     else if (detailedPlace.opening_hours) {
                       if (typeof detailedPlace.opening_hours.isOpen === 'function') {
@@ -424,21 +427,12 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
                         } catch (error) {
                           console.error("Error with isOpen function:", error);
                           calculatedIsOpen = detailedPlace.opening_hours.open_now !== undefined ? 
-                            detailedPlace.opening_hours.open_now : 
-                            // Default to true for hospitals/pharmacies that have no explicit opening hours
-                            (type === 'hospitals' || detailedPlace.types?.includes('hospital')) ? true : null;
+                            detailedPlace.opening_hours.open_now : null;
                         }
                       } else {
                         calculatedIsOpen = detailedPlace.opening_hours.open_now !== undefined ? 
-                          detailedPlace.opening_hours.open_now : 
-                          // Default to true for hospitals/pharmacies
-                          (type === 'hospitals' || detailedPlace.types?.includes('hospital')) ? true : null;
+                          detailedPlace.opening_hours.open_now : null;
                       }
-                    }
-                    // For hospitals without opening hours info, default to open
-                    // Many hospitals are open 24/7 especially for emergencies
-                    else if (type === 'hospitals' || detailedPlace.types?.includes('hospital')) {
-                      calculatedIsOpen = true;
                     }
                     
                     // Pass comprehensive data to parent component
@@ -497,12 +491,21 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
                 window.selectPlace = (placeId, placeName) => {
                   if (onPlaceSelect) {
                     // Calculate open status from the basic place data we have
-                    let basicOpenStatus = place.opening_hours && place.opening_hours.open_now !== undefined ? 
-                      place.opening_hours.open_now : null;
-                      
-                    // For hospitals, assume they're open by default unless explicitly marked as closed
-                    if (basicOpenStatus === null && (type === 'hospitals' || place.types?.includes('hospital'))) {
+                    let basicOpenStatus = null;
+                    
+                    // First check if business status indicates closure
+                    if (place.business_status === 'CLOSED_TEMPORARILY' || 
+                        place.business_status === 'CLOSED_PERMANENTLY') {
+                      basicOpenStatus = false;
+                    }
+                    // For hospitals, always set to open unless explicitly marked as closed
+                    else if (type === 'hospitals' || place.types?.includes('hospital')) {
                       basicOpenStatus = true;
+                      console.log(`Setting fallback hospital ${placeName} as OPEN`);
+                    }
+                    // Otherwise use opening_hours if available
+                    else if (place.opening_hours && place.opening_hours.open_now !== undefined) {
+                      basicOpenStatus = place.opening_hours.open_now;
                     }
                     
                     onPlaceSelect({
@@ -842,4 +845,4 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
   );
 };
 
-export default GoogleMapComponent; 
+export default GoogleMapComponent;

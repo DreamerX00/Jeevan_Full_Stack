@@ -13,7 +13,13 @@ jeevan/
 ├── frontend/               # React Web Application
 │   ├── myNewApp/          # Main React application
 │   │   ├── src/          # Source code
+│   │   │   ├── components/ # Reusable components
+│   │   │   ├── pages/     # Page components
+│   │   │   ├── context/   # React context providers
+│   │   │   ├── services/  # API services
+│   │   │   └── assets/    # Static assets
 │   │   ├── public/       # Static files
+│   │   ├── .env          # Environment variables (not in version control)
 │   │   └── package.json  # Dependencies
 │   └── DEVELOPMENT_GUIDE.md # Frontend development guide
 ├── android/               # Android Mobile Application
@@ -37,6 +43,7 @@ jeevan/
 2. Security Files:
    - `SECURITY.md`
    - `backend/src/main/resources/application.properties`
+   - `frontend/myNewApp/.env` (never commit this file)
    - Any files containing credentials or secrets
 
 3. Documentation:
@@ -49,6 +56,7 @@ jeevan/
    - Always use `.env.example` as a template
    - Never commit actual `.env` files
    - Keep sensitive data in environment variables
+   - For Google Maps API: set VITE_GOOGLE_MAPS_API_KEY in .env file
 
 2. Database Files:
    - Never commit database dumps
@@ -87,14 +95,21 @@ jeevan/
    - Keep types in `src/types`
 
 2. State Management:
-   - Use Redux for global state
    - Use React Context for theme/auth
    - Keep state logic in separate files
 
 3. Styling:
-   - Use Material-UI components
+   - Use Tailwind CSS for styling
    - Follow design system guidelines
-   - Keep styles modular
+   - Keep styles modular and responsive
+   - Support dark/light mode via ThemeContext
+
+4. Maps Integration:
+   - GoogleMapComponent uses Google Maps JavaScript API
+   - API key must be set in .env file as VITE_GOOGLE_MAPS_API_KEY
+   - Never hardcode the API key in the source code
+   - API key should have proper restrictions set in Google Cloud Console
+   - Hospital and Pharmacy status (open/closed) is managed via the isOpen function
 
 ### Android Development
 1. Code Organization:
@@ -130,6 +145,15 @@ jeevan/
    - Scan for malware
    - Implement file size limits
 
+4. API Keys:
+   - Never commit API keys to version control
+   - Store API keys in environment variables (.env file)
+   - For Google Maps API:
+     - Add HTTP referrer restrictions in Google Cloud Console
+     - Limit API key usage to only required APIs
+     - Monitor API usage in Google Cloud Console
+     - Rotate keys if compromised
+
 ## Deployment Guidelines
 
 1. Backend:
@@ -141,6 +165,7 @@ jeevan/
    - Build for production
    - Optimize assets
    - Configure CDN
+   - Use environment-specific .env files
 
 3. Android:
    - Sign release builds
@@ -164,6 +189,25 @@ jeevan/
    - Optimize database queries
    - Profile frontend performance
 
+## Google Maps Integration Notes
+
+1. API Key Setup:
+   - Create a project in Google Cloud Console
+   - Enable Maps JavaScript API, Places API, and Directions API
+   - Create API key with proper restrictions
+   - Add key to .env file as VITE_GOOGLE_MAPS_API_KEY
+
+2. Component Functionality:
+   - GoogleMapComponent handles map display and place search
+   - NearbyHospitals and NearbyPharmacies handle list/details display
+   - For hospitals: isOpen() defaults to true (hospitals are generally 24/7)
+   - For pharmacies: isOpen() checks actual opening hours
+
+3. Common Issues:
+   - Maps not loading: Check API key and quotas
+   - Status inconsistency: Check console log for isOpenNow logs
+   - Direction links: Uses maps/dir API with destination_place_id parameter
+
 ## Support and Resources
 
 1. Documentation:
@@ -172,7 +216,7 @@ jeevan/
    - API documentation in backend
 
 2. Tools:
-   - IDE: IntelliJ IDEA/Android Studio
+   - IDE: IntelliJ IDEA/Android Studio/VS Code
    - Version Control: Git
    - CI/CD: GitHub Actions
 

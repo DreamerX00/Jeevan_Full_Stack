@@ -45,12 +45,22 @@ const NearbyPharmacies = () => {
     // Case 2: Pharmacy has direct place_id
     else if (pharmacy.place_id || pharmacy.id) {
       const placeId = pharmacy.place_id || pharmacy.id;
-      return `https://www.google.com/maps/dir/?api=1&destination=place_id:${placeId}&travelmode=driving&dir_action=navigate`;
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(pharmacy.name)}&destination_place_id=${placeId}`;
     }
     // Case 3: Pharmacy has geometry (coordinates)
     else if (pharmacy.geometry) {
-      const destination = `${pharmacy.geometry.location.lat()},${pharmacy.geometry.location.lng()}`;
-      return `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving&dir_action=navigate`;
+      let lat, lng;
+      
+      // Handle both function-based location and direct value object
+      if (typeof pharmacy.geometry.location.lat === 'function') {
+        lat = pharmacy.geometry.location.lat();
+        lng = pharmacy.geometry.location.lng();
+      } else {
+        lat = pharmacy.geometry.location.lat;
+        lng = pharmacy.geometry.location.lng;
+      }
+      
+      return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     }
     // Case 4: Pharmacy has no valid location data
     else {
@@ -115,11 +125,13 @@ const NearbyPharmacies = () => {
     // If pharmacy is temporarily or permanently closed, return false
     if (pharmacy.business_status === 'CLOSED_TEMPORARILY' || 
         pharmacy.business_status === 'CLOSED_PERMANENTLY') {
+      console.log(`Pharmacy ${pharmacy.name || 'unknown'} is marked as ${pharmacy.business_status}`);
       return false;
     }
     
-    // Use pre-calculated isOpenNow value if available
+    // Use pre-calculated isOpenNow value if available - prioritize this over everything else
     if (pharmacy.isOpenNow !== undefined) {
+      console.log(`Pharmacy ${pharmacy.name || 'unknown'} using isOpenNow=${pharmacy.isOpenNow}`);
       return pharmacy.isOpenNow;
     }
     
@@ -127,19 +139,31 @@ const NearbyPharmacies = () => {
     if (pharmacy.opening_hours) {
       if (typeof pharmacy.opening_hours.isOpen === 'function') {
         try {
-          return pharmacy.opening_hours.isOpen();
+          const isOpenValue = pharmacy.opening_hours.isOpen();
+          console.log(`Pharmacy ${pharmacy.name || 'unknown'} using isOpen() function: ${isOpenValue}`);
+          return isOpenValue;
         } catch (error) {
-          console.error("Error using isOpen function:", error);
-          return pharmacy.opening_hours.open_now !== undefined ? 
-            pharmacy.opening_hours.open_now : null; // Pharmacies might not be 24/7
+          console.error(`Error using isOpen function for ${pharmacy.name || 'unknown'}:`, error);
+          if (pharmacy.opening_hours.open_now !== undefined) {
+            console.log(`Pharmacy ${pharmacy.name || 'unknown'} fallback to open_now: ${pharmacy.opening_hours.open_now}`);
+            return pharmacy.opening_hours.open_now;
+          }
+          console.log(`Pharmacy ${pharmacy.name || 'unknown'} defaulting to null`);
+          return null; // Don't assume open/closed for pharmacies
         }
       }
       
-      return pharmacy.opening_hours.open_now !== undefined ? 
-        pharmacy.opening_hours.open_now : null;
+      if (pharmacy.opening_hours.open_now !== undefined) {
+        console.log(`Pharmacy ${pharmacy.name || 'unknown'} using open_now: ${pharmacy.opening_hours.open_now}`);
+        return pharmacy.opening_hours.open_now;
+      }
+      
+      console.log(`Pharmacy ${pharmacy.name || 'unknown'} has opening_hours but no open_now, defaulting to null`);
+      return null;
     }
     
-    // For pharmacies, we'll return null if we don't know since they usually have set hours
+    // For pharmacies, we don't default to open
+    console.log(`Pharmacy ${pharmacy.name || 'unknown'} has no opening_hours, defaulting to null`);
     return null;
   };
 
