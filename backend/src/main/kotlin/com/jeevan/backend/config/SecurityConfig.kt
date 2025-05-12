@@ -70,9 +70,13 @@ class SecurityConfig(
         configuration.allowedOrigins = listOf(
             "http://localhost:3000",  // React development
             "https://jeevan.com",     // Production website
-            "http://localhost:8080"   // Android emulator
+            "http://localhost:8080",  // Android emulator
+            "http://localhost:5173",  // Vite default dev server
+            "http://localhost:4173",  // Vite preview server
+            "http://127.0.0.1:5173",  // Vite alternative URL
+            "http://127.0.0.1:4173"   // Vite preview alternative URL
         )
-        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
         configuration.allowedHeaders = listOf(
             "Authorization",
             "Content-Type",

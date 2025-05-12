@@ -15,7 +15,7 @@ const GoogleMapComponent = ({ type, onPlaceSelect }) => {
   
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
-  const placesServiceRef = useRef(null);
+  const searchSessionRef = useRef(null);
   const markersRef = useRef([]);
   const userMarkerRef = useRef(null);
   
@@ -95,13 +95,6 @@ const GoogleMapComponent = ({ type, onPlaceSelect }) => {
         return;
       }
       
-      try {
-        placesServiceRef.current = new window.google.maps.places.PlacesService(mapInstanceRef.current);
-      } catch (err) {
-        handleApiError("Places Service failed to initialize. Google Maps API key may not have Places API enabled.");
-        return;
-      }
-      
       // Get user's current location
       getUserLocation();
       
@@ -178,20 +171,30 @@ const GoogleMapComponent = ({ type, onPlaceSelect }) => {
 
   // Search for places near a specific location
   const searchPlacesNear = (latitude, longitude) => {
-    if (!placesServiceRef.current || apiError) return;
+    if (apiError) return;
     
     setLoading(true);
     
     try {
       const location = new window.google.maps.LatLng(latitude, longitude);
       
+      // Using the new Places API via LocalContextMapView
+      if (searchSessionRef.current) {
+        searchSessionRef.current = null;
+      }
+      
+      const placeType = type === 'hospitals' ? 'hospital' : 'pharmacy';
+      
+      // Use Nearby Search from Places Library
       const request = {
         location: location,
         radius: 5000, // 5 km radius
-        type: type === 'hospitals' ? 'hospital' : 'pharmacy'
+        type: placeType
       };
       
-      placesServiceRef.current.nearbySearch(request, (results, status) => {
+      const service = new window.google.maps.places.PlacesService(mapInstanceRef.current);
+      
+      service.nearbySearch(request, (results, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
           setPlaces(results);
           addMarkersToMap(results, location);
@@ -245,16 +248,25 @@ const GoogleMapComponent = ({ type, onPlaceSelect }) => {
               ${place.opening_hours ? `<p style="margin: 0; font-size: 14px; color: ${place.opening_hours.open_now ? 'green' : 'red'}">
                 ${place.opening_hours.open_now ? 'Open Now' : 'Closed'}
               </p>` : ''}
+              <button 
+                style="margin-top: 8px; padding: 4px 8px; background-color: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer;"
+                onclick="window.selectPlace('${place.place_id}', '${place.name.replace(/'/g, "\\'")}')"
+              >
+                Select
+              </button>
             </div>
           `;
           
           infoWindow.setContent(content);
           infoWindow.open(mapInstanceRef.current, marker);
           
-          // Notify parent component
-          if (onPlaceSelect) {
-            onPlaceSelect(place);
-          }
+          // Add method to window object to handle the select button click
+          window.selectPlace = (placeId, placeName) => {
+            if (onPlaceSelect) {
+              onPlaceSelect({ id: placeId, name: placeName });
+            }
+            infoWindow.close();
+          };
         });
         
         markersRef.current.push(marker);
@@ -281,222 +293,287 @@ const GoogleMapComponent = ({ type, onPlaceSelect }) => {
         mapInstanceRef.current.setZoom(16);
       }
     } catch (err) {
-      console.error('Error adding markers to map:', err);
-      handleApiError("Error displaying locations on map: " + err.message);
+      console.error('Error adding markers:', err);
     }
   };
 
-  // Handle search by query
+  // Handle search button click
   const handleSearch = () => {
-    if (!searchQuery.trim() || apiError) return;
+    if (!searchQuery.trim() || !mapInstanceRef.current || apiError) return;
+    
+    setLoading(true);
     
     try {
-      const geocoder = new window.google.maps.Geocoder();
+      const request = {
+        query: `${searchQuery} ${type}`,
+        fields: ['name', 'geometry']
+      };
       
-      setLoading(true);
+      const service = new window.google.maps.places.PlacesService(mapInstanceRef.current);
       
-      geocoder.geocode({ address: searchQuery }, (results, status) => {
-        if (status === 'OK' && results[0]) {
-          const location = results[0].geometry.location;
+      service.findPlaceFromQuery(request, (results, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && results.length > 0) {
+          const place = results[0];
+          const location = place.geometry.location;
           
-          // Move map to the searched location
+          // Center the map on the search result
           mapInstanceRef.current.setCenter(location);
           
           // Search for places near this location
           searchPlacesNear(location.lat(), location.lng());
         } else {
-          setError('Location not found');
+          alert('No results found for your search.');
           setLoading(false);
         }
       });
     } catch (err) {
       console.error('Error in handleSearch:', err);
-      handleApiError("Error searching for location: " + err.message);
+      handleApiError("Error searching for places: " + err.message);
+      setLoading(false);
     }
   };
 
-  // Zoom controls
+  // Map zoom controls
   const zoomIn = () => {
-    if (mapInstanceRef.current && !apiError) {
-      const newZoom = Math.min(mapInstanceRef.current.getZoom() + 1, 20);
-      mapInstanceRef.current.setZoom(newZoom);
-      setMapZoom(newZoom);
-    }
+    if (!mapInstanceRef.current) return;
+    const newZoom = Math.min(mapZoom + 1, 20);
+    setMapZoom(newZoom);
+    mapInstanceRef.current.setZoom(newZoom);
   };
   
   const zoomOut = () => {
-    if (mapInstanceRef.current && !apiError) {
-      const newZoom = Math.max(mapInstanceRef.current.getZoom() - 1, 1);
-      mapInstanceRef.current.setZoom(newZoom);
-      setMapZoom(newZoom);
-    }
+    if (!mapInstanceRef.current) return;
+    const newZoom = Math.max(mapZoom - 1, 1);
+    setMapZoom(newZoom);
+    mapInstanceRef.current.setZoom(newZoom);
   };
-
-  // Center on user location
+  
+  // Center map on user's location
   const centerOnUser = () => {
-    if (mapInstanceRef.current && userLocation && !apiError) {
-      mapInstanceRef.current.setCenter(userLocation);
-      mapInstanceRef.current.setZoom(15);
-    } else if (!apiError) {
-      getUserLocation();
-    }
+    if (!mapInstanceRef.current || !userLocation) return;
+    mapInstanceRef.current.setCenter(userLocation);
   };
-
-  // Show error message with fix instructions
+  
+  // Render API error message
   const renderApiErrorMessage = () => (
-    <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
-      <div className="flex items-center mb-4">
-        <FaExclamationTriangle className="text-amber-500 h-6 w-6 mr-2" />
-        <h3 className="text-lg font-medium text-gray-900">Google Maps API Error</h3>
-      </div>
-      
-      <p className="text-gray-700 mb-4">
-        The Google Maps functionality is not working because the API key requires activation or billing setup.
-      </p>
-      
-      <div className="bg-gray-50 p-4 rounded-md mb-4 border border-gray-200">
-        <h4 className="font-medium text-gray-800 mb-2">Error Details:</h4>
-        <p className="text-sm text-gray-600 mb-2">
-          {error || "API key authentication failed"}
-        </p>
-        <p className="text-sm text-gray-600">
-          API Key: {GOOGLE_MAPS_API_KEY}
-        </p>
-      </div>
-      
-      <div className="space-y-2 mb-6">
-        <h4 className="font-medium text-gray-800">To fix this issue:</h4>
-        <ol className="list-decimal list-inside text-sm text-gray-700 space-y-2 pl-2">
-          <li>Go to the <a href="https://console.cloud.google.com/google/maps-apis/overview" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">Google Cloud Console</a></li>
-          <li>Ensure the API key is valid and has not expired</li>
-          <li>Enable the following APIs for your project:
-            <ul className="list-disc list-inside ml-4 mt-1">
-              <li>Maps JavaScript API</li>
-              <li>Places API</li>
-              <li>Geocoding API</li>
-            </ul>
-          </li>
-          <li>Set up billing for your Google Cloud account</li>
-          <li>Check API key restrictions to ensure the domains are properly configured</li>
-        </ol>
-      </div>
-      
-      <p className="text-sm text-gray-500 italic mb-4">
-        Note: You can temporarily replace the API key in the GoogleMapComponent.jsx file with a valid key for testing purposes.
-      </p>
-      
-      <div className="flex justify-end">
-        <button 
-          onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          Retry
-        </button>
-      </div>
+    <div className="error-container">
+      <FaExclamationTriangle size={24} color="#D32F2F" />
+      <h3>Google Maps API Error</h3>
+      <p>{error || "An error occurred loading Google Maps. Please try again later."}</p>
+      <p className="error-note">Note: This might be due to an invalid API key or Daily API quota exceeded.</p>
     </div>
   );
 
   return (
-    <div className="w-full">
-      {/* Map Container */}
-      <div className="relative w-full h-[500px] rounded-xl overflow-hidden shadow-md">
-        {apiError ? (
-          <div className="w-full h-full flex items-center justify-center bg-gray-100">
-            {renderApiErrorMessage()}
+    <div className="map-container" style={{ position: 'relative', height: '400px', width: '100%' }}>
+      {apiError ? (
+        renderApiErrorMessage()
+      ) : (
+        <>
+          <div 
+            ref={mapRef} 
+            style={{ height: '100%', width: '100%', borderRadius: '8px' }}
+          />
+          
+          {/* Search bar */}
+          <div className="search-box" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 5 }}>
+            <div style={{ display: 'flex', backgroundColor: 'white', borderRadius: '4px', boxShadow: '0 2px 6px rgba(0,0,0,0.3)' }}>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={`Search for ${type}...`}
+                style={{ 
+                  flex: 1, 
+                  padding: '10px', 
+                  border: 'none',
+                  borderRadius: '4px 0 0 4px',
+                  outline: 'none',
+                  fontSize: '14px'
+                }}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              />
+              <button 
+                onClick={handleSearch}
+                style={{ 
+                  padding: '10px 15px',
+                  background: '#1976d2', 
+                  border: 'none',
+                  borderRadius: '0 4px 4px 0',
+                  color: 'white',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <FaSearch />
+              </button>
+            </div>
           </div>
-        ) : (
-          <>
-            <div 
-              ref={mapRef} 
-              className="w-full h-full"
-              style={{ borderRadius: '12px' }}
-            ></div>
-            
-            {/* Loading indicator */}
-            {loading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-                <div className="bg-white p-4 rounded-full">
-                  <FaSpinner className="text-blue-500 animate-spin h-8 w-8" />
-                </div>
-              </div>
-            )}
-            
-            {/* Error message (non-API errors) */}
-            {error && !apiError && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-20">
-                <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
-                  <FaMapMarkerAlt className="text-red-500 h-12 w-12 mb-4 mx-auto" />
-                  <p className="text-gray-800 text-center mb-4">{error}</p>
-                  <button 
-                    onClick={() => window.location.reload()}
-                    className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
-                    Try Again
-                  </button>
-                </div>
-              </div>
-            )}
-            
-            {/* Map Controls */}
-            <div className="absolute top-4 right-4 flex flex-col gap-3">
-              {/* Zoom in */}
-              <button 
-                onClick={zoomIn}
-                className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 focus:outline-none"
-                title="Zoom In"
-              >
-                <FaPlus className="text-gray-700" />
-              </button>
-              
-              {/* Zoom out */}
-              <button 
-                onClick={zoomOut}
-                className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 focus:outline-none"
-                title="Zoom Out"
-              >
-                <FaMinus className="text-gray-700" />
-              </button>
-              
-              {/* Center on user location */}
-              <button 
-                onClick={centerOnUser}
-                className="bg-blue-500 p-2 rounded-full shadow-md hover:bg-blue-600 focus:outline-none mt-3"
-                title="My Location"
-              >
-                <FaLocationArrow className="text-white" />
-              </button>
+          
+          {/* Map Controls */}
+          <div className="map-controls" style={{ position: 'absolute', bottom: '20px', right: '10px', zIndex: 5 }}>
+            <button 
+              onClick={zoomIn}
+              style={{ 
+                width: '40px', 
+                height: '40px', 
+                backgroundColor: 'white', 
+                border: 'none',
+                borderRadius: '4px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                marginBottom: '5px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              <FaPlus />
+            </button>
+            <button 
+              onClick={zoomOut}
+              style={{ 
+                width: '40px', 
+                height: '40px', 
+                backgroundColor: 'white', 
+                border: 'none',
+                borderRadius: '4px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                marginBottom: '5px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              <FaMinus />
+            </button>
+            <button 
+              onClick={centerOnUser}
+              style={{ 
+                width: '40px', 
+                height: '40px', 
+                backgroundColor: 'white', 
+                border: 'none',
+                borderRadius: '4px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              <FaLocationArrow />
+            </button>
+          </div>
+          
+          {/* Places List */}
+          <div className="places-list" style={{ 
+            position: 'absolute', 
+            bottom: '20px', 
+            left: '10px', 
+            zIndex: 5,
+            backgroundColor: 'white',
+            borderRadius: '4px',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+            maxHeight: '200px',
+            width: '280px',
+            overflowY: 'auto',
+            display: places.length > 0 ? 'block' : 'none'
+          }}>
+            <h3 style={{ padding: '10px', margin: 0, borderBottom: '1px solid #eee', fontSize: '16px' }}>
+              Nearby {type === 'hospitals' ? 'Hospitals' : 'Pharmacies'}
+            </h3>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              {places.map((place) => (
+                <li 
+                  key={place.place_id}
+                  style={{ padding: '10px', borderBottom: '1px solid #eee', cursor: 'pointer' }}
+                  onClick={() => {
+                    // Center map on this place
+                    mapInstanceRef.current.setCenter(place.geometry.location);
+                    
+                    // Find the marker and click it to open info window
+                    const marker = markersRef.current.find(
+                      m => m.getPosition().equals(place.geometry.location)
+                    );
+                    if (marker) {
+                      window.google.maps.event.trigger(marker, 'click');
+                    }
+                  }}
+                >
+                  <div style={{ display: 'flex' }}>
+                    <FaMapMarkerAlt style={{ marginRight: '8px', color: type === 'hospitals' ? '#1976d2' : '#d32f2f' }} />
+                    <div>
+                      <strong>{place.name}</strong>
+                      <div style={{ fontSize: '12px', color: '#666' }}>{place.vicinity}</div>
+                      {place.opening_hours && (
+                        <div style={{ 
+                          fontSize: '12px', 
+                          color: place.opening_hours.open_now ? 'green' : 'red',
+                          marginTop: '2px'
+                        }}>
+                          {place.opening_hours.open_now ? 'Open Now' : 'Closed'}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          {/* Loading indicator */}
+          {loading && (
+            <div style={{ 
+              position: 'absolute', 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              bottom: 0, 
+              backgroundColor: 'rgba(255,255,255,0.7)', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              zIndex: 10
+            }}>
+              <FaSpinner size={40} color="#1976d2" style={{ animation: 'spin 1s linear infinite' }} />
             </div>
-            
-            {/* Search Bar */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-11/12 max-w-3xl">
-              <div className="bg-white rounded-lg shadow-lg p-4">
-                <div className="flex items-center">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={`Search for ${type}`}
-                    className="flex-1 p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  />
-                  <button
-                    onClick={handleSearch}
-                    className="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600"
-                  >
-                    <FaSearch className="h-5 w-5" />
-                  </button>
-                </div>
-                
-                {places.length > 0 && (
-                  <p className="text-sm text-blue-600 mt-2 text-center">
-                    Found {places.length} {type} nearby
-                  </p>
-                )}
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+          )}
+        </>
+      )}
+      
+      <style jsx="true">{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        
+        .error-container {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 20px;
+          background-color: #f8f8f8;
+          border-radius: 8px;
+        }
+        
+        .error-container h3 {
+          margin: 10px 0;
+          color: #D32F2F;
+        }
+        
+        .error-note {
+          font-size: 14px;
+          color: #666;
+          margin-top: 10px;
+        }
+      `}</style>
     </div>
   );
 };

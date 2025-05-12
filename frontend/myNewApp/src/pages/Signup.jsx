@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaPhone } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaExclamationCircle } from 'react-icons/fa';
+import authService from '../services/authService';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,9 @@ const Signup = () => {
     confirmPassword: '',
     agreeToTerms: false,
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -20,10 +24,48 @@ const Signup = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log('Signup form submitted:', formData);
+    setError('');
+    setLoading(true);
+    
+    try {
+      // Validate form
+      if (!formData.email || !formData.password || !formData.confirmPassword) {
+        throw new Error('Please fill in all required fields.');
+      }
+      
+      if (formData.password !== formData.confirmPassword) {
+        throw new Error('Passwords do not match.');
+      }
+      
+      if (formData.password.length < 8) {
+        throw new Error('Password must be at least 8 characters long.');
+      }
+      
+      if (!formData.agreeToTerms) {
+        throw new Error('You must agree to the terms and conditions.');
+      }
+      
+      // Call register API
+      const response = await authService.register({
+        email: formData.email,
+        password: formData.password,
+        // The backend doesn't handle fullName and phone yet, but we can include them for future use
+      });
+      
+      // If registration is successful, redirect to dashboard
+      if (response.token) {
+        navigate('/dashboard');
+      } else if (response.error) {
+        setError(response.error);
+      }
+    } catch (err) {
+      setError(err.message || err.error || 'Registration failed. Please try again.');
+      console.error('Registration error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,6 +79,19 @@ const Signup = () => {
             Join our medical platform for better healthcare
           </p>
         </div>
+        
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded" role="alert">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <FaExclamationCircle className="h-5 w-5 text-red-500" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
@@ -147,9 +202,12 @@ const Signup = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+                loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+              }`}
+              disabled={loading}
             >
-              Create Account
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </div>
 

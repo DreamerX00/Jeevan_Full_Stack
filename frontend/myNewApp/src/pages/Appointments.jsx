@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { 
@@ -13,119 +14,60 @@ import {
   FaPhone, 
   FaVideo,
   FaChevronDown,
-  FaChevronUp
+  FaChevronUp,
+  FaSpinner,
+  FaExclamationCircle
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import appointmentService from '../services/appointmentService';
+import authService from '../services/authService';
 
 const Appointments = () => {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [expandedAppointment, setExpandedAppointment] = useState(null);
   const [filterSpecialty, setFilterSpecialty] = useState('all');
-  
-  // Mock data for upcoming appointments
-  const upcomingAppointments = [
-    {
-      id: 1,
-      date: '15 Jun 2023',
-      time: '10:00 AM',
-      doctor: 'Dr. Sarah Johnson',
-      specialty: 'Cardiology',
-      location: 'City Hospital, Block A',
-      address: '123 Medical Center Blvd, Delhi',
-      type: 'In-person',
-      reason: 'Annual Heart Checkup',
-      notes: 'Bring previous ECG reports',
-      status: 'Confirmed',
-      phoneNumber: '+91 98765 43210'
-    },
-    {
-      id: 2,
-      date: '22 Jun 2023',
-      time: '3:30 PM',
-      doctor: 'Dr. Michael Chen',
-      specialty: 'Dermatology',
-      location: 'DermaCare Clinic',
-      address: '456 Health Street, Delhi',
-      type: 'Video',
-      reason: 'Skin Rash Follow-up',
-      notes: 'Take clear photos of affected area before consultation',
-      status: 'Pending',
-      videoLink: 'https://meet.example.com/dr-chen-123'
-    },
-    {
-      id: 3,
-      date: '05 Jul 2023',
-      time: '9:15 AM',
-      doctor: 'Dr. Emily Wilson',
-      specialty: 'General Medicine',
-      location: 'Family Health Center',
-      address: '789 Hospital Road, Delhi',
-      type: 'In-person',
-      reason: 'Regular Health Checkup',
-      notes: 'Fasting required for blood tests',
-      status: 'Confirmed',
-      phoneNumber: '+91 87654 32109'
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in
+    if (!authService.isLoggedIn()) {
+      navigate('/login');
+      return;
     }
-  ];
+
+    // Fetch appointments from the backend
+    const fetchAppointments = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await appointmentService.getAppointments();
+        setAppointments(data);
+      } catch (err) {
+        console.error('Error fetching appointments:', err);
+        setError('Failed to load appointments. ' + (err.error || err.message || ''));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAppointments();
+  }, [navigate]);
   
-  // Mock data for previous appointments
-  const previousAppointments = [
-    {
-      id: 4,
-      date: '15 May 2023',
-      time: '10:00 AM',
-      doctor: 'Dr. Sarah Johnson',
-      specialty: 'Cardiology',
-      location: 'City Hospital, Block A',
-      type: 'In-person',
-      reason: 'Annual Heart Checkup',
-      diagnosis: 'Mild hypertension',
-      prescription: 'Amlodipine 5mg daily',
-      followUp: 'In 3 months',
-      documents: ['heart_report_may_2023.pdf', 'ecg_may_2023.pdf']
-    },
-    {
-      id: 5,
-      date: '22 Mar 2023',
-      time: '2:30 PM',
-      doctor: 'Dr. Michael Chen',
-      specialty: 'Dermatology',
-      location: 'DermaCare Clinic',
-      type: 'In-person',
-      reason: 'Skin Rash Consultation',
-      diagnosis: 'Contact dermatitis',
-      prescription: 'Hydrocortisone cream 1%, apply twice daily',
-      followUp: 'As needed',
-      documents: ['dermatology_report_mar_2023.pdf']
-    },
-    {
-      id: 6,
-      date: '10 Jan 2023',
-      time: '9:15 AM',
-      doctor: 'Dr. Emily Wilson',
-      specialty: 'Immunology',
-      location: 'Family Health Center',
-      type: 'In-person',
-      reason: 'COVID-19 Vaccination',
-      notes: 'Second booster dose administered',
-      followUp: 'None required',
-      documents: ['vaccination_certificate_jan_2023.pdf']
-    },
-    {
-      id: 7,
-      date: '05 Dec 2022',
-      time: '3:45 PM',
-      doctor: 'Dr. Robert Adams',
-      specialty: 'Orthopedics',
-      location: 'Joint Care Center',
-      type: 'Video',
-      reason: 'Knee Pain Consultation',
-      diagnosis: 'Minor knee sprain',
-      prescription: 'Ibuprofen 400mg as needed, knee brace',
-      followUp: 'In 2 weeks if not improved',
-      documents: ['orthopedic_assessment_dec_2022.pdf']
-    }
-  ];
+  // Split appointments into upcoming and previous based on the date
+  const today = new Date();
+  
+  const upcomingAppointments = appointments.filter(appointment => {
+    const appointmentDate = new Date(appointment.date);
+    return appointmentDate >= today;
+  });
+  
+  const previousAppointments = appointments.filter(appointment => {
+    const appointmentDate = new Date(appointment.date);
+    return appointmentDate < today;
+  });
   
   // Filter appointments by specialty
   const filteredUpcoming = filterSpecialty === 'all' 
@@ -140,7 +82,7 @@ const Appointments = () => {
   const allSpecialties = [...new Set([
     ...upcomingAppointments.map(apt => apt.specialty),
     ...previousAppointments.map(apt => apt.specialty)
-  ])];
+  ])].filter(specialty => specialty); // Filter out undefined/null values
   
   // Toggle appointment details expansion
   const toggleExpand = (id) => {
@@ -150,6 +92,44 @@ const Appointments = () => {
       setExpandedAppointment(id);
     }
   };
+
+  // Handle booking a new appointment
+  const handleNewAppointment = () => {
+    // Redirect to new appointment booking form
+    // This will be implemented with a proper form later
+    alert('Booking appointment functionality will be implemented soon');
+  };
+
+  // Handle canceling an appointment
+  const handleCancelAppointment = async (id) => {
+    if (!confirm('Are you sure you want to cancel this appointment?')) {
+      return;
+    }
+    
+    try {
+      await appointmentService.deleteAppointment(id);
+      // Remove the appointment from the state
+      setAppointments(appointments.filter(apt => apt.id !== id));
+    } catch (err) {
+      alert('Failed to cancel appointment: ' + (err.error || err.message || ''));
+    }
+  };
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="flex">
+          <Sidebar />
+          <main className="flex-1 ml-64 pt-16 pb-12">
+            <div className="flex items-center justify-center h-full">
+              <FaSpinner className="animate-spin h-12 w-12 text-blue-600" />
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -163,11 +143,25 @@ const Appointments = () => {
                 <h1 className="text-3xl font-bold text-gray-900">Appointments</h1>
                 <p className="mt-2 text-lg text-gray-600">Manage all your medical appointments</p>
               </div>
-              <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+              <button 
+                onClick={handleNewAppointment}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+              >
                 <FaCalendarPlus className="mr-2" />
                 Book New Appointment
               </button>
             </div>
+            
+            {error && (
+              <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                <div className="flex">
+                  <FaExclamationCircle className="h-5 w-5 text-red-500" />
+                  <div className="ml-3">
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* Filter Section */}
             <div className="bg-white p-4 rounded-lg shadow-sm mb-6">

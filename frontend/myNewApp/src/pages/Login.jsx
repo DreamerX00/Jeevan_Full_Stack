@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaEnvelope, FaLock, FaExclamationCircle } from 'react-icons/fa';
+import authService from '../services/authService';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,9 @@ const Login = () => {
     password: '',
     rememberMe: false,
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -17,10 +21,35 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login form submitted:', formData);
+    setError('');
+    setLoading(true);
+    
+    try {
+      // Validate form
+      if (!formData.email || !formData.password) {
+        throw new Error('Please fill in all fields.');
+      }
+      
+      // Call login API
+      const response = await authService.login({
+        email: formData.email,
+        password: formData.password,
+      });
+      
+      // If login is successful, redirect to dashboard
+      if (response.token) {
+        navigate('/dashboard');
+      } else if (response.error) {
+        setError(response.error);
+      }
+    } catch (err) {
+      setError(err.error || 'Login failed. Please check your credentials and try again.');
+      console.error('Login error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,6 +63,19 @@ const Login = () => {
             Sign in to access your medical dashboard
           </p>
         </div>
+        
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded" role="alert">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <FaExclamationCircle className="h-5 w-5 text-red-500" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
@@ -97,9 +139,12 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+                loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+              }`}
+              disabled={loading}
             >
-              Sign in
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
 

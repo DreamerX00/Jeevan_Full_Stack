@@ -15,6 +15,7 @@ import NearbyPharmacies from './pages/NearbyPharmacies';
 import MedicalRecords from './pages/MedicalRecords';
 import Appointments from './pages/Appointments';
 import Prescriptions from './pages/Prescriptions';
+import ApiTest from './pages/ApiTest';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
       <Route path="/records" element={<MedicalRecords />} />
       <Route path="/appointments" element={<Appointments />} />
       <Route path="/prescriptions" element={<Prescriptions />} />
+      <Route path="/api-test" element={<ApiTest />} />
     </Routes>
   );
 }

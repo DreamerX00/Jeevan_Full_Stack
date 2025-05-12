@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { 
@@ -11,133 +12,94 @@ import {
   FaShoppingCart,
   FaExclamationTriangle,
   FaCheck,
-  FaSearch
+  FaSearch,
+  FaSpinner,
+  FaExclamationCircle
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import prescriptionService from '../services/prescriptionService';
+import authService from '../services/authService';
 
 const Prescriptions = () => {
   const [activeTab, setActiveTab] = useState('current');
   const [searchTerm, setSearchTerm] = useState('');
+  const [medications, setMedications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
   
-  // Mock data for current medications
-  const currentMedications = [
-    {
-      id: 1,
-      name: 'Amlodipine',
-      dosage: '5mg',
-      frequency: 'Once daily',
-      timing: 'Morning, after breakfast',
-      prescribedDate: '15 May 2023',
-      endDate: '15 Nov 2023',
-      doctor: 'Dr. Sarah Johnson',
-      specialty: 'Cardiology',
-      reason: 'Hypertension',
-      instructions: 'Take with water. Avoid grapefruit juice.',
-      refillsRemaining: 2,
-      status: 'Active',
-      quantity: '30 tablets',
-      image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 2,
-      name: 'Metformin',
-      dosage: '500mg',
-      frequency: 'Twice daily',
-      timing: 'Morning and evening, with meals',
-      prescribedDate: '22 Apr 2023',
-      endDate: '22 Oct 2023',
-      doctor: 'Dr. James Wilson',
-      specialty: 'Endocrinology',
-      reason: 'Type 2 Diabetes',
-      instructions: 'Take with food to minimize GI side effects.',
-      refillsRemaining: 3,
-      status: 'Active',
-      quantity: '60 tablets',
-      image: 'https://images.unsplash.com/photo-1626716046238-0e09595e5764?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 3,
-      name: 'Hydrocortisone Cream',
-      dosage: '1%',
-      frequency: 'Twice daily',
-      timing: 'Morning and evening',
-      prescribedDate: '22 Mar 2023',
-      endDate: '22 Jun 2023',
-      doctor: 'Dr. Michael Chen',
-      specialty: 'Dermatology',
-      reason: 'Contact dermatitis',
-      instructions: 'Apply thin layer to affected areas. Do not use on face unless directed.',
-      refillsRemaining: 1,
-      status: 'Active',
-      quantity: '1 tube (30g)',
-      image: 'https://images.unsplash.com/photo-1576602976016-d14c313e3293?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+  useEffect(() => {
+    // Check if user is logged in
+    if (!authService.isLoggedIn()) {
+      navigate('/login');
+      return;
     }
-  ];
+
+    // Fetch prescriptions from the backend
+    const fetchPrescriptions = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await prescriptionService.getPrescriptions();
+        setMedications(data);
+      } catch (err) {
+        console.error('Error fetching prescriptions:', err);
+        setError('Failed to load prescriptions. ' + (err.error || err.message || ''));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrescriptions();
+  }, [navigate]);
   
-  // Mock data for past medications
-  const pastMedications = [
-    {
-      id: 4,
-      name: 'Amoxicillin',
-      dosage: '500mg',
-      frequency: 'Three times daily',
-      timing: 'Every 8 hours',
-      prescribedDate: '10 Jan 2023',
-      endDate: '17 Jan 2023',
-      doctor: 'Dr. Emily Wilson',
-      specialty: 'General Medicine',
-      reason: 'Bacterial infection',
-      instructions: 'Complete entire course even if symptoms improve.',
-      status: 'Completed',
-      quantity: '21 capsules',
-      image: 'https://images.unsplash.com/photo-1550572017-edd951b55104?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 5,
-      name: 'Ibuprofen',
-      dosage: '400mg',
-      frequency: 'As needed',
-      timing: 'Every 6 hours as needed for pain',
-      prescribedDate: '05 Dec 2022',
-      endDate: '19 Dec 2022',
-      doctor: 'Dr. Robert Adams',
-      specialty: 'Orthopedics',
-      reason: 'Knee sprain',
-      instructions: 'Take with food. Do not exceed 1200mg in 24 hours.',
-      status: 'Completed',
-      quantity: '20 tablets',
-      image: 'https://images.unsplash.com/photo-1550572017-49960de90618?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 6,
-      name: 'Loratadine',
-      dosage: '10mg',
-      frequency: 'Once daily',
-      timing: 'Morning',
-      prescribedDate: '15 Oct 2022',
-      endDate: '15 Nov 2022',
-      doctor: 'Dr. Lisa Patel',
-      specialty: 'Allergy & Immunology',
-      reason: 'Seasonal allergies',
-      instructions: 'Can be taken with or without food.',
-      status: 'Completed',
-      quantity: '30 tablets',
-      image: 'https://images.unsplash.com/photo-1626716098239-6c062d134d18?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    }
-  ];
+  // Split medications into current and past based on the end date
+  const today = new Date();
+  
+  const currentMedications = medications.filter(medication => {
+    const endDate = new Date(medication.endDate);
+    return endDate >= today || medication.status === 'Active';
+  });
+  
+  const pastMedications = medications.filter(medication => {
+    const endDate = new Date(medication.endDate);
+    return endDate < today || medication.status === 'Completed';
+  });
   
   // Filter medications based on search term
   const filteredCurrent = currentMedications.filter(medication => 
-    medication.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medication.reason.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medication.doctor.toLowerCase().includes(searchTerm.toLowerCase())
+    medication.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medication.reason?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medication.doctor?.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
   const filteredPast = pastMedications.filter(medication => 
-    medication.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medication.reason.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medication.doctor.toLowerCase().includes(searchTerm.toLowerCase())
+    medication.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medication.reason?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medication.doctor?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  
+  // Handle upload prescription
+  const handleUploadPrescription = () => {
+    // This will be implemented with a file upload component
+    alert('Upload prescription functionality will be implemented soon');
+  };
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="flex">
+          <Sidebar />
+          <main className="flex-1 ml-64 pt-16 pb-12">
+            <div className="flex items-center justify-center h-full">
+              <FaSpinner className="animate-spin h-12 w-12 text-blue-600" />
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -151,11 +113,25 @@ const Prescriptions = () => {
                 <h1 className="text-3xl font-bold text-gray-900">Prescriptions</h1>
                 <p className="mt-2 text-lg text-gray-600">Manage and track your medications</p>
               </div>
-              <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+              <button 
+                onClick={handleUploadPrescription}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+              >
                 <FaFileMedical className="mr-2" />
                 Upload Prescription
               </button>
             </div>
+            
+            {error && (
+              <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                <div className="flex">
+                  <FaExclamationCircle className="h-5 w-5 text-red-500" />
+                  <div className="ml-3">
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* Search and Filter Section */}
             <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
@@ -282,20 +258,11 @@ const Prescriptions = () => {
                   <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center">
-                        <FaExclamationTriangle className="h-5 w-5 text-yellow-500 mr-2" />
-                        <p className="text-sm font-medium text-gray-900">Important Medication Information</p>
+                        <FaCheck className="h-5 w-5 text-green-500 mr-2" />
+                        <p className="text-sm font-medium text-gray-900">Take medications at the same time each day</p>
                       </div>
                     </div>
                     <ul className="space-y-4">
-                      <li className="border-b border-gray-200 pb-4">
-                        <div className="flex">
-                          <FaCheck className="h-5 w-5 text-green-500 mr-2" />
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">Take medications at the same time each day</p>
-                            <p className="text-xs text-gray-500">Keeping a consistent schedule helps maintain proper medication levels in your body.</p>
-                          </div>
-                        </div>
-                      </li>
                       <li className="border-b border-gray-200 pb-4">
                         <div className="flex">
                           <FaCheck className="h-5 w-5 text-green-500 mr-2" />
