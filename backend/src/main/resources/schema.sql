@@ -12,3 +12,25 @@ SET search_path TO public;
 -- This file is mainly for any additional database setup that JPA might not handle
 
 -- You can add any additional database setup here if needed 
+
+-- First verify if the role column exists, if not add it
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT FROM information_schema.columns 
+        WHERE table_name = 'users' AND column_name = 'role'
+    ) THEN
+        -- Add the role column without constraints initially
+        ALTER TABLE users ADD COLUMN role VARCHAR(255);
+        
+        -- Update all existing rows to have the default USER role
+        UPDATE users SET role = 'USER';
+        
+        -- Now add the NOT NULL constraint
+        ALTER TABLE users ALTER COLUMN role SET NOT NULL;
+    END IF;
+END
+$$;
+
+-- Now add the NOT NULL constraint and check constraint
+ALTER TABLE users ADD CONSTRAINT check_role CHECK (role IN ('USER', 'ADMIN', 'DOCTOR', 'PHARMACIST')); 
