@@ -1,4 +1,4 @@
-com.example.jeevanandroid
+com.jeevan.android
 attr action
 attr alpha
 attr ambientEnabled
@@ -14,7 +14,6 @@ attr cameraTilt
 attr cameraZoom
 attr circleCrop
 attr colorScheme
-attr coordinatorLayoutStyle
 attr data
 attr dataPattern
 attr destination
@@ -35,20 +34,14 @@ attr fontWeight
 attr graph
 attr imageAspectRatio
 attr imageAspectRatioAdjust
-attr keylines
 attr lStar
 attr latLngBoundsNorthEastLatitude
 attr latLngBoundsNorthEastLongitude
 attr latLngBoundsSouthWestLatitude
 attr latLngBoundsSouthWestLongitude
 attr launchSingleTop
-attr layout_anchor
-attr layout_anchorGravity
-attr layout_behavior
-attr layout_dodgeInsetEdges
-attr layout_insetEdge
-attr layout_keyline
 attr liteMode
+attr mapColorScheme
 attr mapId
 attr mapType
 attr mimeType
@@ -66,7 +59,6 @@ attr route
 attr scopeUris
 attr shortcutMatchRequired
 attr startDestination
-attr statusBarBackground
 attr targetPackage
 attr ttcIndex
 attr uiCompass
@@ -233,27 +225,17 @@ id action_text
 id actions
 id adjust_height
 id adjust_width
-id all
 id androidx_compose_ui_view_composition_context
 id async
 id auto
 id blocking
-id bottom
-id center
-id center_horizontal
-id center_vertical
 id chronometer
-id clip_horizontal
-id clip_vertical
 id compose_view_saveable_id_tag
 id consume_window_insets_tag
 id dark
 id dialog_button
 id edit_text_id
-id end
-id fill
-id fill_horizontal
-id fill_vertical
+id follow_system
 id forever
 id hide_graphics_layer_in_inspector_tag
 id hide_ime_id
@@ -266,7 +248,6 @@ id info
 id inspection_slot_table_set
 id is_pooling_container_tag
 id italic
-id left
 id light
 id line1
 id line3
@@ -279,21 +260,21 @@ id notification_main_column
 id notification_main_column_container
 id pooling_container_listener_holder_tag
 id report_drawn
-id right
 id right_icon
 id right_side
 id satellite
 id standard
-id start
 id tag_accessibility_actions
 id tag_accessibility_clickable_spans
 id tag_accessibility_heading
 id tag_accessibility_pane_title
+id tag_compat_insets_dispatch
 id tag_on_apply_window_listener
 id tag_on_receive_content_listener
 id tag_on_receive_content_mime_types
 id tag_screen_reader_focusable
 id tag_state_description
+id tag_system_bar_state_monitor
 id tag_transition_group
 id tag_unhandled_key_event_manager
 id tag_unhandled_key_listeners
@@ -303,7 +284,7 @@ id text
 id text2
 id time
 id title
-id top
+id view_tree_disjoint_parent
 id view_tree_lifecycle_owner
 id view_tree_on_back_pressed_dispatcher_owner
 id view_tree_saved_state_registry_owner
@@ -311,6 +292,7 @@ id view_tree_view_model_store_owner
 id wide
 id wrapped_composition_tag
 integer google_play_services_version
+integer m3c_window_layout_in_display_cutout_mode
 integer status_bar_notification_info_maxnum
 layout custom_dialog
 layout ime_base_split_test_activity
@@ -325,6 +307,7 @@ mipmap ic_launcher
 mipmap ic_launcher_round
 string androidx_startup
 string app_name
+string autofill
 string call_notification_answer_action
 string call_notification_answer_video_action
 string call_notification_decline_action
@@ -396,6 +379,7 @@ string m3c_date_range_picker_title
 string m3c_dialog
 string m3c_dropdown_menu_collapsed
 string m3c_dropdown_menu_expanded
+string m3c_dropdown_menu_toggle
 string m3c_search_bar_search
 string m3c_snackbar_dismiss
 string m3c_suggestions_available
@@ -413,11 +397,13 @@ string m3c_time_picker_period_toggle_description
 string m3c_time_picker_pm
 string m3c_tooltip_long_press_label
 string m3c_tooltip_pane_description
+string mc2_snackbar_pane_title
 string navigation_menu
 string not_selected
 string range_end
 string range_start
 string selected
+string snackbar_pane_title
 string state_empty
 string state_off
 string state_on
@@ -428,6 +414,8 @@ string template_percent
 string tooltip_description
 string tooltip_label
 style DialogWindowTheme
+style EdgeToEdgeFloatingDialogTheme
+style EdgeToEdgeFloatingDialogWindowTheme
 style FloatingDialogTheme
 style FloatingDialogWindowTheme
 style TextAppearance_Compat_Notification
@@ -438,18 +426,15 @@ style TextAppearance_Compat_Notification_Title
 style Theme_JeevanAndroid
 style Widget_Compat_NotificationActionContainer
 style Widget_Compat_NotificationActionText
-style Widget_Support_CoordinatorLayout
 styleable ActivityNavigator android_name action data dataPattern targetPackage
 styleable Capability queryPatterns shortcutMatchRequired
 styleable ColorStateListItem android_color android_alpha android_lStar alpha lStar
-styleable CoordinatorLayout keylines statusBarBackground
-styleable CoordinatorLayout_Layout android_layout_gravity layout_anchor layout_anchorGravity layout_behavior layout_dodgeInsetEdges layout_insetEdge layout_keyline
 styleable FontFamily fontProviderAuthority fontProviderCerts fontProviderFallbackQuery fontProviderFetchStrategy fontProviderFetchTimeout fontProviderPackage fontProviderQuery fontProviderSystemFontFamily
 styleable FontFamilyFont android_font android_fontWeight android_fontStyle android_ttcIndex android_fontVariationSettings font fontStyle fontVariationSettings fontWeight ttcIndex
 styleable GradientColor android_startColor android_endColor android_type android_centerX android_centerY android_gradientRadius android_tileMode android_centerColor android_startX android_startY android_endX android_endY
 styleable GradientColorItem android_color android_offset
 styleable LoadingImageView circleCrop imageAspectRatio imageAspectRatioAdjust
-styleable MapAttrs ambientEnabled backgroundColor cameraBearing cameraMaxZoomPreference cameraMinZoomPreference cameraTargetLat cameraTargetLng cameraTilt cameraZoom latLngBoundsNorthEastLatitude latLngBoundsNorthEastLongitude latLngBoundsSouthWestLatitude latLngBoundsSouthWestLongitude liteMode mapId mapType uiCompass uiMapToolbar uiRotateGestures uiScrollGestures uiScrollGesturesDuringRotateOrZoom uiTiltGestures uiZoomControls uiZoomGestures useViewLifecycle zOrderOnTop
+styleable MapAttrs ambientEnabled backgroundColor cameraBearing cameraMaxZoomPreference cameraMinZoomPreference cameraTargetLat cameraTargetLng cameraTilt cameraZoom latLngBoundsNorthEastLatitude latLngBoundsNorthEastLongitude latLngBoundsSouthWestLatitude latLngBoundsSouthWestLongitude liteMode mapColorScheme mapId mapType uiCompass uiMapToolbar uiRotateGestures uiScrollGestures uiScrollGesturesDuringRotateOrZoom uiTiltGestures uiZoomControls uiZoomGestures useViewLifecycle zOrderOnTop
 styleable NavAction android_id destination enterAnim exitAnim launchSingleTop popEnterAnim popExitAnim popUpTo popUpToInclusive popUpToSaveState restoreState
 styleable NavArgument android_name android_defaultValue argType nullable
 styleable NavDeepLink android_autoVerify action mimeType uri

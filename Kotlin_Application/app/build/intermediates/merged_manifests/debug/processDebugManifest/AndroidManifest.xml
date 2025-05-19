@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.jeevanandroid"
+    package="com.jeevan.android"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -26,13 +26,13 @@
     </queries>
 
     <permission
-        android:name="com.example.jeevanandroid.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="com.jeevan.android.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.jeevanandroid.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="com.jeevan.android.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
-        android:name="com.example.jeevanandroid.JeevanApplication"
+        android:name="com.jeevan.JeevanApplication"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -54,7 +54,7 @@
             android:value="AIzaSyCzdG6W3NuCNElD4ZOFBS6iWX_SHirxr9A" />
 
         <activity
-            android:name="com.example.jeevanandroid.MainActivity"
+            android:name="com.jeevan.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.JeevanAndroid" >
@@ -64,7 +64,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Needs to be explicitly declared on P+ -->
+        <activity
+            android:name="androidx.compose.ui.tooling.PreviewActivity"
+            android:exported="true" /> <!-- Needs to be explicitly declared on P+ -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -78,13 +80,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name="androidx.activity.ComponentActivity"
-            android:exported="true" />
-
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.example.jeevanandroid.androidx-startup"
+            android:authorities="com.jeevan.android.androidx-startup"
             android:exported="false" >
             <meta-data
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"
@@ -98,8 +96,9 @@
         </provider>
 
         <activity
-            android:name="androidx.compose.ui.tooling.PreviewActivity"
-            android:exported="true" />
+            android:name="androidx.activity.ComponentActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar" />
 
         <receiver
             android:name="androidx.profileinstaller.ProfileInstallReceiver"
