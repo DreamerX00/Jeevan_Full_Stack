@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: jeevan_postgres
+    environment:
+      POSTGRES_DB: jeevanDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - jeevan_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d jeevanDB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jeevan_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jeevanDB
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: your_jwt_secret_key_here
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - jeevan_network
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend/myNewApp
+      dockerfile: Dockerfile
+    container_name: jeevan_frontend
+    environment:
+      VITE_API_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+    networks:
+      - jeevan_network
+    depends_on:
+      - backend
+
+networks:
+  jeevan_network:
+    driver: bridge
+
+volumes:
+  postgres_data: 
