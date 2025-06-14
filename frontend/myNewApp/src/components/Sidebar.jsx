@@ -1,117 +1,150 @@
-import { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 import { 
   FaHome, 
   FaCalendarAlt, 
-  FaPrescriptionBottleAlt,
-  FaUserMd,
-  FaShoppingCart,
-  FaFileAlt,
-  FaCog,
-  FaQuestionCircle,
+  FaUserMd, 
+  FaPrescriptionBottleAlt, 
+  FaFileMedicalAlt, 
+  FaShoppingBag, 
+  FaUser, 
+  FaCog, 
+  FaSignOutAlt,
+  FaHeartbeat,
+  FaHospital,
   FaPhoneAlt,
-  FaBars
+  FaFirstAid
 } from 'react-icons/fa';
-import { useTheme } from '../context/ThemeContext';
 
 const Sidebar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
   const { darkMode } = useTheme();
+  const location = useLocation();
 
   const menuItems = [
-    { icon: FaHome, label: 'Home', path: '/' },
-    { icon: FaCalendarAlt, label: 'Appointments', path: '/appointments' },
-    { icon: FaPrescriptionBottleAlt, label: 'Prescriptions', path: '/prescriptions' },
-    { icon: FaUserMd, label: 'Doctors', path: '/doctors' },
-    { icon: FaShoppingCart, label: 'Medical Shop', path: '/shop' },
-    { icon: FaFileAlt, label: 'Medical Records', path: '/records' },
-    { icon: FaPhoneAlt, label: 'Emergency Contacts', path: '/emergency-contacts' },
+    {
+      icon: <FaHome className="w-5 h-5" />,
+      title: 'Home',
+      path: '/',
+      color: 'text-blue-500'
+    },
+    {
+      icon: <FaCalendarAlt className="w-5 h-5" />,
+      title: 'Appointments',
+      path: '/appointments',
+      color: 'text-purple-500'
+    },
+    {
+      icon: <FaUserMd className="w-5 h-5" />,
+      title: 'Doctors',
+      path: '/doctors',
+      color: 'text-green-500'
+    },
+    {
+      icon: <FaPrescriptionBottleAlt className="w-5 h-5" />,
+      title: 'Prescriptions',
+      path: '/prescriptions',
+      color: 'text-yellow-500'
+    },
+    {
+      icon: <FaFileMedicalAlt className="w-5 h-5" />,
+      title: 'Medical Records',
+      path: '/medical-records',
+      color: 'text-red-500'
+    },
+    {
+      icon: <FaPhoneAlt className="w-5 h-5" />,
+      title: 'Emergency Contacts',
+      path: '/emergency-contacts',
+      color: 'text-red-600'
+    }
   ];
 
   const bottomMenuItems = [
-    { icon: FaCog, label: 'Settings', path: '/settings' },
-    { icon: FaQuestionCircle, label: 'Help', path: '/help' },
+    {
+      icon: <FaUser className="w-5 h-5" />,
+      title: 'Profile',
+      path: '/profile',
+      color: 'text-gray-500'
+    },
+    {
+      icon: <FaCog className="w-5 h-5" />,
+      title: 'Settings',
+      path: '/settings',
+      color: 'text-gray-500'
+    },
+    {
+      icon: <FaSignOutAlt className="w-5 h-5" />,
+      title: 'Logout',
+      path: '/logout',
+      color: 'text-gray-500'
+    }
   ];
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  // Function to check if a menu item is active
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
-
   return (
-    <>
-      {/* Mobile Menu Button */}
-      <button
-        onClick={toggleMobileMenu}
-        className="md:hidden fixed top-4 left-4 z-50 text-white"
-      >
-        <FaBars className="h-6 w-6" />
-      </button>
-
-      {/* Sidebar */}
-      <div className={`${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transform transition-transform duration-200 ease-in-out fixed left-0 top-0 h-screen w-64 ${darkMode ? 'bg-dark-card border-gray-700' : 'bg-white border-gray-200'} border-r z-40 md:top-16 transition-colors duration-200`}>
-        <div className="flex flex-col h-full">
-          <div className="flex-1 py-6 overflow-y-auto">
-            <nav className="px-4 space-y-2">
-              {menuItems.map((item, index) => (
-                <Link
-                  key={index}
-                  to={item.path}
-                  className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 ${
-                    isActive(item.path) 
-                      ? darkMode
-                        ? 'bg-gray-800 text-blue-400'
-                        : 'bg-blue-50 text-blue-600'
-                      : darkMode
-                        ? 'text-gray-300 hover:bg-gray-800 hover:text-blue-400'
-                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <item.icon className="h-5 w-5" />
-                  <span className="ml-3 font-medium">{item.label}</span>
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} py-4 px-4 transition-colors duration-200`}>
-            {bottomMenuItems.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 ${
-                  isActive(item.path) 
-                    ? darkMode
-                      ? 'bg-gray-800 text-blue-400'
-                      : 'bg-blue-50 text-blue-600'
-                    : darkMode
-                      ? 'text-gray-300 hover:bg-gray-800 hover:text-blue-400'
-                      : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <item.icon className="h-5 w-5" />
-                <span className="ml-3 font-medium">{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
+    <div className={`h-screen w-64 fixed left-0 top-0 ${darkMode ? 'bg-dark-card' : 'bg-white'} border-r ${darkMode ? 'border-gray-700' : 'border-gray-200'} transition-colors duration-200 flex flex-col`}>
+      <div className="p-6">
+        <Link to="/" className="flex items-center space-x-3">
+          <img src="/logo.png" alt="Logo" className="h-8 w-8" />
+          <span className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
+            MediConnect
+          </span>
+        </Link>
       </div>
 
-      {/* Overlay */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-    </>
+      <nav className="flex-1 px-4 overflow-y-auto">
+        <div className="space-y-2">
+          {menuItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden ${
+                location.pathname === item.path
+                  ? darkMode
+                    ? 'bg-blue-600/20 text-blue-400'
+                    : 'bg-blue-50 text-blue-600'
+                  : darkMode
+                    ? 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+              }`}
+            >
+              <div className={`${item.color} transition-all duration-200 transform group-hover:scale-110`}>
+                {item.icon}
+              </div>
+              <span className="ml-3 font-medium">{item.title}</span>
+              {location.pathname === item.path && (
+                <div className={`absolute left-0 top-0 h-full w-1 ${darkMode ? 'bg-blue-400' : 'bg-blue-600'} transition-all duration-300`} />
+              )}
+            </Link>
+          ))}
+        </div>
+      </nav>
+
+      <div className={`px-4 py-4 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} bg-inherit`}>
+        <div className="space-y-2">
+          {bottomMenuItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group ${
+                location.pathname === item.path
+                  ? darkMode
+                    ? 'bg-gray-800 text-white'
+                    : 'bg-gray-100 text-gray-900'
+                  : darkMode
+                    ? 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+              }`}
+            >
+              <div className={`${item.color} transition-all duration-200 transform group-hover:scale-110`}>
+                {item.icon}
+              </div>
+              <span className="ml-3 font-medium">{item.title}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

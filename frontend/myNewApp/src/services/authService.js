@@ -43,6 +43,20 @@ api.interceptors.request.use(
   }
 );
 
+// Add a response interceptor to handle token expiration
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Token is invalid or expired
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Log requests in development - helpful for debugging
 if (import.meta.env.DEV) {
   api.interceptors.request.use(request => {
@@ -169,7 +183,17 @@ const authService = {
   // Check if user is logged in
   isLoggedIn: () => {
     const token = localStorage.getItem('token');
-    return !!token;
+    if (!token) return false;
+    
+    try {
+      // Check if token is expired
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expirationTime = payload.exp * 1000; // Convert to milliseconds
+      return Date.now() < expirationTime;
+    } catch (error) {
+      console.error('Error validating token:', error);
+      return false;
+    }
   },
   
   // Get user token

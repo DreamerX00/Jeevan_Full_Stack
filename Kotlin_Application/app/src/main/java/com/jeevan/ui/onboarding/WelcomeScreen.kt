@@ -1,7 +1,6 @@
 package com.jeevan.ui.onboarding
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -35,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -46,14 +44,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.jeevan.android.R
 import com.jeevan.ui.components.HeartbeatLoadingIndicator
+import com.jeevan.ui.theme.JeevanAndroidTheme
+import com.jeevan.utils.PrefsManager
 import com.jeevan.viewmodel.UserProfileViewModel
+import com.jeevan.viewmodel.UserProfileViewModelFactory
 
 @Composable
 fun WelcomeScreen(
@@ -439,4 +442,14 @@ fun CompleteStepContent(
             }
         }
     }
-} 
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun WelcomeScreenPreview() {
+    JeevanAndroidTheme {
+        WelcomeScreen(
+            navController = rememberNavController(),
+            userProfileViewModel = viewModel(factory = UserProfileViewModelFactory(PrefsManager(LocalContext.current))))
+    }
+}

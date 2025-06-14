@@ -59,13 +59,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.jeevan.android.R
 import com.jeevan.ui.components.HeartbeatLoadingIndicator
+import com.jeevan.ui.theme.JeevanAndroidTheme
+import com.jeevan.utils.PrefsManager
 import com.jeevan.viewmodel.AuthViewModel
+import com.jeevan.viewmodel.AuthViewModelFactory
 
 @Composable
 fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
@@ -250,7 +256,8 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                         Icon(
                                             imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                            contentDescription = "Toggle Password Visibility"
+                                            contentDescription = "Toggle Password Visibility",
+                                            tint = Color(0xFF6235E0)
                                         )
                                     }
                                 }
@@ -295,7 +302,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                             ),
                             enabled = !isLoading
                         ) {
-                            Text("Log in", fontSize = 20.sp)
+                            Text("Log in", fontSize = 20.sp,color = Color(0xFF08BAED))
                         }
 
                         // Observe auth response
@@ -337,7 +344,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                                 contentColor = Color(0xFF08BAED)
                             )
                         ) {
-                            Text("Register")
+                            Text("Register",color = Color(0xFF08BAED))
                         }
                     }
                 }
@@ -367,5 +374,13 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
         }
     }
 }
-
+@Preview(showBackground = true)
+@Composable
+private fun LoginScreenPreview() {
+    JeevanAndroidTheme {
+        LoginScreen(
+            navController = rememberNavController(),
+            authViewModel = viewModel(factory = AuthViewModelFactory(PrefsManager(LocalContext.current))))
+    }
+}
 

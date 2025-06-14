@@ -48,7 +48,9 @@ import androidx.navigation.compose.rememberNavController
 import com.jeevan.android.R
 import com.jeevan.ui.components.HeartbeatLoadingIndicator
 import com.jeevan.ui.theme.JeevanAndroidTheme
+import com.jeevan.utils.PrefsManager
 import com.jeevan.viewmodel.AuthViewModel
+import com.jeevan.viewmodel.AuthViewModelFactory
 
 @Composable
 fun ForgotPasswordScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
@@ -209,8 +211,10 @@ fun ForgotPasswordScreen(navController: NavController, authViewModel: AuthViewMo
 
 @Preview(showBackground = true)
 @Composable
-fun ForgotPasswordScreenPreview() {
+private fun ForgotPasswordScreenPreview() {
     JeevanAndroidTheme {
-        ForgotPasswordScreen(navController = rememberNavController())
+        ForgotPasswordScreen(
+            navController = rememberNavController(),
+            authViewModel = viewModel(factory = AuthViewModelFactory(PrefsManager(LocalContext.current))))
     }
 }

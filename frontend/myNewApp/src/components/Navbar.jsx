@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaBell, FaUser, FaTimes, FaSpinner, FaMoon, FaSun } from 'react-icons/fa';
+import { FaSearch, FaBell, FaUser, FaTimes, FaSpinner, FaMoon, FaSun, FaComments } from 'react-icons/fa';
 import { useSearch } from '../context/SearchContext';
 import { useTheme } from '../context/ThemeContext';
 import SearchResultItem from './SearchResultItem';
 import ThemeToggle from './ThemeToggle';
+import ChatNotifications from './Chat/ChatNotifications';
 
 const Navbar = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -163,12 +164,21 @@ const Navbar = () => {
             {/* Dark mode toggle */}
             <ThemeToggle minimal={true} className="mr-2" />
             
-            {/* Notifications */}
-            <button className={`ml-2 p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-blue-700'} relative transition-colors duration-200`}>
-              <FaBell className="h-5 w-5" />
-              <span className={`absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ${darkMode ? 'ring-gray-800' : 'ring-blue-600'}`}></span>
-            </button>
-            
+            {/* Chat Notifications */}
+            <div className="ml-2">
+              {(() => {
+                try {
+                  return <ChatNotifications />;
+                } catch (error) {
+                  return (
+                    <button title="Chat notification failed to load" className="ml-2 p-2 rounded-full bg-red-100 text-red-600 cursor-not-allowed">
+                      <FaComments className="h-5 w-5" />
+                    </button>
+                  );
+                }
+              })()}
+            </div>
+
             {/* User Menu */}
             <div className="ml-3 relative">
               <div>

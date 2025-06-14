@@ -61,12 +61,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.jeevan.android.R
 import com.jeevan.ui.components.MedicalThemeColorChangingButton
+import com.jeevan.ui.theme.JeevanAndroidTheme
+import com.jeevan.utils.PrefsManager
 import com.jeevan.viewmodel.UserProfileViewModel
+import com.jeevan.viewmodel.UserProfileViewModelFactory
 import kotlinx.coroutines.launch
 
 @Composable
@@ -263,9 +269,9 @@ fun HomeScreen(
                                     .padding(8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                SpecialityButton(R.drawable.symptoms, "Symptoms")
-                                SpecialityButton(R.drawable.appointment, "Appointment")
-                                SpecialityButton(R.drawable.diagnose, "Diagnose")
+                                SpecialityButton(R.drawable.symptoms, "Symptoms", navController)
+                                SpecialityButton(R.drawable.appointment, "Appointment", navController)
+                                SpecialityButton(R.drawable.diagnose, "Diagnose", navController)
                             }
 
                             Spacer(modifier = Modifier.height(10.dp))
@@ -276,9 +282,9 @@ fun HomeScreen(
                                     .padding(8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                SpecialityButton(R.drawable.cart, "Shop")
-                                SpecialityButton(R.drawable.medical_kit, "Kit")
-                                SpecialityButton(R.drawable.vaccination, "Vaccination")
+                                SpecialityButton(R.drawable.cart, "Shop", navController)
+                                SpecialityButton(R.drawable.medical_kit, "Kit", navController)
+                                SpecialityButton(R.drawable.vaccination, "Vaccination", navController)
                             }
 
                             Row(
@@ -503,14 +509,18 @@ fun DrawerContent(
 }
 
 @Composable
-fun SpecialityButton(imageResId: Int, text: String) {
+fun SpecialityButton(imageResId: Int, text: String, navController: NavController) {
     val context = LocalContext.current
+    
     Column(
         modifier = Modifier
             .size(100.dp) // Increased size for better usability
             .padding(4.dp)
             .clickable {
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                when (text) {
+                    "Symptoms" -> navController.navigate("symptom-checker")
+                    else -> Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                }
             },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -639,5 +649,15 @@ fun RecommendationSection(navController: NavController) {
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeScreenPreview() {
+    JeevanAndroidTheme {
+        HomeScreen(
+            navController = rememberNavController(),
+            userProfileViewModel = viewModel(factory = UserProfileViewModelFactory(PrefsManager(LocalContext.current))))
     }
 }

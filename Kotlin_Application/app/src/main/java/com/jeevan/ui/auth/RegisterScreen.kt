@@ -68,7 +68,9 @@ import androidx.navigation.compose.rememberNavController
 import com.jeevan.android.R
 import com.jeevan.ui.components.PulseLoadingIndicator
 import com.jeevan.ui.theme.JeevanAndroidTheme
+import com.jeevan.utils.PrefsManager
 import com.jeevan.viewmodel.AuthViewModel
+import com.jeevan.viewmodel.AuthViewModelFactory
 
 @Composable
 fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
@@ -245,7 +247,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                     .offset(y = passwordLabelYPosition)
                                     .animateContentSize()
                             )
-                            
+
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -278,10 +280,19 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                         )
                                     )
 
-                                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                    IconButton(
+                                        onClick = { passwordVisible = !passwordVisible },
+                                        modifier = Modifier.onFocusChanged {
+                                            // This ensures the field doesn't lose focus when clicking the icon
+                                            if (it.isFocused) {
+                                                isPasswordFocused.value = true
+                                            }
+                                        }
+                                    ) {
                                         Icon(
                                             imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                            contentDescription = "Toggle Password Visibility"
+                                            contentDescription = "Toggle Password Visibility",
+                                            tint = Color(0xFF6235E0)
                                         )
                                     }
                                 }
@@ -305,9 +316,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        // Re-enter Password Field
+// Re-enter Password Field
                         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                             Text(
                                 text = "RE-ENTER PASSWORD",
@@ -318,7 +327,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                     .offset(y = reEnterPasswordLabelYPosition)
                                     .animateContentSize()
                             )
-                            
+
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -351,10 +360,20 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                         )
                                     )
 
-                                    IconButton(onClick = { reEnterPasswordVisible = !reEnterPasswordVisible }) {
+                                    IconButton(
+
+                                        onClick = { reEnterPasswordVisible = !reEnterPasswordVisible },
+                                        modifier = Modifier.onFocusChanged {
+                                            // This ensures the field doesn't lose focus when clicking the icon
+                                            if (it.isFocused) {
+                                                isReEnterPasswordFocused.value = true
+                                            }
+                                        }
+                                    ) {
                                         Icon(
                                             imageVector = if (reEnterPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                            contentDescription = "Toggle Re-enter Password Visibility"
+                                            contentDescription = "Toggle Re-enter Password Visibility",
+                                            tint = Color(0xFF6235E0)
                                         )
                                     }
                                 }
@@ -378,7 +397,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         // Register Button
                         Button(
@@ -399,7 +418,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                             ),
                             enabled = !isLoading
                         ) {
-                            Text("Register", fontSize = 20.sp)
+                            Text("Register", fontSize = 20.sp, color = Color(0xFF08BAED))
                         }
 
                         // Observe auth response
@@ -440,7 +459,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                                 contentColor = Color(0xFF08BAED)
                             )
                         ) {
-                            Text("Log in")
+                            Text("Log in",color = Color(0xFF08BAED), fontSize = 20.sp)
                         }
                     }
                 }
@@ -473,8 +492,10 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
 
 @Preview(showBackground = true)
 @Composable
-fun RegisterScreenPreview() {
+private fun RegisterScreenPreview() {
     JeevanAndroidTheme {
-        RegisterScreen(navController = rememberNavController())
+        RegisterScreen(
+            navController = rememberNavController(),
+            authViewModel = viewModel(factory = AuthViewModelFactory(PrefsManager(LocalContext.current))))
     }
 }

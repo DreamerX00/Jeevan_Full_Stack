@@ -49,7 +49,7 @@ class AuthInterceptor(private val prefsManager: PrefsManager) : Interceptor {
 object RetrofitClient {
     // For emulator use 10.0.2.2, for physical device use your computer's IP address
     private const val EMULATOR_URL = "http://10.0.2.2:8080/"
-    private const val DEVICE_URL = "http://172.31.96.1:8080/" // Your computer's actual IP address
+    private const val DEVICE_URL = "http://192.168.1.9:8080/" // Local WiFi network IP address
     
     // Get the appropriate base URL
     private fun getBaseUrl(): String {
