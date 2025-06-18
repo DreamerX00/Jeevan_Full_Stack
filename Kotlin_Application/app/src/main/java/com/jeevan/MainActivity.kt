@@ -33,6 +33,7 @@ import com.jeevan.ui.auth.LoginScreen
 import com.jeevan.ui.auth.RegisterScreen
 import com.jeevan.ui.home.HomeScreen
 import com.jeevan.ui.home.ProfileScreen
+import com.jeevan.ui.medical.DiagnoseScreen
 import com.jeevan.ui.medical.SymptomCheckerScreen
 import com.jeevan.ui.nearby.HospitalScreen
 import com.jeevan.ui.nearby.PharmacyScreen
@@ -41,6 +42,8 @@ import com.jeevan.ui.theme.JeevanAndroidTheme
 import com.jeevan.utils.PrefsManager
 import com.jeevan.viewmodel.AuthViewModel
 import com.jeevan.viewmodel.AuthViewModelFactory
+import com.jeevan.viewmodel.DiagnoseViewModel
+import com.jeevan.viewmodel.DiagnoseViewModelFactory
 import com.jeevan.viewmodel.HospitalViewModel
 import com.jeevan.viewmodel.NearbyViewModel
 import com.jeevan.viewmodel.NearbyViewModelFactory
@@ -103,6 +106,12 @@ class MainActivity : ComponentActivity() {
                         composable("pharmacy") { PharmacyScreen(navController, nearbyViewModel) }
                         composable("hospitals") { HospitalScreen(navController, hospitalViewModel) }
                         composable("symptom-checker") { SymptomCheckerScreen(navController, symptomCheckerViewModel) }
+                        composable("diagnose") { 
+                            DiagnoseScreen(
+                                onNavigateBack = { navController.navigateUp() },
+                                viewModel = viewModel(factory = DiagnoseViewModelFactory())
+                            ) 
+                        }
 
                         if (isDebug) {
                             composable("development") {

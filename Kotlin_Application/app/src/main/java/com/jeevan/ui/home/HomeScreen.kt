@@ -519,6 +519,7 @@ fun SpecialityButton(imageResId: Int, text: String, navController: NavController
             .clickable {
                 when (text) {
                     "Symptoms" -> navController.navigate("symptom-checker")
+                    "Diagnose" -> navController.navigate("diagnose")
                     else -> Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
                 }
             },

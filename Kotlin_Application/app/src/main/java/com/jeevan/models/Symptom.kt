@@ -4,9 +4,9 @@ data class Symptom(
     val id: String,
     val name: String,
     val description: String,
-    val causes: List<String>,
-    val cures: List<String>,
-    val isSelected: Boolean = false
+    val causes: List<String> = emptyList(),
+    val cures: List<String> = emptyList(),
+    var isSelected: Boolean = false
 )
 
 data class Disease(

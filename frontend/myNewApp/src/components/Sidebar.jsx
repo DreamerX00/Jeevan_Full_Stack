@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import authService from '../services/authService';
 import { 
   FaHome, 
   FaCalendarAlt, 
@@ -20,6 +21,13 @@ import {
 const Sidebar = () => {
   const { darkMode } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    authService.logout();
+    navigate('/login', { replace: true });
+  };
 
   const menuItems = [
     {
@@ -77,7 +85,8 @@ const Sidebar = () => {
       icon: <FaSignOutAlt className="w-5 h-5" />,
       title: 'Logout',
       path: '/logout',
-      color: 'text-gray-500'
+      color: 'text-gray-500',
+      onClick: handleLogout
     }
   ];
 
@@ -120,20 +129,17 @@ const Sidebar = () => {
         </div>
       </nav>
 
-      <div className={`px-4 py-4 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} bg-inherit`}>
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         <div className="space-y-2">
           {bottomMenuItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
+              onClick={item.onClick}
               className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group ${
-                location.pathname === item.path
-                  ? darkMode
-                    ? 'bg-gray-800 text-white'
-                    : 'bg-gray-100 text-gray-900'
-                  : darkMode
-                    ? 'text-gray-400 hover:bg-gray-800 hover:text-white'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                darkMode
+                  ? 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               }`}
             >
               <div className={`${item.color} transition-all duration-200 transform group-hover:scale-110`}>

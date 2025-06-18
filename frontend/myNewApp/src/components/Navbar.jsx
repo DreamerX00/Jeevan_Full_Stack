@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaSearch, FaBell, FaUser, FaTimes, FaSpinner, FaMoon, FaSun, FaComments } from 'react-icons/fa';
 import { useSearch } from '../context/SearchContext';
 import { useTheme } from '../context/ThemeContext';
 import SearchResultItem from './SearchResultItem';
 import ThemeToggle from './ThemeToggle';
 import ChatNotifications from './Chat/ChatNotifications';
+import authService from '../services/authService';
 
 const Navbar = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -18,6 +19,7 @@ const Navbar = () => {
     setShowResults
   } = useSearch();
   const { darkMode, toggleDarkMode } = useTheme();
+  const navigate = useNavigate();
   
   const searchRef = useRef(null);
 
@@ -52,6 +54,12 @@ const Navbar = () => {
     acc[result.type].push(result);
     return acc;
   }, {});
+
+  const handleLogout = () => {
+    authService.logout();
+    setIsUserMenuOpen(false);
+    navigate('/login', { replace: true });
+  };
 
   return (
     <nav className={`${darkMode ? 'bg-dark-card text-white' : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'} shadow-lg fixed w-full z-50 transition-colors duration-200`}>
@@ -224,7 +232,10 @@ const Navbar = () => {
                     <Link
                       to="/login"
                       className={`block px-4 py-2 text-sm ${darkMode ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'} transition-colors duration-200`}
-                      onClick={() => setIsUserMenuOpen(false)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleLogout();
+                      }}
                     >
                       Sign out
                     </Link>

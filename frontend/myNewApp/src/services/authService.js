@@ -170,8 +170,28 @@ const authService = {
   
   // Logout user
   logout: () => {
+    // Clear all auth-related data from localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userPreferences');
+    
+    // Clear any session storage items
+    sessionStorage.clear();
+    
+    // Clear any cookies that might be set
+    document.cookie.split(";").forEach(function(c) { 
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+    });
+    
+    // Clear any cached data
+    if (window.caches) {
+      caches.keys().then(function(names) {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
   },
   
   // Get current user from localStorage
