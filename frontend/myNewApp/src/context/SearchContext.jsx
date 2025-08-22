@@ -1,11 +1,32 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect, useCallback, useMemo } from 'react';
 
 // Create context
 const SearchContext = createContext();
 
 // Custom hook to use the search context
 export const useSearch = () => {
-  return useContext(SearchContext);
+  const context = useContext(SearchContext);
+  if (!context) {
+    throw new Error('useSearch must be used within a SearchProvider');
+  }
+  return context;
+};
+
+// Debounce utility function
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 };
 
 // Context provider component
@@ -14,182 +35,174 @@ export const SearchProvider = ({ children }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [searchError, setSearchError] = useState(null);
 
-  // Define the pages and items to search through
-  const searchablePages = [
-    { title: 'Home', path: '/', tags: ['homepage', 'welcome', 'main', 'health'] },
-    { title: 'Login', path: '/login', tags: ['login', 'sign in', 'account', 'access'] },
-    { title: 'Sign Up', path: '/signup', tags: ['signup', 'register', 'create account', 'join'] },
-    { title: 'Forgot Password', path: '/forgot-password', tags: ['forgot', 'reset', 'password', 'recover'] },
-    { title: 'Dashboard', path: '/dashboard', tags: ['dashboard', 'overview', 'summary', 'health status'] },
-    { title: 'Profile', path: '/profile', tags: ['profile', 'personal information', 'settings', 'account'] },
-    { title: 'Medical Shop', path: '/shop', tags: ['shop', 'store', 'medicines', 'products', 'buy'] },
-    { title: 'Cart', path: '/cart', tags: ['cart', 'shopping cart', 'checkout', 'purchase'] },
-  ];
+  // Debounce search term to avoid excessive API calls
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  // Medical products for search
-  const products = [
-    {
-      id: 1,
-      name: 'Paracetamol Tablets',
-      category: 'medicines',
-      path: '/shop',
-      tags: ['pain reliever', 'fever', 'headache', 'medicine'],
-    },
-    {
-      id: 2,
-      name: 'Vitamin C Tablets',
-      category: 'vitamins',
-      path: '/shop',
-      tags: ['immunity', 'vitamin', 'supplement', 'health'],
-    },
-    {
-      id: 3,
-      name: 'N95 Face Masks',
-      category: 'essentials',
-      path: '/shop',
-      tags: ['mask', 'protection', 'covid', 'safety'],
-    },
-    {
-      id: 4,
-      name: 'Digital Thermometer',
-      category: 'devices',
-      path: '/shop',
-      tags: ['temperature', 'fever', 'monitor', 'device'],
-    },
-    {
-      id: 5,
-      name: 'First Aid Kit',
-      category: 'essentials',
-      path: '/shop',
-      tags: ['emergency', 'kit', 'bandage', 'aid'],
-    },
-    {
-      id: 6,
-      name: 'Hand Sanitizer',
-      category: 'essentials',
-      path: '/shop',
-      tags: ['hygiene', 'sanitizer', 'cleaner', 'germs'],
-    },
-  ];
+  // Memoized searchable data
+  const searchableData = useMemo(() => {
+    const pages = [
+      { id: 'home', type: 'page', displayTitle: 'Home Page', path: '/', tags: ['homepage', 'welcome', 'main', 'health'] },
+      { id: 'login', type: 'page', displayTitle: 'Login', path: '/login', tags: ['login', 'sign in', 'account', 'access'] },
+      { id: 'signup', type: 'page', displayTitle: 'Sign Up', path: '/signup', tags: ['signup', 'register', 'create account', 'join'] },
+      { id: 'forgot-password', type: 'page', displayTitle: 'Forgot Password', path: '/forgot-password', tags: ['forgot', 'reset', 'password', 'recover'] },
+      { id: 'dashboard', type: 'page', displayTitle: 'Dashboard', path: '/dashboard', tags: ['dashboard', 'overview', 'summary', 'health status'] },
+      { id: 'profile', type: 'page', displayTitle: 'Profile', path: '/profile', tags: ['profile', 'personal information', 'settings', 'account'] },
+      { id: 'shop', type: 'page', displayTitle: 'Medical Shop', path: '/shop', tags: ['shop', 'store', 'medicines', 'products', 'buy'] },
+      { id: 'cart', type: 'page', displayTitle: 'Cart', path: '/cart', tags: ['cart', 'shopping cart', 'checkout', 'purchase'] },
+    ];
 
-  // Features to search
-  const features = [
-    { 
-      title: 'Medical Records', 
-      path: '/dashboard', 
-      tags: ['records', 'history', 'medical history', 'documents'] 
-    },
-    { 
-      title: 'Appointment Scheduling', 
-      path: '/dashboard', 
-      tags: ['appointment', 'book', 'schedule', 'doctor visit'] 
-    },
-    { 
-      title: 'Health Tracker', 
-      path: '/dashboard', 
-      tags: ['track', 'monitor', 'vitals', 'statistics'] 
-    },
-    { 
-      title: 'Medication Reminders', 
-      path: '/dashboard', 
-      tags: ['reminder', 'medication', 'alerts', 'schedule'] 
-    },
-    { 
-      title: 'Emergency Contacts', 
-      path: '/emergency-contacts', 
-      tags: ['emergency', 'contacts', 'urgent', 'help'] 
-    },
-  ];
+    const products = [
+      {
+        id: 1,
+        type: 'product',
+        displayTitle: 'Paracetamol Tablets',
+        subtitle: 'Pain Relief Medicine',
+        path: '/shop',
+        tags: ['pain reliever', 'fever', 'headache', 'medicine'],
+      },
+      {
+        id: 2,
+        type: 'product',
+        displayTitle: 'Vitamin C Tablets',
+        subtitle: 'Immunity Booster',
+        path: '/shop',
+        tags: ['immunity', 'vitamin', 'supplement', 'health'],
+      },
+      {
+        id: 3,
+        type: 'product',
+        displayTitle: 'N95 Face Masks',
+        subtitle: 'Protection Equipment',
+        path: '/shop',
+        tags: ['mask', 'protection', 'covid', 'safety'],
+      },
+      {
+        id: 4,
+        type: 'product',
+        displayTitle: 'Digital Thermometer',
+        subtitle: 'Health Monitoring Device',
+        path: '/shop',
+        tags: ['temperature', 'fever', 'monitor', 'device'],
+      },
+      {
+        id: 5,
+        type: 'product',
+        displayTitle: 'First Aid Kit',
+        subtitle: 'Emergency Kit',
+        path: '/shop',
+        tags: ['emergency', 'kit', 'bandage', 'aid'],
+      },
+      {
+        id: 6,
+        type: 'product',
+        displayTitle: 'Hand Sanitizer',
+        subtitle: 'Hygiene Product',
+        path: '/shop',
+        tags: ['hygiene', 'sanitizer', 'cleaner', 'germs'],
+      },
+    ];
 
-  // Perform search when search term changes
-  useEffect(() => {
-    if (!searchTerm.trim()) {
+    const features = [
+      { 
+        id: 'records',
+        type: 'feature',
+        displayTitle: 'Medical Records',
+        path: '/dashboard',
+        tags: ['records', 'history', 'medical history', 'documents'] 
+      },
+      { 
+        id: 'appointments',
+        type: 'feature',
+        displayTitle: 'Appointment Scheduling',
+        path: '/dashboard',
+        tags: ['appointment', 'book', 'schedule', 'doctor visit'] 
+      },
+      { 
+        id: 'tracker',
+        type: 'feature',
+        displayTitle: 'Health Tracker',
+        path: '/dashboard',
+        tags: ['track', 'monitor', 'vitals', 'statistics'] 
+      },
+      { 
+        id: 'reminders',
+        type: 'feature',
+        displayTitle: 'Medication Reminders',
+        path: '/dashboard',
+        tags: ['reminder', 'medication', 'alerts', 'schedule'] 
+      },
+      { 
+        id: 'emergency',
+        type: 'feature',
+        displayTitle: 'Emergency Contacts',
+        path: '/emergency-contacts',
+        tags: ['emergency', 'contacts', 'urgent', 'help'] 
+      },
+    ];
+
+    return [...pages, ...products, ...features];
+  }, []);
+
+  // Memoized search function
+  const performSearch = useCallback(async (term) => {
+    if (!term.trim()) {
       setSearchResults([]);
       setShowResults(false);
+      setSearchError(null);
       return;
     }
-    
-    const search = async () => {
+
+    try {
       setIsSearching(true);
+      setSearchError(null);
       setShowResults(true);
-      
+
       // Simulate API call with setTimeout
-      setTimeout(() => {
-        // Mock search results
-        const results = [
-          // Pages
-          {
-            id: 'home',
-            type: 'page',
-            displayTitle: 'Home Page',
-            path: '/'
-          },
-          {
-            id: 'medical-shop',
-            type: 'page',
-            displayTitle: 'Medical Shop',
-            path: '/shop'
-          },
-          {
-            id: 'appointments',
-            type: 'page',
-            displayTitle: 'Book Appointments',
-            path: '/appointments'
-          },
+      const results = await new Promise((resolve) => {
+        setTimeout(() => {
+          const searchTermLower = term.toLowerCase();
           
-          // Products - only if search matches
-          ...(searchTerm.toLowerCase().includes('med') ? [
-            {
-              id: 1,
-              type: 'product',
-              displayTitle: 'Paracetamol Tablets',
-              subtitle: 'Pain Relief Medicine',
-              path: '/shop'
-            }
-          ] : []),
-          
-          ...(searchTerm.toLowerCase().includes('vit') ? [
-            {
-              id: 2,
-              type: 'product',
-              displayTitle: 'Vitamin C Tablets',
-              subtitle: 'Immunity Booster',
-              path: '/shop'
-            }
-          ] : []),
-          
-          // Features
-          {
-            id: 'records',
-            type: 'feature',
-            displayTitle: 'Medical Records',
-            title: 'Medical Records',
-            path: '/dashboard'
-          }
-        ].filter(item => 
-          item.displayTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (item.subtitle && item.subtitle.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-        
-        setSearchResults(results);
-        setIsSearching(false);
-      }, 500);
-    };
-    
-    search();
-  }, [searchTerm]);
-  
-  const value = {
+          const filteredResults = searchableData.filter(item => {
+            const titleMatch = item.displayTitle.toLowerCase().includes(searchTermLower);
+            const subtitleMatch = item.subtitle && item.subtitle.toLowerCase().includes(searchTermLower);
+            const tagMatch = item.tags && item.tags.some(tag => tag.toLowerCase().includes(searchTermLower));
+            
+            return titleMatch || subtitleMatch || tagMatch;
+          });
+
+          resolve(filteredResults);
+        }, 300);
+      });
+
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Search error:', error);
+      setSearchError('Search failed. Please try again.');
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [searchableData]);
+
+  // Perform search when debounced search term changes
+  useEffect(() => {
+    performSearch(debouncedSearchTerm);
+  }, [debouncedSearchTerm, performSearch]);
+
+  // Memoized context value for better performance
+  const contextValue = useMemo(() => ({
     searchTerm,
     setSearchTerm,
     searchResults,
     isSearching,
     showResults,
-    setShowResults
-  };
-  
-  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
+    setShowResults,
+    searchError
+  }), [searchTerm, searchResults, isSearching, showResults, searchError]);
+
+  return <SearchContext.Provider value={contextValue}>{children}</SearchContext.Provider>;
 };
 
 export default SearchContext; 

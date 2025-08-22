@@ -16,7 +16,8 @@ class WebConfig : WebMvcConfigurer {
                 "http://localhost:5173",  // Vite default dev server
                 "http://localhost:4173",  // Vite preview server
                 "http://127.0.0.1:5173",  // Vite alternative URL
-                "http://127.0.0.1:4173"   // Vite preview alternative URL
+                "http://127.0.0.1:4173",  // Vite preview alternative URL
+                "http://192.168.1.9:8080" // Local WiFi network access
             )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
             .allowedHeaders(
@@ -31,4 +32,4 @@ class WebConfig : WebMvcConfigurer {
             .allowCredentials(true)
             .maxAge(3600)
     }
-} 
+}

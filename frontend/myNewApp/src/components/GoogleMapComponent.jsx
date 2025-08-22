@@ -195,13 +195,23 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
         searchSessionRef.current = null;
       }
       
-      const placeType = type === 'hospitals' ? 'hospital' : 'pharmacy';
+      // Determine place type based on the type prop
+      let placeType;
+      if (type === 'hospitals') {
+        placeType = 'hospital';
+      } else if (type === 'pharmacies') {
+        placeType = 'pharmacy';
+      } else if (type === 'diagnostic') {
+        // For diagnostic centers, we'll use a broader search
+        placeType = ['hospital', 'health', 'doctor'];
+      }
       
       // Use Nearby Search from Places Library
       const request = {
         location: location,
         radius: 5000, // 5 km radius
-        type: placeType
+        type: placeType,
+        keyword: type === 'diagnostic' ? 'diagnostic center' : undefined
       };
       
       const service = new window.google.maps.places.PlacesService(mapInstanceRef.current);
@@ -338,7 +348,9 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
           icon: {
             url: type === 'hospitals' 
               ? 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' 
-              : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+              : type === 'diagnostic'
+                ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
           }
         });
         
@@ -647,7 +659,7 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
     <div className={`flex flex-col items-center justify-center py-6 px-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'} rounded-lg mb-4`}>
       <FaMapMarkerAlt size={24} className={`mb-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
       <h4 className={`text-lg font-medium mb-2 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-        No {type === 'hospitals' ? 'hospitals' : 'pharmacies'} found
+        No {type === 'hospitals' ? 'hospitals' : type === 'diagnostic' ? 'diagnostic centers' : 'pharmacies'} found
       </h4>
       <p className={`text-sm text-center mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
         Click on the map to search in that area or try another location.
@@ -664,7 +676,7 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
   return (
     <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} p-4 rounded-lg shadow-md`}>
       <h2 className={`text-xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-        {type === 'hospitals' ? 'Nearby Hospitals' : 'Nearby Pharmacies'}
+        {type === 'hospitals' ? 'Nearby Hospitals' : type === 'diagnostic' ? 'Diagnostic Centers' : 'Nearby Pharmacies'}
       </h2>
 
       <div className="relative flex flex-col md:flex-row gap-4">
@@ -686,7 +698,7 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={`Search for ${type}...`}
+                    placeholder={`Search for ${type === 'diagnostic' ? 'diagnostic centers' : type}...`}
                     className="flex-1 px-4 py-2 rounded-l-md border-0 focus:ring-2 focus:ring-blue-500 text-gray-700"
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                   />
@@ -741,7 +753,7 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
         <div className="w-full md:w-2/5 h-550px">
           <div className={`p-4 rounded-lg h-full ${darkMode ? 'bg-gray-800' : 'bg-gray-50'} overflow-y-auto`} style={{ maxHeight: '550px' }}>
             <h3 className={`text-lg font-medium mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              {type === 'hospitals' ? 'Hospitals' : 'Pharmacies'} List
+              {type === 'hospitals' ? 'Hospitals' : type === 'diagnostic' ? 'Diagnostic Centers' : 'Pharmacies'} List
             </h3>
             
             {places.length > 0 ? (
@@ -771,7 +783,9 @@ const GoogleMapComponent = ({ type, onPlaceSelect, onPlacesFound, autoSelectOnMa
                       <FaMapMarkerAlt className={`mt-1 mr-3 flex-shrink-0 ${
                         type === 'hospitals' 
                           ? darkMode ? 'text-blue-400' : 'text-blue-600' 
-                          : darkMode ? 'text-red-400' : 'text-red-600'
+                          : type === 'diagnostic'
+                            ? darkMode ? 'text-green-400' : 'text-green-600'
+                            : darkMode ? 'text-red-400' : 'text-red-600'
                       }`} />
                       <div>
                         <h4 className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{place.name}</h4>

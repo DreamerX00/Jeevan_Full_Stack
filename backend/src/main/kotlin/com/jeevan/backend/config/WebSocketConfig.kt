@@ -18,7 +18,11 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/ws")
-            .setAllowedOrigins("http://localhost:3000", "https://jeevan.com")
+            .setAllowedOrigins(
+                "http://localhost:3000", 
+                "https://jeevan.com",
+                "http://192.168.1.9:8080" // Local WiFi network access
+            )
             .withSockJS()
     }
-} 
+}

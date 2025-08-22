@@ -49,7 +49,7 @@ const userProfileService = {
   // Get user profile
   getUserProfile: async () => {
     try {
-      const response = await api.get('/user/profile');
+      const response = await api.get('/api/user/profile');
       return response.data;
     } catch (error) {
       console.error('Error fetching user profile:', error.response?.data || error.message);
@@ -60,11 +60,31 @@ const userProfileService = {
   // Create or update user profile
   updateUserProfile: async (profileData) => {
     try {
-      const response = await api.post('/user/profile', profileData);
+      const response = await api.post('/api/user/profile', profileData);
       return response.data;
     } catch (error) {
       console.error('Error updating user profile:', error.response?.data || error.message);
       throw error.response?.data || { error: error.message };
+    }
+  },
+  
+  // Get user identification
+  getUserIdentification: async () => {
+    try {
+      const response = await api.get('/api/user/identification');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  // Update user identification
+  updateUserIdentification: async (identificationData) => {
+    try {
+      const response = await api.post('/api/user/identification', identificationData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
     }
   },
   
@@ -83,7 +103,10 @@ const userProfileService = {
       emergencyContact,
       allergies,
       medicalConditions,
-      medications 
+      medications,
+      aadhaarNumber,
+      panNumber,
+      abhaNumber
     } = formData;
     
     // Convert string fields for allergies/conditions/medications to arrays if needed
@@ -106,7 +129,10 @@ const userProfileService = {
       emergencyContact,
       allergies: formatStringToArray(allergies),
       medicalConditions: formatStringToArray(medicalConditions),
-      medications: formatStringToArray(medications)
+      medications: formatStringToArray(medications),
+      aadhaarNumber,
+      panNumber,
+      abhaNumber
     };
   }
 };

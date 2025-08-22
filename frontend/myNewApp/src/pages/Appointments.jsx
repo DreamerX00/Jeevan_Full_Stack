@@ -1,508 +1,315 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import { useTheme } from '../context/ThemeContext';
 import { 
   FaCalendarAlt, 
-  FaCalendarCheck, 
-  FaCalendarPlus, 
   FaUserMd, 
   FaClock, 
-  FaMapMarkerAlt, 
-  FaFileMedical, 
-  FaFilter, 
-  FaPhone, 
+  FaMapMarkerAlt,
+  FaSearch,
+  FaFilter,
   FaVideo,
-  FaChevronDown,
-  FaChevronUp,
-  FaSpinner,
-  FaExclamationCircle
+  FaPhone,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaExclamationTriangle
 } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import appointmentService from '../services/appointmentService';
-import authService from '../services/authService';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Alert, AlertDescription } from '../components/ui/alert';
+import { Badge } from '../components/ui/badge';
 
 const Appointments = () => {
-  const [activeTab, setActiveTab] = useState('upcoming');
-  const [expandedAppointment, setExpandedAppointment] = useState(null);
-  const [filterSpecialty, setFilterSpecialty] = useState('all');
-  const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
   const { darkMode } = useTheme();
+  const [activeTab, setActiveTab] = useState('book');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  useEffect(() => {
-    // Check if user is logged in
-    if (!authService.isLoggedIn()) {
-      navigate('/login');
-      return;
+  // Mock data for available doctors
+  const availableDoctors = [
+    {
+      id: 1,
+      name: 'Dr. Sarah Johnson',
+      specialty: 'General Physician',
+      experience: '15 years',
+      rating: 4.8,
+      reviews: 245,
+      availability: [
+        { date: '2024-03-20', slots: ['09:00', '10:00', '11:00'] },
+        { date: '2024-03-21', slots: ['14:00', '15:00', '16:00'] }
+      ],
+      consultationFee: 150,
+      image: '/doctors/doctor1.jpg'
+    },
+    {
+      id: 2,
+      name: 'Dr. Michael Chen',
+      specialty: 'Cardiologist',
+      experience: '12 years',
+      rating: 4.9,
+      reviews: 189,
+      availability: [
+        { date: '2024-03-20', slots: ['13:00', '14:00', '15:00'] },
+        { date: '2024-03-21', slots: ['09:00', '10:00', '11:00'] }
+      ],
+      consultationFee: 200,
+      image: '/doctors/doctor2.jpg'
     }
+  ];
 
-    // Fetch appointments from the backend
-    const fetchAppointments = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        const data = await appointmentService.getAppointments();
-        setAppointments(data);
-      } catch (err) {
-        console.error('Error fetching appointments:', err);
-        setError('Failed to load appointments. ' + (err.error || err.message || ''));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAppointments();
-  }, [navigate]);
-  
-  // Split appointments into upcoming and previous based on the date
-  const today = new Date();
-  
-  const upcomingAppointments = appointments.filter(appointment => {
-    const appointmentDate = new Date(appointment.date);
-    return appointmentDate >= today;
-  });
-  
-  const previousAppointments = appointments.filter(appointment => {
-    const appointmentDate = new Date(appointment.date);
-    return appointmentDate < today;
-  });
-  
-  // Filter appointments by specialty
-  const filteredUpcoming = filterSpecialty === 'all' 
-    ? upcomingAppointments 
-    : upcomingAppointments.filter(apt => apt.specialty === filterSpecialty);
-    
-  const filteredPrevious = filterSpecialty === 'all'
-    ? previousAppointments
-    : previousAppointments.filter(apt => apt.specialty === filterSpecialty);
-  
-  // Get list of all specialties for the filter
-  const allSpecialties = [...new Set([
-    ...upcomingAppointments.map(apt => apt.specialty),
-    ...previousAppointments.map(apt => apt.specialty)
-  ])].filter(specialty => specialty); // Filter out undefined/null values
-  
-  // Toggle appointment details expansion
-  const toggleExpand = (id) => {
-    if (expandedAppointment === id) {
-      setExpandedAppointment(null);
-    } else {
-      setExpandedAppointment(id);
+  // Mock data for upcoming appointments
+  const upcomingAppointments = [
+    {
+      id: 1,
+      doctor: 'Dr. Sarah Johnson',
+      specialty: 'General Physician',
+      date: '2024-03-20',
+      time: '10:00 AM',
+      type: 'In-person',
+      status: 'Confirmed',
+      location: 'City Health Center, Room 302'
+    },
+    {
+      id: 2,
+      doctor: 'Dr. Michael Chen',
+      specialty: 'Cardiologist',
+      date: '2024-03-21',
+      time: '02:30 PM',
+      type: 'Video Consultation',
+      status: 'Pending',
+      location: 'Online'
     }
-  };
+  ];
 
-  // Handle booking a new appointment
-  const handleNewAppointment = () => {
-    // Redirect to new appointment booking form
-    // This will be implemented with a proper form later
-    alert('Booking appointment functionality will be implemented soon');
-  };
+  // Mock data for past appointments
+  const pastAppointments = [
+    {
+      id: 1,
+      doctor: 'Dr. Emily Wilson',
+      specialty: 'Dermatologist',
+      date: '2024-02-15',
+      time: '11:00 AM',
+      type: 'In-person',
+      status: 'Completed',
+      location: 'Skin Care Clinic',
+      notes: 'Prescribed medication for skin condition'
+    }
+  ];
 
-  // Handle canceling an appointment
-  const handleCancelAppointment = async (id) => {
-    if (!confirm('Are you sure you want to cancel this appointment?')) {
-      return;
-    }
-    
-    try {
-      await appointmentService.deleteAppointment(id);
-      // Remove the appointment from the state
-      setAppointments(appointments.filter(apt => apt.id !== id));
-    } catch (err) {
-      alert('Failed to cancel appointment: ' + (err.error || err.message || ''));
-    }
-  };
-  
-  if (loading) {
-    return (
-      <div className={`min-h-screen ${darkMode ? 'bg-dark-bg' : 'bg-gray-50'} transition-colors duration-200`}>
-        <Navbar />
-        <div className="flex">
-          <Sidebar />
-          <main className="flex-1 ml-64 pt-16 pb-12">
-            <div className="flex items-center justify-center h-full">
-              <FaSpinner className={`animate-spin h-12 w-12 ${darkMode ? 'text-blue-400' : 'text-blue-600'} transition-colors duration-200`} />
-            </div>
-          </main>
-        </div>
-      </div>
-    );
-  }
-  
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-dark-bg' : 'bg-gray-50'} transition-colors duration-200`}>
       <Navbar />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 ml-64 pt-16 pb-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>Appointments</h1>
-                <p className={`mt-2 text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-200`}>Manage all your medical appointments</p>
+        <main className="flex-1 ml-64 pt-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-xl shadow-sm p-6 transition-colors duration-200`}>
+              <h1 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
+                Appointments
+              </h1>
+
+              {/* Tabs */}
+              <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
+                <nav className="-mb-px flex space-x-8">
+                  {['book', 'upcoming', 'past'].map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`${
+                        activeTab === tab
+                          ? darkMode
+                            ? 'border-blue-500 text-blue-400'
+                            : 'border-blue-500 text-blue-600'
+                          : darkMode
+                            ? 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200`}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                  ))}
+                </nav>
               </div>
-              <button 
-                onClick={handleNewAppointment}
-                className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'} transition-colors duration-200`}
-              >
-                <FaCalendarPlus className="mr-2" />
-                Book New Appointment
-              </button>
-            </div>
-            
-            {error && (
-              <div className={`mb-6 ${darkMode ? 'bg-red-900 border-red-700' : 'bg-red-50 border-red-500'} border-l-4 p-4 rounded transition-colors duration-200`}>
-                <div className="flex">
-                  <FaExclamationCircle className="h-5 w-5 text-red-500" />
-                  <div className="ml-3">
-                    <p className={`text-sm ${darkMode ? 'text-red-200' : 'text-red-700'} transition-colors duration-200`}>{error}</p>
-                  </div>
+
+              {/* Search and Filter */}
+              <div className="mb-6 flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    placeholder="Search doctors or specialties..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      darkMode
+                        ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400'
+                        : 'border-gray-300 text-gray-900 placeholder-gray-500'
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200`}
+                  />
                 </div>
-              </div>
-            )}
-            
-            {/* Filter Section */}
-            <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} p-4 rounded-lg shadow-sm mb-6 transition-colors duration-200`}>
-              <div className="flex flex-wrap items-center justify-between">
-                <div className="flex items-center mb-4 sm:mb-0">
-                  <FaFilter className={`${darkMode ? 'text-gray-400' : 'text-gray-400'} mr-2`} />
-                  <label htmlFor="specialty-filter" className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-500'} mr-2 transition-colors duration-200`}>
-                    Filter by Specialty:
-                  </label>
+                <div className="flex gap-4">
                   <select
-                    id="specialty-filter"
-                    value={filterSpecialty}
-                    onChange={(e) => setFilterSpecialty(e.target.value)}
-                    className={`border ${darkMode ? 'bg-gray-800 border-gray-700 text-gray-200' : 'border-gray-300 text-gray-900'} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors duration-200`}
+                    className={`px-4 py-2 rounded-lg border ${
+                      darkMode
+                        ? 'bg-gray-800 border-gray-700 text-white'
+                        : 'border-gray-300 text-gray-900'
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200`}
                   >
-                    <option value="all">All Specialties</option>
-                    {allSpecialties.map((specialty, index) => (
-                      <option key={index} value={specialty}>{specialty}</option>
-                    ))}
+                    <option value="">All Specialties</option>
+                    <option value="general">General Physician</option>
+                    <option value="cardiology">Cardiology</option>
+                    <option value="dermatology">Dermatology</option>
+                  </select>
+                  <select
+                    className={`px-4 py-2 rounded-lg border ${
+                      darkMode
+                        ? 'bg-gray-800 border-gray-700 text-white'
+                        : 'border-gray-300 text-gray-900'
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200`}
+                  >
+                    <option value="">Consultation Type</option>
+                    <option value="in-person">In-person</option>
+                    <option value="video">Video Consultation</option>
                   </select>
                 </div>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setActiveTab('upcoming')}
-                    className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-                      activeTab === 'upcoming'
-                        ? darkMode 
-                          ? 'bg-blue-900 text-blue-300' 
-                          : 'bg-blue-100 text-blue-700'
-                        : darkMode
-                          ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    <FaCalendarAlt className="inline-block mr-2" />
-                    Upcoming
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('previous')}
-                    className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-                      activeTab === 'previous'
-                        ? darkMode 
-                          ? 'bg-blue-900 text-blue-300' 
-                          : 'bg-blue-100 text-blue-700'
-                        : darkMode
-                          ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    <FaCalendarCheck className="inline-block mr-2" />
-                    Previous
-                  </button>
-                </div>
+              </div>
+
+              {/* Content based on active tab */}
+              <div className="mt-6">
+                {activeTab === 'book' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {availableDoctors.map((doctor) => (
+                      <div
+                        key={doctor.id}
+                        className={`${
+                          darkMode ? 'bg-gray-800' : 'bg-white'
+                        } rounded-lg shadow-sm p-6 border ${
+                          darkMode ? 'border-gray-700' : 'border-gray-200'
+                        } transition-colors duration-200`}
+                      >
+                        <div className="flex items-center space-x-4 mb-4">
+                          <div className="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <img
+                              src={doctor.image}
+                              alt={doctor.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
+                              {doctor.name}
+                            </h3>
+                            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
+                              {doctor.specialty}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="space-y-2 mb-4">
+                          <div className="flex justify-between text-sm">
+                            <span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>Experience</span>
+                            <span className={darkMode ? 'text-white' : 'text-gray-900'}>{doctor.experience}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>Rating</span>
+                            <span className={darkMode ? 'text-white' : 'text-gray-900'}>{doctor.rating} ({doctor.reviews} reviews)</span>
+                          </div>
+                        </div>
+                        <button
+                          className={`w-full px-4 py-2 rounded-lg ${
+                            darkMode
+                              ? 'bg-blue-600 hover:bg-blue-700'
+                              : 'bg-blue-500 hover:bg-blue-600'
+                          } text-white transition-colors duration-200`}
+                        >
+                          Book Appointment
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === 'upcoming' && (
+                  <div className="space-y-4">
+                    {upcomingAppointments.map((appointment) => (
+                      <div
+                        key={appointment.id}
+                        className={`${
+                          darkMode ? 'bg-gray-800' : 'bg-white'
+                        } rounded-lg shadow-sm p-6 border ${
+                          darkMode ? 'border-gray-700' : 'border-gray-200'
+                        } transition-colors duration-200`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
+                              {appointment.doctor}
+                            </h3>
+                            <p className={`text-sm mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
+                              {appointment.date} at {appointment.time} • {appointment.location}
+                            </p>
+                          </div>
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm font-medium ${
+                              appointment.status === 'Confirmed'
+                                ? darkMode
+                                  ? 'bg-green-900 text-green-300'
+                                  : 'bg-green-100 text-green-800'
+                                : darkMode
+                                ? 'bg-yellow-900 text-yellow-300'
+                                : 'bg-yellow-100 text-yellow-800'
+                            } transition-colors duration-200`}
+                          >
+                            {appointment.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === 'past' && (
+                  <div className="space-y-4">
+                    {pastAppointments.map((appointment) => (
+                      <div
+                        key={appointment.id}
+                        className={`${
+                          darkMode ? 'bg-gray-800' : 'bg-white'
+                        } rounded-lg shadow-sm p-6 border ${
+                          darkMode ? 'border-gray-700' : 'border-gray-200'
+                        } transition-colors duration-200`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
+                              {appointment.doctor}
+                            </h3>
+                            <p className={`text-sm mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
+                              {appointment.date} at {appointment.time} • {appointment.location}
+                            </p>
+                            <p className={`text-sm mt-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-200`}>
+                              {appointment.notes}
+                            </p>
+                          </div>
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm font-medium ${
+                              appointment.status === 'Completed'
+                                ? darkMode
+                                  ? 'bg-green-900 text-green-300'
+                                  : 'bg-green-100 text-green-800'
+                                : darkMode
+                                ? 'bg-yellow-900 text-yellow-300'
+                                : 'bg-yellow-100 text-yellow-800'
+                            } transition-colors duration-200`}
+                          >
+                            {appointment.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-            
-            {/* Appointments List */}
-            {activeTab === 'upcoming' ? (
-              filteredUpcoming.length > 0 ? (
-                <div className="space-y-4">
-                  {filteredUpcoming.map((appointment) => (
-                    <div 
-                      key={appointment.id} 
-                      className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-lg shadow-sm overflow-hidden transition-colors duration-200`}
-                    >
-                      <div 
-                        className={`px-4 py-5 sm:px-6 cursor-pointer ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-50'} transition-colors duration-200`}
-                        onClick={() => toggleExpand(appointment.id)}
-                      >
-                        <div className="flex flex-wrap justify-between items-center">
-                          <div className="flex items-center">
-                            <div className={`flex-shrink-0 h-12 w-12 rounded-full ${darkMode ? 'bg-blue-900' : 'bg-blue-100'} flex items-center justify-center transition-colors duration-200`}>
-                              <FaUserMd className={`h-6 w-6 ${darkMode ? 'text-blue-300' : 'text-blue-600'} transition-colors duration-200`} />
-                            </div>
-                            <div className="ml-4">
-                              <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.doctor}
-                              </h3>
-                              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                {appointment.specialty}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex flex-col sm:flex-row mt-4 sm:mt-0 items-start sm:items-center">
-                            <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                              appointment.method === 'In-person' 
-                                ? darkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'
-                                : darkMode ? 'bg-purple-900 text-purple-300' : 'bg-purple-100 text-purple-800'
-                            } transition-colors duration-200`}>
-                              {appointment.method === 'In-person' ? <FaMapMarkerAlt className="mr-1" /> : <FaVideo className="mr-1" />}
-                              {appointment.method}
-                            </div>
-                            <div className={`flex-shrink-0 ml-0 sm:ml-4 mt-2 sm:mt-0 ${darkMode ? 'text-gray-300' : 'text-gray-700'} transition-colors duration-200`}>
-                              {expandedAppointment === appointment.id ? <FaChevronUp /> : <FaChevronDown />}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {expandedAppointment === appointment.id && (
-                        <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} px-4 py-5 sm:px-6 transition-colors duration-200`}>
-                          <dl className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">
-                            <div className="sm:col-span-1">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                <FaCalendarAlt className="inline-block mr-2" />
-                                Date
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.date}
-                              </dd>
-                            </div>
-                            <div className="sm:col-span-1">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                <FaClock className="inline-block mr-2" />
-                                Time
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.time}
-                              </dd>
-                            </div>
-                            <div className="sm:col-span-1">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                <FaMapMarkerAlt className="inline-block mr-2" />
-                                Location
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.location || 'Online Consultation'}
-                              </dd>
-                            </div>
-                            <div className="sm:col-span-1">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                <FaFileMedical className="inline-block mr-2" />
-                                Reason
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.reason}
-                              </dd>
-                            </div>
-                            {/* Additional Information */}
-                            <div className="sm:col-span-2">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                Additional Information
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} transition-colors duration-200`}>
-                                {appointment.notes || 'No additional information provided.'}
-                              </dd>
-                            </div>
-                            <div className="sm:col-span-2 flex justify-between items-center pt-4">
-                              <div className="flex space-x-3">
-                                <button 
-                                  className={`inline-flex items-center px-3 py-1.5 border rounded-md text-sm font-medium ${
-                                    darkMode 
-                                      ? 'border-blue-500 text-blue-400 hover:bg-blue-900 hover:bg-opacity-30' 
-                                      : 'border-blue-600 text-blue-600 hover:bg-blue-50'
-                                  } transition-colors duration-200`}
-                                >
-                                  <FaCalendarAlt className="mr-2" />
-                                  Reschedule
-                                </button>
-                                <button 
-                                  onClick={() => handleCancelAppointment(appointment.id)}
-                                  className={`inline-flex items-center px-3 py-1.5 border rounded-md text-sm font-medium ${
-                                    darkMode 
-                                      ? 'border-red-500 text-red-400 hover:bg-red-900 hover:bg-opacity-30' 
-                                      : 'border-red-600 text-red-600 hover:bg-red-50'
-                                  } transition-colors duration-200`}
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                              <button 
-                                className={`inline-flex items-center px-3 py-1.5 border rounded-md text-sm font-medium ${
-                                  darkMode 
-                                    ? 'border-green-500 text-green-400 hover:bg-green-900 hover:bg-opacity-30' 
-                                    : 'border-green-600 text-green-600 hover:bg-green-50'
-                                } transition-colors duration-200`}
-                              >
-                                <FaPhone className="mr-2" />
-                                Contact
-                              </button>
-                            </div>
-                          </dl>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-lg shadow-sm p-6 text-center transition-colors duration-200`}>
-                  <FaCalendarAlt className={`mx-auto h-12 w-12 ${darkMode ? 'text-gray-600' : 'text-gray-400'} transition-colors duration-200`} />
-                  <h3 className={`mt-2 text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>No upcoming appointments</h3>
-                  <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>Book a new appointment to see a doctor</p>
-                  <button 
-                    onClick={handleNewAppointment}
-                    className={`mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200`}
-                  >
-                    <FaCalendarPlus className="mr-2" />
-                    Book Appointment
-                  </button>
-                </div>
-              )
-            ) : (
-              filteredPrevious.length > 0 ? (
-                <div className="space-y-4">
-                  {filteredPrevious.map((appointment) => (
-                    <div 
-                      key={appointment.id} 
-                      className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-lg shadow-sm overflow-hidden transition-colors duration-200`}
-                    >
-                      <div 
-                        className={`px-4 py-5 sm:px-6 cursor-pointer ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-50'} transition-colors duration-200`}
-                        onClick={() => toggleExpand(appointment.id)}
-                      >
-                        <div className="flex flex-wrap justify-between items-center">
-                          <div className="flex items-center">
-                            <div className={`flex-shrink-0 h-12 w-12 rounded-full ${darkMode ? 'bg-blue-900' : 'bg-blue-100'} flex items-center justify-center transition-colors duration-200`}>
-                              <FaUserMd className={`h-6 w-6 ${darkMode ? 'text-blue-300' : 'text-blue-600'} transition-colors duration-200`} />
-                            </div>
-                            <div className="ml-4">
-                              <h3 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.doctor}
-                              </h3>
-                              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                {appointment.specialty}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex flex-col sm:flex-row mt-4 sm:mt-0 items-start sm:items-center">
-                            <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                              appointment.method === 'In-person' 
-                                ? darkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'
-                                : darkMode ? 'bg-purple-900 text-purple-300' : 'bg-purple-100 text-purple-800'
-                            } transition-colors duration-200`}>
-                              {appointment.method === 'In-person' ? <FaMapMarkerAlt className="mr-1" /> : <FaVideo className="mr-1" />}
-                              {appointment.method}
-                            </div>
-                            <div className={`flex-shrink-0 ml-0 sm:ml-4 mt-2 sm:mt-0 ${darkMode ? 'text-gray-300' : 'text-gray-700'} transition-colors duration-200`}>
-                              {expandedAppointment === appointment.id ? <FaChevronUp /> : <FaChevronDown />}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {expandedAppointment === appointment.id && (
-                        <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} px-4 py-5 sm:px-6 transition-colors duration-200`}>
-                          <dl className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">
-                            <div className="sm:col-span-1">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                <FaCalendarAlt className="inline-block mr-2" />
-                                Date
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.date}
-                              </dd>
-                            </div>
-                            <div className="sm:col-span-1">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                <FaClock className="inline-block mr-2" />
-                                Time
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.time}
-                              </dd>
-                            </div>
-                            <div className="sm:col-span-1">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                <FaMapMarkerAlt className="inline-block mr-2" />
-                                Location
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.location || 'Online Consultation'}
-                              </dd>
-                            </div>
-                            <div className="sm:col-span-1">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                <FaFileMedical className="inline-block mr-2" />
-                                Reason
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>
-                                {appointment.reason}
-                              </dd>
-                            </div>
-                            {/* Additional Information */}
-                            <div className="sm:col-span-2">
-                              <dt className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>
-                                Additional Information
-                              </dt>
-                              <dd className={`mt-1 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} transition-colors duration-200`}>
-                                {appointment.notes || 'No additional information provided.'}
-                              </dd>
-                            </div>
-                            <div className="sm:col-span-2 flex justify-between items-center pt-4">
-                              <div className="flex space-x-3">
-                                <button 
-                                  className={`inline-flex items-center px-3 py-1.5 border rounded-md text-sm font-medium ${
-                                    darkMode 
-                                      ? 'border-blue-500 text-blue-400 hover:bg-blue-900 hover:bg-opacity-30' 
-                                      : 'border-blue-600 text-blue-600 hover:bg-blue-50'
-                                  } transition-colors duration-200`}
-                                >
-                                  <FaCalendarAlt className="mr-2" />
-                                  Reschedule
-                                </button>
-                                <button 
-                                  onClick={() => handleCancelAppointment(appointment.id)}
-                                  className={`inline-flex items-center px-3 py-1.5 border rounded-md text-sm font-medium ${
-                                    darkMode 
-                                      ? 'border-red-500 text-red-400 hover:bg-red-900 hover:bg-opacity-30' 
-                                      : 'border-red-600 text-red-600 hover:bg-red-50'
-                                  } transition-colors duration-200`}
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                              <button 
-                                className={`inline-flex items-center px-3 py-1.5 border rounded-md text-sm font-medium ${
-                                  darkMode 
-                                    ? 'border-green-500 text-green-400 hover:bg-green-900 hover:bg-opacity-30' 
-                                    : 'border-green-600 text-green-600 hover:bg-green-50'
-                                } transition-colors duration-200`}
-                              >
-                                <FaPhone className="mr-2" />
-                                Contact
-                              </button>
-                            </div>
-                          </dl>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className={`${darkMode ? 'bg-dark-card' : 'bg-white'} rounded-lg shadow-sm p-6 text-center transition-colors duration-200`}>
-                  <FaCalendarCheck className={`mx-auto h-12 w-12 ${darkMode ? 'text-gray-600' : 'text-gray-400'} transition-colors duration-200`} />
-                  <h3 className={`mt-2 text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-200`}>No previous appointments</h3>
-                  <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'} transition-colors duration-200`}>Your past appointments will appear here</p>
-                </div>
-              )
-            )}
           </div>
         </main>
       </div>

@@ -1,65 +1,74 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
-  postgres:
+  db:
     image: postgres:15-alpine
-    container_name: jeevan_postgres
+    restart: always
     environment:
       POSTGRES_DB: jeevanDB
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
+      POSTGRES_PASSWORD: mydb123
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - jeevan_network
+      - ./backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d jeevanDB"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - jeevan-network
 
-  # Backend Service
+  # Backend Service (Spring Boot)
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: jeevan_backend
-    depends_on:
-      postgres:
-        condition: service_healthy
+    restart: always
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jeevanDB
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      JWT_SECRET: your_jwt_secret_key_here
-      SERVER_PORT: 8080
+      - SPRING_PROFILES_ACTIVE=docker
+      - JDBC_URL=jdbc:postgresql://db:5432/jeevanDB
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=mydb123
+      - SERVER_PORT=8080
+      - JWT_SECRET=b9b958a0b33023e409965803ee38ab8122ebc137d3f525750436f78200702c5868f51179c3606ad465d81e41ed8ffbf530263f0cc218e57bd946d8748bdf4330
+      - JWT_EXPIRATION=86400000
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://frontend:3000
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USERNAME=your-email@gmail.com
+      - MAIL_PASSWORD=your-app-password
     ports:
       - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
-      - jeevan_network
+      - jeevan-network
 
-  # Frontend Service
+  # Frontend Service (React/Vite)
   frontend:
     build:
       context: ./frontend/myNewApp
       dockerfile: Dockerfile
-    container_name: jeevan_frontend
+    restart: always
     environment:
-      VITE_API_URL: http://localhost:8080
+      - NODE_ENV=production
+      - VITE_API_BASE_URL=http://localhost:8080
+      - VITE_WEBSOCKET_URL=ws://localhost:8080
     ports:
       - "3000:3000"
-    networks:
-      - jeevan_network
     depends_on:
       - backend
-
-networks:
-  jeevan_network:
-    driver: bridge
+    networks:
+      - jeevan-network
 
 volumes:
-  postgres_data: 
+  postgres_data:
+    driver: local
+
+networks:
+  jeevan-network:
+    driver: bridge
+
