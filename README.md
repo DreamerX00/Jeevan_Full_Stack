@@ -1,9 +1,6 @@
 # 🏥 Jeevan - Healthcare Management System
 
 <div align="center">
-
-![Jeevan Logo](https://i.ibb.co/d0HWpCKX/heart-logo.png)
-
 **A comprehensive healthcare management system that connects patients, doctors, and pharmacies through a unified platform.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -524,4 +521,5 @@ If this project helped you, please consider giving it a ⭐️!
 **Made with ❤️ by the Jeevan Team**
 
 </div>
+
 
