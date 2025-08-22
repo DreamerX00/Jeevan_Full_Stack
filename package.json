@@ -1,9 +1,48 @@
 {
+  "name": "jeevan-healthcare-system",
+  "version": "1.0.0",
+  "description": "A comprehensive healthcare management system",
+  "main": "index.js",
+  "scripts": {
+    "dev": "docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build",
+    "prod": "docker-compose -f docker-compose.prod.yml up --build -d",
+    "stop": "docker-compose down",
+    "clean": "docker-compose down -v && docker system prune -f",
+    "logs": "docker-compose logs -f",
+    "status": "docker-compose ps",
+    "backend:test": "docker-compose exec backend ./gradlew test",
+    "backend:shell": "docker-compose exec backend /bin/sh",
+    "frontend:shell": "docker-compose exec frontend /bin/sh",
+    "db:shell": "docker-compose exec db psql -U postgres -d jeevanDB",
+    "install:frontend": "cd frontend/myNewApp && npm install",
+    "build:frontend": "cd frontend/myNewApp && npm run build",
+    "build:backend": "cd backend && ./gradlew build",
+    "build:android": "cd Kotlin_Application && ./gradlew assembleDebug"
+  },
+  "keywords": [
+    "healthcare",
+    "management",
+    "react",
+    "spring-boot",
+    "kotlin",
+    "android",
+    "docker"
+  ],
+  "author": "Jeevan Healthcare Team",
+  "license": "MIT",
   "dependencies": {
     "@react-google-maps/api": "^2.20.6",
     "axios": "^1.9.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-toastify": "^11.0.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DreamerX00/Jeevan_Full_Stack.git"
   }
 }

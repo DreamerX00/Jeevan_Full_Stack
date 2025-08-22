@@ -1,0 +1,51 @@
+# Development override - use with: docker-compose -f docker-compose.yml -f docker-compose.override.yml up
+services:
+  db:
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: jeevanDB_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mydb123
+
+  backend:
+    build:
+      context: ./backend
+      target: build
+    command: ["./gradlew", "bootRun", "--continuous"]
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - JDBC_URL=jdbc:postgresql://db:5432/jeevanDB_dev
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=mydb123
+    volumes:
+      - ./backend:/app
+      - gradle_cache:/home/gradle/.gradle
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+
+  frontend:
+    build:
+      context: ./frontend/myNewApp
+      target: build
+    command: ["npm", "run", "dev"]
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:8080
+      - VITE_WEBSOCKET_URL=ws://localhost:8080
+    volumes:
+      - ./frontend/myNewApp:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+      - "24678:24678"  # Vite HMR port
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  gradle_cache:
+    driver: local

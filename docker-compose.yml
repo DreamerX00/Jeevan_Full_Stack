@@ -1,51 +1,74 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker Compose reference guide at
-# https://docs.docker.com/go/compose-spec-reference/
-
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
 services:
-  server:
-    build:
-      context: .
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    restart: always
     environment:
-      NODE_ENV: production
+      POSTGRES_DB: jeevanDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mydb123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     ports:
-      - 3000:3000
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jeevan-network
 
-# The commented out section below is an example of how to define a PostgreSQL
-# database that your application can use. `depends_on` tells Docker Compose to
-# start the database before your application. The `db-data` volume persists the
-# database data between container restarts. The `db-password` secret is used
-# to set the database password. You must create `db/password.txt` and add
-# a password of your choosing to it before running `docker-compose up`.
-#     depends_on:
-#       db:
-#         condition: service_healthy
-#   db:
-#     image: postgres
-#     restart: always
-#     user: postgres
-#     secrets:
-#       - db-password
-#     volumes:
-#       - db-data:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_DB=example
-#       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-#     expose:
-#       - 5432
-#     healthcheck:
-#       test: [ "CMD", "pg_isready" ]
-#       interval: 10s
-#       timeout: 5s
-#       retries: 5
-# volumes:
-#   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt
+  # Backend Service (Spring Boot)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - JDBC_URL=jdbc:postgresql://db:5432/jeevanDB
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=mydb123
+      - SERVER_PORT=8080
+      - JWT_SECRET=b9b958a0b33023e409965803ee38ab8122ebc137d3f525750436f78200702c5868f51179c3606ad465d81e41ed8ffbf530263f0cc218e57bd946d8748bdf4330
+      - JWT_EXPIRATION=86400000
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://frontend:3000
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USERNAME=your-email@gmail.com
+      - MAIL_PASSWORD=your-app-password
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - jeevan-network
+
+  # Frontend Service (React/Vite)
+  frontend:
+    build:
+      context: ./frontend/myNewApp
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - VITE_API_BASE_URL=http://localhost:8080
+      - VITE_WEBSOCKET_URL=ws://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - jeevan-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  jeevan-network:
+    driver: bridge
 

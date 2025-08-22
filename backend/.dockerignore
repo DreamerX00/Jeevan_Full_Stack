@@ -1,0 +1,17 @@
+build/
+.gradle/
+gradle-wrapper.jar
+.git
+.gitignore
+.dockerignore
+Dockerfile
+README.md
+*.md
+.idea/
+.vscode/
+*.log
+bin/
+out/
+target/
+.DS_Store
+Thumbs.db

@@ -64,16 +64,16 @@ android {
 
 dependencies {
     // Core Android dependencies
-    implementation(libs.androidx.core.ktx.v1120)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v270)
-    implementation(libs.androidx.activity.compose.v182)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
 
     // Compose dependencies
-    implementation(platform(libs.androidx.compose.bom.v20240200))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
     
     // Material Icons Extended - needed for Visibility and VisibilityOff icons
     implementation("androidx.compose.material:material-icons-extended")
@@ -81,7 +81,7 @@ dependencies {
     // Navigation and ViewModel
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.0")
-    implementation(libs.runtime.livedata)
+    implementation(libs.androidx.runtime.livedata)
 
     // Maps dependencies
     implementation(libs.play.services.maps)
@@ -100,10 +100,10 @@ dependencies {
 
     // Testing dependencies
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit.v115)
-    androidTestImplementation(libs.androidx.espresso.core.v351)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

@@ -32,3 +32,16 @@
 **/dist
 LICENSE
 README.md
+.DS_Store
+Thumbs.db
+*.log
+frontend/myNewApp/node_modules/
+frontend/myNewApp/dist/
+backend/build/
+backend/.gradle/
+backend/bin/
+backend/out/
+Kotlin_Application/build/
+Kotlin_Application/.gradle/
+android/build/
+android/.gradle/
