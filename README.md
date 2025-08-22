@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Jeevan Logo](https://via.placeholder.com/200x100/4A90E2/FFFFFF?text=JEEVAN)
+![Jeevan Logo](https://i.ibb.co/d0HWpCKX/heart-logo.png)
 
 **A comprehensive healthcare management system that connects patients, doctors, and pharmacies through a unified platform.**
 
@@ -524,3 +524,4 @@ If this project helped you, please consider giving it a ⭐️!
 **Made with ❤️ by the Jeevan Team**
 
 </div>
+
