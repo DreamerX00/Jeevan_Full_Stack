@@ -1,23 +1,48 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import MedicalLoading from '../components/MedicalLoading';
 
 const LoadingContext = createContext();
 
 export const LoadingProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
+  const [loadingCount, setLoadingCount] = useState(0);
 
-  const showLoading = useCallback(() => {
+  const showLoading = useCallback((message = '') => {
+    setLoadingMessage(message);
+    setLoadingCount(prev => prev + 1);
     setIsLoading(true);
   }, []);
 
   const hideLoading = useCallback(() => {
-    setIsLoading(false);
+    setLoadingCount(prev => {
+      const newCount = Math.max(0, prev - 1);
+      if (newCount === 0) {
+        setIsLoading(false);
+        setLoadingMessage('');
+      }
+      return newCount;
+    });
   }, []);
 
+  const updateLoadingMessage = useCallback((message) => {
+    setLoadingMessage(message);
+  }, []);
+
+  // Memoized context value for better performance
+  const contextValue = useMemo(() => ({
+    isLoading,
+    loadingMessage,
+    loadingCount,
+    showLoading,
+    hideLoading,
+    updateLoadingMessage
+  }), [isLoading, loadingMessage, loadingCount, showLoading, hideLoading, updateLoadingMessage]);
+
   return (
-    <LoadingContext.Provider value={{ isLoading, showLoading, hideLoading }}>
+    <LoadingContext.Provider value={contextValue}>
       {children}
-      {isLoading && <MedicalLoading />}
+      {isLoading && <MedicalLoading message={loadingMessage} />}
     </LoadingContext.Provider>
   );
 };

@@ -3,6 +3,37 @@ import axios from 'axios';
 // Default API URL from environment or hardcoded fallback
 const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
+// Safe storage utilities to handle localStorage errors
+const safeStorage = {
+  get: (key, defaultValue = null) => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch (error) {
+      console.error(`Error reading from localStorage (${key}):`, error);
+      return defaultValue;
+    }
+  },
+  set: (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (error) {
+      console.error(`Error writing to localStorage (${key}):`, error);
+      return false;
+    }
+  },
+  remove: (key) => {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (error) {
+      console.error(`Error removing from localStorage (${key}):`, error);
+      return false;
+    }
+  }
+};
+
 // Check if we need to include the /api prefix
 // This is determined by comparing our API_URL to the current window location
 const determineApiPrefix = () => {
@@ -26,13 +57,14 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 10000 // 10 second timeout
 });
 
 // Add a request interceptor to include the JWT token in all authenticated requests
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = safeStorage.get('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -49,8 +81,8 @@ api.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
       // Token is invalid or expired
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      safeStorage.remove('token');
+      safeStorage.remove('user');
       window.location.href = '/login';
     }
     return Promise.reject(error);
@@ -76,47 +108,55 @@ if (import.meta.env.DEV) {
   );
 }
 
+// Helper function to handle API calls with fallback
+const makeApiCall = async (endpoint, data, method = 'post') => {
+  try {
+    // Try with API prefix first
+    const response = await api[method](`${API_PREFIX}${endpoint}`, data);
+    return response.data;
+  } catch (prefixError) {
+    // If API prefix fails and we have a prefix, try without it
+    if (API_PREFIX && API_PREFIX !== endpoint) {
+      try {
+        const response = await api[method](endpoint, data);
+        return response.data;
+      } catch (noPrefixError) {
+        // If both fail, throw the original error
+        throw prefixError;
+      }
+    }
+    // If no API prefix, just throw the original error
+    throw prefixError;
+  }
+};
+
+// Helper function to save auth data safely
+const saveAuthData = (token, userData) => {
+  const tokenSaved = safeStorage.set('token', token);
+  const userSaved = safeStorage.set('user', userData);
+  
+  if (!tokenSaved || !userSaved) {
+    console.warn('Failed to save authentication data to localStorage');
+  }
+  
+  return tokenSaved && userSaved;
+};
+
 // Authentication service
 const authService = {
   // Register a new user
   register: async (userData) => {
     try {
-      // Try with API prefix first
-      try {
-        const response = await api.post(`${API_PREFIX}/auth/register`, {
-          email: userData.email,
-          password: userData.password
-        });
-        
-        if (response.data.token) {
-          localStorage.setItem('token', response.data.token);
-          localStorage.setItem('user', JSON.stringify({
-            email: userData.email
-          }));
-        }
-        
-        return response.data;
-      } catch (prefixError) {
-        // If API prefix fails, try without it
-        if (API_PREFIX) {
-          const response = await api.post('/auth/register', {
-            email: userData.email,
-            password: userData.password
-          });
-          
-          if (response.data.token) {
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify({
-              email: userData.email
-            }));
-          }
-          
-          return response.data;
-        }
-        
-        // If no API prefix, just throw the original error
-        throw prefixError;
+      const response = await makeApiCall('/auth/register', {
+        email: userData.email,
+        password: userData.password
+      });
+      
+      if (response.token) {
+        saveAuthData(response.token, { email: userData.email });
       }
+      
+      return response;
     } catch (error) {
       console.error('Registration error:', error.response?.data || error.message);
       throw error.response?.data || { error: error.message };
@@ -126,42 +166,16 @@ const authService = {
   // Login user
   login: async (credentials) => {
     try {
-      // Try with API prefix first
-      try {
-        const response = await api.post(`${API_PREFIX}/auth/login`, {
-          email: credentials.email,
-          password: credentials.password
-        });
-        
-        if (response.data.token) {
-          localStorage.setItem('token', response.data.token);
-          localStorage.setItem('user', JSON.stringify({
-            email: credentials.email
-          }));
-        }
-        
-        return response.data;
-      } catch (prefixError) {
-        // If API prefix fails, try without it
-        if (API_PREFIX) {
-          const response = await api.post('/auth/login', {
-            email: credentials.email,
-            password: credentials.password
-          });
-          
-          if (response.data.token) {
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify({
-              email: credentials.email
-            }));
-          }
-          
-          return response.data;
-        }
-        
-        // If no API prefix, just throw the original error
-        throw prefixError;
+      const response = await makeApiCall('/auth/login', {
+        email: credentials.email,
+        password: credentials.password
+      });
+      
+      if (response.token) {
+        saveAuthData(response.token, { email: credentials.email });
       }
+      
+      return response;
     } catch (error) {
       console.error('Login error:', error.response?.data || error.message);
       throw error.response?.data || { error: error.message };
@@ -171,18 +185,26 @@ const authService = {
   // Logout user
   logout: () => {
     // Clear all auth-related data from localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userPreferences');
+    safeStorage.remove('token');
+    safeStorage.remove('user');
+    safeStorage.remove('refreshToken');
+    safeStorage.remove('userPreferences');
     
     // Clear any session storage items
-    sessionStorage.clear();
+    try {
+      sessionStorage.clear();
+    } catch (error) {
+      console.error('Error clearing sessionStorage:', error);
+    }
     
     // Clear any cookies that might be set
-    document.cookie.split(";").forEach(function(c) { 
-      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
-    });
+    try {
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+      });
+    } catch (error) {
+      console.error('Error clearing cookies:', error);
+    }
     
     // Clear any cached data
     if (window.caches) {
@@ -190,19 +212,20 @@ const authService = {
         for (let name of names) {
           caches.delete(name);
         }
+      }).catch(error => {
+        console.error('Error clearing caches:', error);
       });
     }
   },
   
   // Get current user from localStorage
   getCurrentUser: () => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    return safeStorage.get('user', null);
   },
   
   // Check if user is logged in
   isLoggedIn: () => {
-    const token = localStorage.getItem('token');
+    const token = safeStorage.get('token');
     if (!token) return false;
     
     try {
@@ -218,26 +241,14 @@ const authService = {
   
   // Get user token
   getToken: () => {
-    return localStorage.getItem('token');
+    return safeStorage.get('token');
   },
   
   // Reset password request
   forgotPassword: async (email) => {
     try {
-      // Try with API prefix first
-      try {
-        const response = await api.post(`${API_PREFIX}/auth/forgot-password`, { email });
-        return response.data;
-      } catch (prefixError) {
-        // If API prefix fails, try without it
-        if (API_PREFIX) {
-          const response = await api.post('/auth/forgot-password', { email });
-          return response.data;
-        }
-        
-        // If no API prefix, just throw the original error
-        throw prefixError;
-      }
+      const response = await makeApiCall('/auth/forgot-password', { email });
+      return response;
     } catch (error) {
       console.error('Forgot password error:', error.response?.data || error.message);
       throw error.response?.data || { error: error.message };
